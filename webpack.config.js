@@ -19,10 +19,8 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
-    // extension: ['.js'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '@core': path.resolve(__dirname, 'src/core'),
     },
   },
   devtool: isDev ? 'source-map' : false,
