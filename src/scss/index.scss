@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-@import '~normalize.css';
+
+@import './vars.scss';
 
 * {
   margin: 0;
@@ -9,4 +10,70 @@
 
 body {
   font-family: 'Roboto', sans-serif;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1440px;
+  padding-top: 100px;
+}
+
+.range-slider {
+  position: relative;
+  max-width: 400px;
+  cursor: pointer;
+
+  &__track {
+    width: 100%;
+    border: $track-border solid rgb(31, 32, 65, 0.25);
+    height: $track-height;
+    background: $track-color;
+    border-radius: $track-height;
+  }
+
+  &__handle {
+    position: absolute;
+    height: $handle-size;
+    width: $handle-size;
+    border-radius: $handle-size/2;
+    background: $background-progress;
+    border: $handle-border solid white;
+    top: -$handle-size/$track-height - $handle-border;
+    &_type_from {
+      left: 10%;
+    }
+    &_type_to {
+      left: 90%;
+    }
+  }
+
+  &__tooltip {
+    position: absolute;
+    top: -30px;
+    left: -50%;
+  }
+
+  &__progress {
+    position: absolute;
+    height: 100%;
+    width: 76.3%;
+    top: 0;
+    left: 40px + $handle-size;
+    background: $background-progress;
+  }
+
+  &__scale {
+    position: relative;
+    margin-top: 8px;
+    &_point {
+      position: absolute;
+      transform: translate(-50%);
+      &:nth-child(2) {
+        left: 50%;
+      }
+      &:nth-child(3) {
+        left: 100%;
+      }
+    }
+  }
 }
