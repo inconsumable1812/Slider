@@ -1,6 +1,6 @@
 class Track {
   toHtml(): string {
-    return '<div class="range-slider__track"></div>'
+    return `<div class="range-slider__track"></div>`
   }
 }
 

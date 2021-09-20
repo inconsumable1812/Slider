@@ -1,10 +1,6 @@
-import Track from './components/views/Track/Track'
 import View from './components/views/View'
 import './scss/index.scss'
 
-const view = new View('#app', {
-  components: [Track]
-})
+const view = new View('#app')
 
-console.log(view)
-view.render()
+console.log(view.render())
