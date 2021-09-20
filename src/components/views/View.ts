@@ -6,10 +6,10 @@ import render from './utils/render'
 
 class View {
   root: HTMLElement
-  el: HTMLElement
+  el: Element
   components: any
-  constructor(selector: string) {
-    this.el = document.querySelector(selector)
+  constructor(selector: Element) {
+    this.el = selector
   }
 
   render() {
