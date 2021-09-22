@@ -39,10 +39,10 @@ body {
     background: $background-progress;
     border: $handle-border solid white;
     top: -$handle-size/$track-height - $handle-border;
-    &_type_from {
+    &_num_1 {
       left: 10%;
     }
-    &_type_to {
+    &_num_2 {
       left: 90%;
     }
   }

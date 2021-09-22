@@ -1,7 +1,10 @@
+import Model from './model/Model'
 import Presenter from './presenter/Presenter'
 import View from './views/View'
 
 const root = document.querySelector('#app')
 
-const view = new View(root)
-const presenter = new Presenter(view)
+const model = new Model()
+console.log(model)
+const view = new View(root, model.getOptions())
+const presenter = new Presenter(model, view)
