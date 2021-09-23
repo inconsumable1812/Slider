@@ -18,7 +18,6 @@ class Model extends Observer {
   getOptions(): ModelOptions {
     const { options } = this
 
-    console.log(options)
     return { ...options }
   }
 

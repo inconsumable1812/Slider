@@ -7,8 +7,7 @@ class Handle {
   constructor(
     public handleNumber: number = 1,
     public value: string | number = '10%',
-    private isVertical?: boolean,
-    private container?: HTMLElement
+    private isVertical?: boolean
   ) {
     this.toHtml()
   }
@@ -22,6 +21,17 @@ class Handle {
       handle: this.element,
       tooltip: this.element.querySelector(`.js-range-slider__tooltip`) as HTMLElement
     }
+  }
+
+  getElement(): HTMLElement {
+    return this.elements.handle
+  }
+
+  on() {
+    this.element.addEventListener('mousedown', () => {
+      console.log('click')
+    })
+    console.log(this.elements.tooltip)
   }
 
   // private movePin(): void {

@@ -1,8 +1,16 @@
+import render from '../utils/render'
+
 class Progress {
-  toHtml(): string {
-    return `
+  element: HTMLElement
+
+  constructor() {
+    this.toHtml()
+  }
+
+  toHtml(): void {
+    this.element = render(`
     <div class="range-slider__progress"></div>
-    `
+    `)
   }
 }
 

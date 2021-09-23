@@ -14,14 +14,22 @@ type ModelOptions = {
   range: boolean
 }
 
+// type TObjects = {
+//   bar: BarView
+//   firstPin: PinView
+//   secondPin?: PinView
+//   input: InputView
+//   progress?: ProgressView
+//   scale?: ScaleView
+// }
+
 class View extends Observer {
+  private objects: any
   root: HTMLElement
   el: Element
-  components: any
   constructor(selector: Element, public model: ModelOptions) {
     super()
     this.el = selector
-    console.log(this.model.value[0])
   }
 
   render() {
@@ -30,19 +38,20 @@ class View extends Observer {
     `)
 
     const track = new Track()
-    this.root.innerHTML += track.toHtml()
+    this.root.append(track.element)
 
     const handle = new Handle(1, this.model.value[0])
     this.root.append(handle.element)
+    handle.element.addEventListener('mousedown', () => console.log('ok'))
 
     const secondHandle = new Handle(2, this.model.value[1])
     this.root.append(secondHandle.element)
 
     const progress = new Progress()
-    this.root.innerHTML += progress.toHtml()
+    this.root.append(progress.element)
 
     const scale = new Scale()
-    this.root.innerHTML += scale.toHtml()
+    this.root.append(scale.element)
 
     this.el.append(this.root)
   }
