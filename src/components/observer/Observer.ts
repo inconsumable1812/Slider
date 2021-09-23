@@ -4,7 +4,7 @@ class Observer {
   // dispatch, fire, trigger
   // Уведомляем слушателей если они есть
   // table.emit('table:select', {a: 1})
-  emit(event: string, ...args) {
+  emit(event: string, ...args: any) {
     if (!Array.isArray(this.listeners[event])) {
       return false
     }

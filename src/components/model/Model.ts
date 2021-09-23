@@ -3,33 +3,13 @@ import Observer from '../observer/Observer'
 class Model extends Observer {
   constructor(private options: ModelOptions = DEFAULT_MODEL_OPTIONS) {
     super()
-    //this.init(options)
   }
-
-  // init(options: ModelOptions): void {
-  //   this.options = { ...options }
-
-  //   // console.log(this.options)
-
-  //   // const { minValue, maxValue, step } = this.getOptions();
-  //   // this.options.steps = calculateSteps({ minValue, maxValue, step });
-  // }
 
   getOptions(): ModelOptions {
     const { options } = this
 
     return { ...options }
   }
-
-  // private initValues() {
-  //   const { minValue, stepSize, handlerCount } = this.options
-
-  //   this.values = []
-
-  //   for (let i = 0; i < handlerCount; i += 1) {
-  //     this.values[i] = minValue + i * stepSize * this.directionMod
-  //   }
-  // }
 }
 
 export default Model

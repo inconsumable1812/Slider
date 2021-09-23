@@ -42,7 +42,11 @@ class View extends Observer {
 
     const handle = new Handle(1, this.model.value[0])
     this.root.append(handle.element)
-    handle.element.addEventListener('mousedown', () => console.log('ok'))
+    handle.element.addEventListener('mousedown', () => {
+      console.log('ok')
+      this.emit('handle', handle.getValue())
+    })
+    console.log(handle.getValue())
 
     const secondHandle = new Handle(2, this.model.value[1])
     this.root.append(secondHandle.element)

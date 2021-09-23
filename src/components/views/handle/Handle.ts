@@ -27,25 +27,9 @@ class Handle {
     return this.elements.handle
   }
 
-  on() {
-    this.element.addEventListener('mousedown', () => {
-      console.log('click')
-    })
-    console.log(this.elements.tooltip)
+  getValue(): number | string {
+    return this.value
   }
-
-  // private movePin(): void {
-  //   const {
-  //     isVertical,
-  //     elements: { tooltip },
-  //     elements: { handle }
-  //   } = this
-
-  //   const sliderSize = Math.max(handle.clientWidth, handle.clientHeight)
-  //   console.log(sliderSize)
-
-  // tooltip.style[isVertical ? 'bottom' : 'left'] = `${(value / sliderSize) * 100}%`
-  // }
 }
 
 export default Handle
