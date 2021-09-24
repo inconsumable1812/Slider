@@ -8,7 +8,11 @@ class Model extends Observer {
   getOptions(): ModelOptions {
     const { options } = this
 
-    return { ...options }
+    return options
+  }
+
+  setOptions(modelOptions: Partial<ModelOptions>) {
+    this.options = { ...this.options, ...modelOptions }
   }
 }
 

@@ -30,6 +30,11 @@ class Handle {
   getValue(): number | string {
     return this.value
   }
+
+  setValue(value: number) {
+    this.value = value
+    this.elements.tooltip.textContent = this.value.toString()
+  }
 }
 
 export default Handle

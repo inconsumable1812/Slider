@@ -37,22 +37,22 @@ class View extends Observer {
     <div class="range-slider">
     `)
 
-    const track = new Track()
-    this.root.append(track.element)
+    const track = new Track(this.model.minValue, this.model.maxValue, false)
+    const trackDom = track.element
 
     const handle = new Handle(1, this.model.value[0])
     this.root.append(handle.element)
     handle.element.addEventListener('mousedown', () => {
-      console.log('ok')
+      handle.setValue(5000)
       this.emit('handle', handle.getValue())
     })
-    console.log(handle.getValue())
 
     const secondHandle = new Handle(2, this.model.value[1])
     this.root.append(secondHandle.element)
 
     const progress = new Progress()
-    this.root.append(progress.element)
+    trackDom.append(progress.element)
+    this.root.append(trackDom)
 
     const scale = new Scale()
     this.root.append(scale.element)
