@@ -1,6 +1,7 @@
+import Observer from '../../observer/Observer'
 import render from '../utils/render'
 
-class Track {
+class Track extends Observer {
   element: HTMLElement
 
   constructor(
@@ -8,6 +9,7 @@ class Track {
     private maxValue: number,
     private isVertical: boolean
   ) {
+    super()
     this.toHtml()
   }
   toHtml(): void {
@@ -23,7 +25,9 @@ class Track {
 
       const progress = offset / widthOrHeight
       const newValue = calculateNewValue(minValue, maxValue, progress)
-      // console.log(progress)
+
+      console.log(newValue)
+      this.emit('NewBarValue', newValue)
     }
 
     this.element.addEventListener('mousedown', clickEvent)
@@ -32,6 +36,5 @@ class Track {
 
 export default Track
 function calculateNewValue(minValue: number, maxValue: number, progress: number) {
-  const newVal = +((maxValue - minValue) * progress).toFixed(0)
-  console.log(newVal)
+  return +((maxValue - minValue) * progress).toFixed(0)
 }

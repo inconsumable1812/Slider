@@ -27,8 +27,8 @@ class Handle {
     return this.elements.handle
   }
 
-  getValue(): number | string {
-    return this.value
+  getValue(): number {
+    return +this.value
   }
 
   setValue(value: number) {

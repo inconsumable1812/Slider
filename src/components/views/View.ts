@@ -14,17 +14,16 @@ type ModelOptions = {
   range: boolean
 }
 
-// type TObjects = {
-//   bar: BarView
-//   firstPin: PinView
-//   secondPin?: PinView
-//   input: InputView
-//   progress?: ProgressView
-//   scale?: ScaleView
-// }
+type Components = {
+  track: Track
+  firstHandle: Handle
+  secondHandle?: Handle
+  progress?: Progress
+  scale?: Scale
+}
 
 class View extends Observer {
-  private objects: any
+  private components: Components
   root: HTMLElement
   el: Element
   constructor(selector: Element, public model: ModelOptions) {
@@ -37,27 +36,65 @@ class View extends Observer {
     <div class="range-slider">
     `)
 
-    const track = new Track(this.model.minValue, this.model.maxValue, false)
-    const trackDom = track.element
+    this.components = {
+      track: new Track(this.model.minValue, this.model.maxValue, false),
+      firstHandle: new Handle(1, this.model.value[0])
+    }
 
-    const handle = new Handle(1, this.model.value[0])
-    this.root.append(handle.element)
-    handle.element.addEventListener('mousedown', () => {
-      handle.setValue(5000)
-      this.emit('handle', handle.getValue())
-    })
+    // handle.element.addEventListener('mousedown', () => {
+    //   handle.setValue(5000)
+    //   this.emit('handle', handle.getValue())
+    // })
 
-    const secondHandle = new Handle(2, this.model.value[1])
+    if (true) {
+      this.components.secondHandle = new Handle(2, this.model.value[1])
+    }
+
+    if (true) {
+      this.components.progress = new Progress()
+    }
+
+    if (true) {
+      this.components.scale = new Scale()
+    }
+
+    const { track, firstHandle, secondHandle, scale, progress } = this.components
+
+    if (true) {
+      track.element.append(progress.element)
+    }
+    this.root.append(track.element)
+    this.root.append(firstHandle.element)
     this.root.append(secondHandle.element)
-
-    const progress = new Progress()
-    trackDom.append(progress.element)
-    this.root.append(trackDom)
-
-    const scale = new Scale()
-    this.root.append(scale.element)
+    if (true) {
+      this.root.append(scale.element)
+    }
 
     this.el.append(this.root)
+    this.bindBarClick()
+  }
+
+  private bindBarClick(): void {
+    const { track, firstHandle, secondHandle } = this.components
+
+    track.subscribe('NewBarValue', (value) => {
+      const nearHandle = this.findNearestHandle(firstHandle, secondHandle, value)
+      nearHandle.setValue(value)
+    })
+  }
+
+  private findNearestHandle(
+    firstHandle: Handle,
+    secondHandle: Handle,
+    clickValue: number
+  ) {
+    const firstValue = firstHandle.getValue()
+    const secondValue = secondHandle.getValue()
+    if (Math.abs(firstValue - clickValue) <= Math.abs(secondValue - clickValue)) {
+      return firstHandle
+    } else {
+      return secondHandle
+    }
   }
 }
 
