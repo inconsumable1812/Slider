@@ -6,7 +6,7 @@ class Handle {
 
   constructor(
     public handleNumber: number = 1,
-    public value: string | number = '10%',
+    public value: number = 10,
     private isVertical?: boolean
   ) {
     this.toHtml()
@@ -34,6 +34,9 @@ class Handle {
   setValue(value: number) {
     this.value = value
     this.elements.tooltip.textContent = this.value.toString()
+  }
+  setStyle(value: number) {
+    this.elements.handle.style.left = value - 0.5 + '%'
   }
 }
 

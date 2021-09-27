@@ -55,7 +55,7 @@ class View extends Observer {
     }
 
     if (true) {
-      this.components.scale = new Scale()
+      this.components.scale = new Scale(this.model.minValue, this.model.maxValue)
     }
 
     const { track, firstHandle, secondHandle, scale, progress } = this.components
@@ -69,21 +69,37 @@ class View extends Observer {
     if (true) {
       this.root.append(scale.element)
     }
+    firstHandle.setStyle(
+      this.searchStyleValue(track.getMinValue(), track.getMaxValue(), this.model.value[0])
+    )
+    secondHandle.setStyle(
+      this.searchStyleValue(track.getMinValue(), track.getMaxValue(), this.model.value[1])
+    )
 
     this.el.append(this.root)
-    this.bindBarClick()
+
+    this.clickOnTrack()
+    this.bindListenersToHandle(firstHandle)
   }
 
-  private bindBarClick(): void {
+  private clickOnTrack(): void {
     const { track, firstHandle, secondHandle } = this.components
 
-    track.subscribe('NewBarValue', (value) => {
-      const nearHandle = this.findNearestHandle(firstHandle, secondHandle, value)
+    track.subscribe('clickOnTrack', (value) => {
+      const nearHandle = this.findClosestHandle(firstHandle, secondHandle, value)
       nearHandle.setValue(value)
+
+      const styleValue = this.searchStyleValue(
+        track.getMinValue(),
+        track.getMaxValue(),
+        value
+      )
+
+      nearHandle.setStyle(styleValue)
     })
   }
 
-  private findNearestHandle(
+  private findClosestHandle(
     firstHandle: Handle,
     secondHandle: Handle,
     clickValue: number
@@ -95,6 +111,45 @@ class View extends Observer {
     } else {
       return secondHandle
     }
+  }
+
+  private handleMouseDown(event: MouseEvent, handle: Handle) {
+    const target = event.target as HTMLElement
+    const { track } = this.components
+
+    // const delta =
+    // console.log(target.getBoundingClientRect())
+    // console.log(event.clientX)
+    // console.log(track.element.getBoundingClientRect())
+
+    document.addEventListener('mousemove', (event) => this.handleMouseMove(event, handle))
+  }
+
+  private handleMouseMove(event: MouseEvent, handle: Handle) {
+    const { track } = this.components
+
+    let valueInPx = event.pageX - track.element.getBoundingClientRect().left
+    if (valueInPx < 0) {
+      valueInPx = 0
+    } else if (valueInPx > track.element.getBoundingClientRect().width) {
+      valueInPx = track.element.getBoundingClientRect().width
+    }
+
+    const valueInPercent = valueInPx / track.element.getBoundingClientRect().width
+
+    const minValue = track.getMinValue()
+    const maxValue = track.getMaxValue()
+    console.log(valueInPercent)
+  }
+
+  private bindListenersToHandle(handle: Handle): void {
+    handle.element.addEventListener('mousedown', (event: MouseEvent): void =>
+      this.handleMouseDown(event, handle)
+    )
+  }
+
+  private searchStyleValue(minValue: number, maxValue: number, progress: number) {
+    return (100 / (maxValue - minValue)) * (progress - minValue)
   }
 }
 

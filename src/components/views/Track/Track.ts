@@ -26,15 +26,22 @@ class Track extends Observer {
       const progress = offset / widthOrHeight
       const newValue = calculateNewValue(minValue, maxValue, progress)
 
-      console.log(newValue)
-      this.emit('NewBarValue', newValue)
+      this.emit('clickOnTrack', newValue)
     }
 
     this.element.addEventListener('mousedown', clickEvent)
+  }
+
+  getMinValue() {
+    return this.minValue
+  }
+
+  getMaxValue() {
+    return this.maxValue
   }
 }
 
 export default Track
 function calculateNewValue(minValue: number, maxValue: number, progress: number) {
-  return +((maxValue - minValue) * progress).toFixed(0)
+  return +((maxValue - minValue) * progress + minValue).toFixed(0)
 }

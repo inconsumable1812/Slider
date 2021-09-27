@@ -27,7 +27,7 @@ type ModelOptions = {
   range: boolean
 }
 const DEFAULT_MODEL_OPTIONS: ModelOptions = {
-  minValue: 0,
+  minValue: 20,
   maxValue: 100,
   step: 1,
   value: [50, 100],
