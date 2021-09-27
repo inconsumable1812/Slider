@@ -80,6 +80,7 @@ class View extends Observer {
 
     this.clickOnTrack()
     this.bindListenersToHandle(firstHandle)
+    this.bindListenersToHandle(secondHandle)
   }
 
   private clickOnTrack(): void {
@@ -114,15 +115,20 @@ class View extends Observer {
   }
 
   private handleMouseDown(event: MouseEvent, handle: Handle) {
+    event.preventDefault()
     const target = event.target as HTMLElement
     const { track } = this.components
 
-    // const delta =
-    // console.log(target.getBoundingClientRect())
-    // console.log(event.clientX)
-    // console.log(track.element.getBoundingClientRect())
+    const handleMouseMove = (event: MouseEvent) => this.handleMouseMove(event, handle)
 
-    document.addEventListener('mousemove', (event) => this.handleMouseMove(event, handle))
+    document.addEventListener('mousemove', handleMouseMove)
+
+    const handleMouseUp = (): void => {
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('mousemove', handleMouseMove)
+    }
+
+    document.addEventListener('mouseup', handleMouseUp)
   }
 
   private handleMouseMove(event: MouseEvent, handle: Handle) {
@@ -137,9 +143,17 @@ class View extends Observer {
 
     const valueInPercent = valueInPx / track.element.getBoundingClientRect().width
 
-    const minValue = track.getMinValue()
-    const maxValue = track.getMaxValue()
-    console.log(valueInPercent)
+    const delta = track.getMaxValue() - track.getMinValue()
+
+    const newValue = +(track.getMinValue() + delta * valueInPercent).toFixed(0)
+    handle.setValue(newValue)
+
+    const styleValue = this.searchStyleValue(
+      track.getMinValue(),
+      track.getMaxValue(),
+      newValue
+    )
+    handle.setStyle(styleValue)
   }
 
   private bindListenersToHandle(handle: Handle): void {
