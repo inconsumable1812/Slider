@@ -69,12 +69,21 @@ class View extends Observer {
     if (true) {
       this.root.append(scale.element)
     }
-    firstHandle.setStyle(
-      this.searchStyleValue(track.getMinValue(), track.getMaxValue(), this.model.value[0])
+
+    const firstHandleStyleValue = this.searchStyleValue(
+      track.getMinValue(),
+      track.getMaxValue(),
+      this.model.value[0]
     )
-    secondHandle.setStyle(
-      this.searchStyleValue(track.getMinValue(), track.getMaxValue(), this.model.value[1])
+    const secondHandleStyleValue = this.searchStyleValue(
+      track.getMinValue(),
+      track.getMaxValue(),
+      this.model.value[1]
     )
+    firstHandle.setStyle(firstHandleStyleValue)
+    secondHandle.setStyle(secondHandleStyleValue)
+
+    progress.setStyle(firstHandleStyleValue, secondHandleStyleValue)
 
     this.el.append(this.root)
 
@@ -84,7 +93,7 @@ class View extends Observer {
   }
 
   private clickOnTrack(): void {
-    const { track, firstHandle, secondHandle } = this.components
+    const { track, firstHandle, secondHandle, progress } = this.components
 
     track.subscribe('clickOnTrack', ({ event, value }) => {
       const nearHandle = this.findClosestHandle(firstHandle, secondHandle, value)
@@ -97,6 +106,11 @@ class View extends Observer {
       )
 
       nearHandle.setStyle(styleValue)
+      if (nearHandle === firstHandle) {
+        progress.setStart(styleValue)
+      } else if (nearHandle === secondHandle) {
+        progress.setEnd(styleValue)
+      }
       this.handleMouseDown(event, nearHandle)
     })
   }
@@ -133,7 +147,7 @@ class View extends Observer {
   }
 
   private handleMouseMove(event: MouseEvent, handle: Handle) {
-    const { track } = this.components
+    const { track, progress, firstHandle, secondHandle } = this.components
 
     let valueInPx = event.pageX - track.element.getBoundingClientRect().left
     if (valueInPx < 0) {
@@ -155,6 +169,11 @@ class View extends Observer {
       newValue
     )
     handle.setStyle(styleValue)
+    if (handle === firstHandle) {
+      progress.setStart(styleValue)
+    } else if (handle === secondHandle) {
+      progress.setEnd(styleValue)
+    }
   }
 
   private bindListenersToHandle(handle: Handle): void {
