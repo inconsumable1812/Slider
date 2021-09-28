@@ -22,11 +22,29 @@ type Components = {
   scale?: Scale
 }
 
+type ViewOptions = {
+  scalePointCount: number
+  isTooltipDisabled: boolean
+  isVertical: boolean
+  showProgress: boolean
+}
+
+const DEFAULT_VIEW_OPTIONS: ViewOptions = {
+  scalePointCount: 11,
+  isTooltipDisabled: false,
+  isVertical: false,
+  showProgress: true
+}
+
 class View extends Observer {
   private components: Components
   root: HTMLElement
   el: Element
-  constructor(selector: Element, public model: ModelOptions) {
+  constructor(
+    selector: Element,
+    private model: ModelOptions,
+    private view: ViewOptions = DEFAULT_VIEW_OPTIONS
+  ) {
     super()
     this.el = selector
   }
@@ -38,16 +56,15 @@ class View extends Observer {
 
     this.components = {
       track: new Track(this.model.minValue, this.model.maxValue, false),
-      firstHandle: new Handle(1, this.model.value[0])
+      firstHandle: new Handle(1, this.model.value[0], this.view.isTooltipDisabled)
     }
 
-    // handle.element.addEventListener('mousedown', () => {
-    //   handle.setValue(5000)
-    //   this.emit('handle', handle.getValue())
-    // })
-
-    if (true) {
-      this.components.secondHandle = new Handle(2, this.model.value[1])
+    if (this.model.range) {
+      this.components.secondHandle = new Handle(
+        2,
+        this.model.value[1],
+        this.view.isTooltipDisabled
+      )
     }
 
     if (true) {
@@ -55,7 +72,11 @@ class View extends Observer {
     }
 
     if (true) {
-      this.components.scale = new Scale(this.model.minValue, this.model.maxValue)
+      this.components.scale = new Scale(
+        this.model.minValue,
+        this.model.maxValue,
+        this.view.scalePointCount
+      )
     }
 
     const { track, firstHandle, secondHandle, scale, progress } = this.components
@@ -65,7 +86,9 @@ class View extends Observer {
     }
     this.root.append(track.element)
     this.root.append(firstHandle.element)
-    this.root.append(secondHandle.element)
+    if (this.model.range) {
+      this.root.append(secondHandle.element)
+    }
     if (true) {
       this.root.append(scale.element)
     }
@@ -81,22 +104,31 @@ class View extends Observer {
       this.model.value[1]
     )
     firstHandle.setStyle(firstHandleStyleValue)
-    secondHandle.setStyle(secondHandleStyleValue)
-
-    progress.setStyle(firstHandleStyleValue, secondHandleStyleValue)
+    if (this.model.range) {
+      secondHandle.setStyle(secondHandleStyleValue)
+      progress.setStyle(firstHandleStyleValue, secondHandleStyleValue)
+    } else {
+      progress.setStyle(0, firstHandleStyleValue)
+    }
 
     this.el.append(this.root)
 
     this.clickOnTrack()
     this.bindListenersToHandle(firstHandle)
-    this.bindListenersToHandle(secondHandle)
+    if (this.model.range) {
+      this.bindListenersToHandle(secondHandle)
+    }
   }
 
   private clickOnTrack(): void {
     const { track, firstHandle, secondHandle, progress } = this.components
 
     track.subscribe('clickOnTrack', ({ event, value }) => {
-      const nearHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+      let nearHandle = firstHandle
+      if (this.model.range) {
+        nearHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+      }
+
       nearHandle.setValue(value)
 
       const styleValue = this.searchStyleValue(
@@ -106,9 +138,14 @@ class View extends Observer {
       )
 
       nearHandle.setStyle(styleValue)
-      if (nearHandle === firstHandle) {
-        progress.setStart(styleValue)
-      } else if (nearHandle === secondHandle) {
+      if (this.model.range) {
+        if (nearHandle === firstHandle) {
+          progress.setStart(styleValue)
+        } else if (nearHandle === secondHandle) {
+          progress.setEnd(styleValue)
+        }
+      } else {
+        progress.setStart(0)
         progress.setEnd(styleValue)
       }
       this.handleMouseDown(event, nearHandle)
@@ -131,8 +168,6 @@ class View extends Observer {
 
   private handleMouseDown(event: MouseEvent, handle: Handle) {
     event.preventDefault()
-    const target = event.target as HTMLElement
-    const { track } = this.components
 
     const handleMouseMove = (event: MouseEvent) => this.handleMouseMove(event, handle)
 
@@ -169,9 +204,14 @@ class View extends Observer {
       newValue
     )
     handle.setStyle(styleValue)
-    if (handle === firstHandle) {
-      progress.setStart(styleValue)
-    } else if (handle === secondHandle) {
+    if (this.model.range) {
+      if (handle === firstHandle) {
+        progress.setStart(styleValue)
+      } else if (handle === secondHandle) {
+        progress.setEnd(styleValue)
+      }
+    } else {
+      progress.setStart(0)
       progress.setEnd(styleValue)
     }
   }

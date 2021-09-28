@@ -7,7 +7,8 @@ class Handle {
   constructor(
     public handleNumber: number = 1,
     public value: number = 10,
-    private isVertical?: boolean
+    private isTooltipDisabled: boolean = false,
+    private isVertical: boolean = false
   ) {
     this.toHtml()
   }
@@ -20,6 +21,9 @@ class Handle {
     this.elements = {
       handle: this.element,
       tooltip: this.element.querySelector(`.js-range-slider__tooltip`) as HTMLElement
+    }
+    if (this.isTooltipDisabled) {
+      this.elements.tooltip.remove()
     }
   }
 

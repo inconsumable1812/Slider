@@ -61,6 +61,7 @@ body {
     left: 40px + $handle-size;
     background: $background-progress;
     pointer-events: none;
+    border-radius: 50%;
   }
 
   &__scale {
