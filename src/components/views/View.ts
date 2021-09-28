@@ -118,6 +118,7 @@ class View extends Observer {
     if (this.model.range) {
       this.bindListenersToHandle(secondHandle)
     }
+    this.clickOnScale(scale)
   }
 
   private clickOnTrack(): void {
@@ -203,6 +204,7 @@ class View extends Observer {
       track.getMaxValue(),
       newValue
     )
+
     handle.setStyle(styleValue)
     if (this.model.range) {
       if (handle === firstHandle) {
@@ -224,6 +226,41 @@ class View extends Observer {
 
   private searchStyleValue(minValue: number, maxValue: number, progress: number) {
     return (100 / (maxValue - minValue)) * (progress - minValue)
+  }
+
+  private clickOnScale(scale: Scale) {
+    scale.element.addEventListener('click', (event) => this.clickOnScaleFunction(event))
+  }
+
+  private clickOnScaleFunction(event: MouseEvent) {
+    const { firstHandle, secondHandle, progress, track } = this.components
+
+    const target = event.target as HTMLElement
+    const value = +target.textContent
+
+    let nearHandle = firstHandle
+    if (this.model.range) {
+      nearHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+    }
+    nearHandle.setValue(value)
+
+    const styleValue = this.searchStyleValue(
+      track.getMinValue(),
+      track.getMaxValue(),
+      value
+    )
+
+    nearHandle.setStyle(styleValue)
+    if (this.model.range) {
+      if (nearHandle === firstHandle) {
+        progress.setStart(styleValue)
+      } else if (nearHandle === secondHandle) {
+        progress.setEnd(styleValue)
+      }
+    } else {
+      progress.setStart(0)
+      progress.setEnd(styleValue)
+    }
   }
 }
 
