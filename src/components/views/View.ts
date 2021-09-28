@@ -86,7 +86,7 @@ class View extends Observer {
   private clickOnTrack(): void {
     const { track, firstHandle, secondHandle } = this.components
 
-    track.subscribe('clickOnTrack', (value) => {
+    track.subscribe('clickOnTrack', ({ event, value }) => {
       const nearHandle = this.findClosestHandle(firstHandle, secondHandle, value)
       nearHandle.setValue(value)
 
@@ -97,6 +97,7 @@ class View extends Observer {
       )
 
       nearHandle.setStyle(styleValue)
+      this.handleMouseDown(event, nearHandle)
     })
   }
 

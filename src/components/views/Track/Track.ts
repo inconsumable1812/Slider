@@ -16,6 +16,7 @@ class Track extends Observer {
     this.element = render(`<div class="range-slider__track"></div>`)
 
     const clickEvent = (event: MouseEvent) => {
+      event.preventDefault()
       const target = event.target as HTMLElement
       const { minValue, maxValue, isVertical } = this
       const widthOrHeight = target.getBoundingClientRect().width
@@ -26,7 +27,7 @@ class Track extends Observer {
       const progress = offset / widthOrHeight
       const newValue = calculateNewValue(minValue, maxValue, progress)
 
-      this.emit('clickOnTrack', newValue)
+      this.emit('clickOnTrack', { event, value: newValue })
     }
 
     this.element.addEventListener('mousedown', clickEvent)
