@@ -1,15 +1,15 @@
 import Model from '../model/Model'
 import View from '../views/View'
 
-const ModelOptions = {
-  value: [500, 1000]
-}
+// const ModelOptions = {
+//   value: [500, 1000]
+// }
 class Presenter {
   constructor(private model: Model, private view: View) {
     this.render()
   }
   render() {
-    this.setOptions(ModelOptions)
+    // this.setOptions(ModelOptions)
     this.view.render()
     this.connect()
   }

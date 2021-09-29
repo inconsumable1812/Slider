@@ -1,3 +1,6 @@
+import { ModelOptions, ViewComponents, ViewOptions } from '../type'
+import { DEFAULT_VIEW_OPTIONS } from '../default'
+
 import Observer from '../observer/Observer'
 import Handle from './handle/Handle'
 import Progress from './progress/Progress'
@@ -5,39 +8,8 @@ import Scale from './Scale/Scale'
 import Track from './Track/Track'
 import render from './utils/render'
 
-type ModelOptions = {
-  minValue: number
-  maxValue: number
-  step: number
-  value: number[]
-  steps: number
-  range: boolean
-}
-
-type Components = {
-  track: Track
-  firstHandle: Handle
-  secondHandle?: Handle
-  progress?: Progress
-  scale?: Scale
-}
-
-type ViewOptions = {
-  scalePointCount: number
-  isTooltipDisabled: boolean
-  isVertical: boolean
-  showProgress: boolean
-}
-
-const DEFAULT_VIEW_OPTIONS: ViewOptions = {
-  scalePointCount: 11,
-  isTooltipDisabled: false,
-  isVertical: false,
-  showProgress: true
-}
-
 class View extends Observer {
-  private components: Components
+  private components: ViewComponents
   root: HTMLElement
   el: Element
   constructor(
@@ -56,32 +28,36 @@ class View extends Observer {
 
     this.components = {
       track: new Track(this.model.minValue, this.model.maxValue, false),
-      firstHandle: new Handle(1, this.model.value[0], this.view.isTooltipDisabled)
+      firstHandle: new Handle(1, this.model.valueStart, this.view.isTooltipDisabled)
     }
 
     if (this.model.range) {
       this.components.secondHandle = new Handle(
         2,
-        this.model.value[1],
+        this.model.valueEnd,
         this.view.isTooltipDisabled
       )
     }
 
-    if (true) {
+    if (this.view.showProgress) {
       this.components.progress = new Progress()
     }
 
-    if (true) {
+    if (this.view.showScale) {
       this.components.scale = new Scale(
         this.model.minValue,
         this.model.maxValue,
-        this.view.scalePointCount
+        this.view.scalePointCount,
+        this.model.step
       )
     }
+    this.init()
+  }
 
+  private init() {
     const { track, firstHandle, secondHandle, scale, progress } = this.components
 
-    if (true) {
+    if (this.view.showProgress) {
       track.element.append(progress.element)
     }
     this.root.append(track.element)
@@ -89,25 +65,27 @@ class View extends Observer {
     if (this.model.range) {
       this.root.append(secondHandle.element)
     }
-    if (true) {
+    if (this.view.showScale) {
       this.root.append(scale.element)
     }
 
     const firstHandleStyleValue = this.searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
-      this.model.value[0]
+      this.model.valueStart
     )
     const secondHandleStyleValue = this.searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
-      this.model.value[1]
+      this.model.valueEnd
     )
     firstHandle.setStyle(firstHandleStyleValue)
     if (this.model.range) {
       secondHandle.setStyle(secondHandleStyleValue)
-      progress.setStyle(firstHandleStyleValue, secondHandleStyleValue)
-    } else {
+      if (this.view.showProgress) {
+        progress.setStyle(firstHandleStyleValue, secondHandleStyleValue)
+      }
+    } else if (this.view.showProgress) {
       progress.setStyle(0, firstHandleStyleValue)
     }
 
@@ -118,39 +96,44 @@ class View extends Observer {
     if (this.model.range) {
       this.bindListenersToHandle(secondHandle)
     }
-    this.clickOnScale(scale)
+    if (this.view.showScale) {
+      this.clickOnScale(scale)
+    }
   }
 
   private clickOnTrack(): void {
     const { track, firstHandle, secondHandle, progress } = this.components
 
-    track.subscribe('clickOnTrack', ({ event, value }) => {
-      let nearHandle = firstHandle
-      if (this.model.range) {
-        nearHandle = this.findClosestHandle(firstHandle, secondHandle, value)
-      }
+    track.subscribe(
+      'clickOnTrack',
+      ({ event, value }: { event: MouseEvent; value: number }) => {
+        let closetHandle = firstHandle
+        if (this.model.range) {
+          closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+        }
 
-      nearHandle.setValue(value)
+        closetHandle.setValue(value)
 
-      const styleValue = this.searchStyleValue(
-        track.getMinValue(),
-        track.getMaxValue(),
-        value
-      )
+        const styleValue = this.searchStyleValue(
+          track.getMinValue(),
+          track.getMaxValue(),
+          value
+        )
+        closetHandle.setStyle(styleValue)
 
-      nearHandle.setStyle(styleValue)
-      if (this.model.range) {
-        if (nearHandle === firstHandle) {
-          progress.setStart(styleValue)
-        } else if (nearHandle === secondHandle) {
+        if (this.model.range && this.view.showProgress) {
+          if (closetHandle === firstHandle) {
+            progress.setStart(styleValue)
+          } else if (closetHandle === secondHandle) {
+            progress.setEnd(styleValue)
+          }
+        } else if (this.view.showProgress) {
+          progress.setStart(0)
           progress.setEnd(styleValue)
         }
-      } else {
-        progress.setStart(0)
-        progress.setEnd(styleValue)
+        this.handleMouseDown(event, closetHandle)
       }
-      this.handleMouseDown(event, nearHandle)
-    })
+    )
   }
 
   private findClosestHandle(
@@ -208,11 +191,35 @@ class View extends Observer {
     handle.setStyle(styleValue)
     if (this.model.range) {
       if (handle === firstHandle) {
-        progress.setStart(styleValue)
+        if (handle.getValue() > secondHandle.getValue()) {
+          handle.setValue(secondHandle.getValue() - 1)
+          handle.setStyle(
+            this.searchStyleValue(
+              track.getMinValue(),
+              track.getMaxValue(),
+              secondHandle.getValue() - 1
+            )
+          )
+        }
+        if (this.view.showProgress) {
+          progress.setStart(styleValue)
+        }
       } else if (handle === secondHandle) {
-        progress.setEnd(styleValue)
+        if (handle.getValue() < firstHandle.getValue()) {
+          handle.setValue(firstHandle.getValue() + 1)
+          handle.setStyle(
+            this.searchStyleValue(
+              track.getMinValue(),
+              track.getMaxValue(),
+              firstHandle.getValue() + 1
+            )
+          )
+        }
+        if (this.view.showProgress) {
+          progress.setEnd(styleValue)
+        }
       }
-    } else {
+    } else if (this.view.showProgress) {
       progress.setStart(0)
       progress.setEnd(styleValue)
     }
@@ -238,11 +245,11 @@ class View extends Observer {
     const target = event.target as HTMLElement
     const value = +target.textContent
 
-    let nearHandle = firstHandle
+    let closetHandle = firstHandle
     if (this.model.range) {
-      nearHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+      closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
     }
-    nearHandle.setValue(value)
+    closetHandle.setValue(value)
 
     const styleValue = this.searchStyleValue(
       track.getMinValue(),
@@ -250,14 +257,14 @@ class View extends Observer {
       value
     )
 
-    nearHandle.setStyle(styleValue)
-    if (this.model.range) {
-      if (nearHandle === firstHandle) {
+    closetHandle.setStyle(styleValue)
+    if (this.model.range && this.view.showProgress) {
+      if (closetHandle === firstHandle) {
         progress.setStart(styleValue)
-      } else if (nearHandle === secondHandle) {
+      } else if (closetHandle === secondHandle) {
         progress.setEnd(styleValue)
       }
-    } else {
+    } else if (this.view.showProgress) {
       progress.setStart(0)
       progress.setEnd(styleValue)
     }

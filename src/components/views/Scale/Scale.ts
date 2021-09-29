@@ -8,7 +8,8 @@ class Scale {
   constructor(
     private minValue: number,
     private maxValue: number,
-    private scalePointCount: number = 2
+    private scalePointCount: number = 2,
+    private step: Number
   ) {
     this.toHtml()
   }
