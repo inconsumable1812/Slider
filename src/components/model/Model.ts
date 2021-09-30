@@ -10,6 +10,8 @@ class Model extends Observer {
     this.checkValueStartInRange()
     this.checkValueEndInRange()
     this.checkValueStartLessValueEnd()
+    this.checkValueStartCorrectStep()
+    this.checkValueEndCorrectStep()
   }
 
   getOptions(): ModelOptions {
@@ -60,15 +62,23 @@ class Model extends Observer {
         return this.setOptions({ valueEnd: valueEnd + step })
       }
     } else if (valueStart > valueEnd) {
-      return this.setOptions({ valueStart: valueStart - step })
+      return this.setOptions({ valueStart: minValue })
     }
   }
 
-  // checkValueStartCorrectStep() {
-  //   const { minValue, step, valueEnd } = this.options
-  //   const isCorrectValue = valueEnd % step
-  //   const newValue = 0
-  // }
+  checkValueStartCorrectStep() {
+    const { minValue, step, valueStart } = this.options
+    if (valueStart % step) {
+      return this.setOptions({ valueStart: minValue })
+    }
+  }
+
+  checkValueEndCorrectStep() {
+    const { maxValue, step, valueEnd } = this.options
+    if (valueEnd % step) {
+      return this.setOptions({ valueEnd: maxValue })
+    }
+  }
 }
 
 export default Model

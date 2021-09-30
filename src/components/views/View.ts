@@ -179,11 +179,6 @@ class View extends Observer {
     const prevValue = handle.getValue()
 
     let valueInPx = event.pageX - track.element.getBoundingClientRect().left
-    // if (valueInPx < 0) {
-    //   valueInPx = 0
-    // } else if (valueInPx > track.element.getBoundingClientRect().width) {
-    //   valueInPx = track.element.getBoundingClientRect().width
-    // }
 
     const valueInPercent = valueInPx / track.element.getBoundingClientRect().width
 

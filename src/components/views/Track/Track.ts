@@ -26,9 +26,9 @@ class Track extends Observer {
       const offset = event.offsetX + borderWidth
 
       const progress = offset / widthOrHeight
-      console.log(progress)
+      // console.log(progress)
 
-      const newValue = calculateNewValue(minValue, maxValue, progress)
+      const newValue = calculateNewValue(minValue, maxValue, progress, step)
 
       this.emit('clickOnTrack', { event, value: newValue })
     }
@@ -46,8 +46,37 @@ class Track extends Observer {
 }
 
 export default Track
-function calculateNewValue(minValue: number, maxValue: number, progress: number) {
-  const range = maxValue - minValue
+function calculateNewValue(
+  minValue: number,
+  maxValue: number,
+  progress: number,
+  step: number
+) {
+  let progressValue = Math.round((maxValue - minValue) * progress + minValue)
+  let isCorrectNewValue = !((progressValue - minValue) % step)
+  let value = progressValue
 
-  return +((maxValue - minValue) * progress + minValue).toFixed(0)
+  let i = 1
+  while (!isCorrectNewValue) {
+    if ((progressValue - minValue) % step <= step / 2) {
+      isCorrectNewValue = !((progressValue - i - minValue) % step)
+      value = progressValue - i
+      if (
+        value + step > maxValue &&
+        maxValue - progressValue < Math.abs(value - progressValue)
+      ) {
+        value = maxValue
+        break
+      }
+      i++
+    } else if ((progressValue - minValue) % step > step / 2) {
+      isCorrectNewValue = !((progressValue + i - minValue) % step)
+      value = progressValue + i
+      i++
+    } else {
+      break
+    }
+  }
+
+  return value
 }

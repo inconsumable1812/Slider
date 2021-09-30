@@ -4,9 +4,9 @@ const DEFAULT_MODEL_OPTIONS: ModelOptions = {
   minValue: 30,
   maxValue: 100,
   step: 33,
-  valueStart: 30,
+  valueStart: 50,
   valueEnd: 80,
-  range: false
+  range: true
 }
 
 const DEFAULT_VIEW_OPTIONS: ViewOptions = {
