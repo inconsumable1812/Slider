@@ -8,40 +8,64 @@ class Scale {
   constructor(
     private minValue: number,
     private maxValue: number,
-    private scalePointCount: number = 2,
-    private step: Number
+    private scalePointCount: number,
+    private step: number
   ) {
     this.toHtml()
   }
 
   toHtml(): void {
     this.element = render(`
-    <div class="range-slider__scale">
-    </div>
+    <div class="range-slider__scale"></div>
     `)
 
-    let correctionValue = 0
-    let styleValue = 0
-    for (let i = 0; i < this.scalePointCount - 1; i++) {
+    const arrayOfValue = this.calculateStepValue()
+    const arrayOfStepsValue = arrayOfValue[0]
+    const arrayOfStepsStyleValue = arrayOfValue[1]
+    const actualCount = arrayOfStepsValue.length
+
+    for (let i = 0; i < actualCount; i++) {
       this.subElement = render(`
-      <div class="range-slider__scale_point">${this.minValue + correctionValue}</div>
+      <div class="range-slider__scale_point">${arrayOfStepsValue[i]}</div>
     `)
-      styleValue = 100 / (this.scalePointCount - 1)
-      correctionValue = +(
-        ((this.maxValue - this.minValue) * (styleValue * (i + 1))) /
-        100
-      ).toFixed(0)
-      this.subElement.style.left = styleValue * i + '%'
-
+      this.subElement.style.left = arrayOfStepsStyleValue[i] + '%'
       this.element.append(this.subElement)
     }
+  }
 
-    this.endElement = render(`
-    <div class="range-slider__scale_point">${this.maxValue}</div>
-    `)
-    this.endElement.style.left = 100 + '%'
+  private checkStep(): number {
+    const { minValue, maxValue, scalePointCount, step } = this
+    const stepsCount = Math.abs((maxValue - minValue) / step)
+    let actualStep = step
+    if (stepsCount > scalePointCount) {
+      actualStep = step * Math.ceil(stepsCount / (scalePointCount - 1))
+    }
 
-    this.element.append(this.endElement)
+    return actualStep
+  }
+
+  private calculateStepValue(): number[][] {
+    const { minValue, maxValue } = this
+    const step = this.checkStep()
+    const range = Math.abs(maxValue - minValue)
+    const isLastStepBigThanMaxValue = range % step
+    let countOfSteps = Math.floor(Math.abs(range / step))
+    countOfSteps = isLastStepBigThanMaxValue ? countOfSteps + 1 : countOfSteps
+
+    const arrayOfStepsValue = []
+    const arrayOfStepsStyleValue = []
+    for (let i = 0; i <= countOfSteps; i++) {
+      let stepsValue = minValue + step * i
+      stepsValue = stepsValue > maxValue ? maxValue : stepsValue
+      arrayOfStepsValue.push(stepsValue)
+
+      let stepStyleValue = Math.abs(step / range) * i * 100
+      stepStyleValue = stepStyleValue > 100 ? 100 : +stepStyleValue.toFixed(2)
+      arrayOfStepsStyleValue.push(stepStyleValue)
+    }
+    const arrayOfValue = [arrayOfStepsValue, arrayOfStepsStyleValue]
+    console.log(arrayOfValue)
+    return arrayOfValue
   }
 }
 

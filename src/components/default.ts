@@ -1,16 +1,16 @@
 import { ModelOptions, ViewOptions } from './type'
 
 const DEFAULT_MODEL_OPTIONS: ModelOptions = {
-  minValue: 20,
+  minValue: 30,
   maxValue: 100,
   step: 1,
-  valueStart: 200,
-  valueEnd: 10,
-  range: true
+  valueStart: 50,
+  valueEnd: 80,
+  range: false
 }
 
 const DEFAULT_VIEW_OPTIONS: ViewOptions = {
-  scalePointCount: 2,
+  scalePointCount: 11,
   isTooltipDisabled: false,
   isVertical: false,
   showProgress: true,
