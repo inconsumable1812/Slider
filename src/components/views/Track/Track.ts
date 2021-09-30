@@ -7,7 +7,8 @@ class Track extends Observer {
   constructor(
     private minValue: number,
     private maxValue: number,
-    private isVertical: boolean
+    private isVertical: boolean,
+    private step: number
   ) {
     super()
     this.toHtml()
@@ -18,13 +19,15 @@ class Track extends Observer {
     const clickEvent = (event: MouseEvent) => {
       event.preventDefault()
       const target = event.target as HTMLElement
-      const { minValue, maxValue, isVertical } = this
+      const { minValue, maxValue, isVertical, step } = this
       const widthOrHeight = target.getBoundingClientRect().width
       const borderWidthPx = getComputedStyle(target).borderWidth
       const borderWidth = Math.round(+borderWidthPx.slice(0, -2))
       const offset = event.offsetX + borderWidth
 
       const progress = offset / widthOrHeight
+      console.log(progress)
+
       const newValue = calculateNewValue(minValue, maxValue, progress)
 
       this.emit('clickOnTrack', { event, value: newValue })
@@ -44,5 +47,7 @@ class Track extends Observer {
 
 export default Track
 function calculateNewValue(minValue: number, maxValue: number, progress: number) {
+  const range = maxValue - minValue
+
   return +((maxValue - minValue) * progress + minValue).toFixed(0)
 }

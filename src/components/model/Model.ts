@@ -6,30 +6,10 @@ import Observer from '../observer/Observer'
 class Model extends Observer {
   constructor(private options: ModelOptions = DEFAULT_MODEL_OPTIONS) {
     super()
-    this.checkMinValueLessMax(
-      this.options.minValue,
-      this.options.maxValue,
-      this.options.step
-    )
-    this.checkValueStartInRange(
-      this.options.minValue,
-      this.options.maxValue,
-      this.options.step,
-      this.options.valueStart
-    )
-    this.checkValueEndInRange(
-      this.options.minValue,
-      this.options.maxValue,
-      this.options.step,
-      this.options.valueEnd
-    )
-    this.checkValueStartLessValueEnd(
-      this.options.valueStart,
-      this.options.valueEnd,
-      this.options.step,
-      this.options.minValue,
-      this.options.maxValue
-    )
+    this.checkMinValueLessMax()
+    this.checkValueStartInRange()
+    this.checkValueEndInRange()
+    this.checkValueStartLessValueEnd()
   }
 
   getOptions(): ModelOptions {
@@ -42,7 +22,8 @@ class Model extends Observer {
     this.options = { ...this.options, ...modelOptions }
   }
 
-  checkMinValueLessMax(minValue: number, maxValue: number, step: number) {
+  checkMinValueLessMax() {
+    const { minValue, maxValue, step } = this.options
     if (minValue === maxValue) {
       return this.setOptions({ maxValue: minValue + step })
     } else if (minValue > maxValue) {
@@ -50,12 +31,8 @@ class Model extends Observer {
     }
   }
 
-  checkValueStartInRange(
-    minValue: number,
-    maxValue: number,
-    step: number,
-    valueStart: number
-  ) {
+  checkValueStartInRange() {
+    const { minValue, maxValue, step, valueStart } = this.options
     if (valueStart < minValue) {
       return this.setOptions({ valueStart: minValue })
     } else if (valueStart > maxValue) {
@@ -63,12 +40,8 @@ class Model extends Observer {
     }
   }
 
-  checkValueEndInRange(
-    minValue: number,
-    maxValue: number,
-    step: number,
-    valueEnd: number
-  ) {
+  checkValueEndInRange() {
+    const { minValue, maxValue, step, valueEnd } = this.options
     if (valueEnd < minValue) {
       return this.setOptions({ valueEnd: minValue + step })
     } else if (valueEnd > maxValue) {
@@ -76,13 +49,8 @@ class Model extends Observer {
     }
   }
 
-  checkValueStartLessValueEnd(
-    valueStart: number,
-    valueEnd: number,
-    step: number,
-    minValue: number,
-    maxValue: number
-  ) {
+  checkValueStartLessValueEnd() {
+    const { minValue, maxValue, step, valueEnd, valueStart } = this.options
     if (valueStart === valueEnd) {
       if (valueEnd === maxValue) {
         return this.setOptions({ valueStart: valueStart - step })
@@ -95,6 +63,12 @@ class Model extends Observer {
       return this.setOptions({ valueStart: valueStart - step })
     }
   }
+
+  // checkValueStartCorrectStep() {
+  //   const { minValue, step, valueEnd } = this.options
+  //   const isCorrectValue = valueEnd % step
+  //   const newValue = 0
+  // }
 }
 
 export default Model

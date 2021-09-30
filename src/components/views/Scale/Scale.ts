@@ -64,8 +64,11 @@ class Scale {
       arrayOfStepsStyleValue.push(stepStyleValue)
     }
     const arrayOfValue = [arrayOfStepsValue, arrayOfStepsStyleValue]
-    console.log(arrayOfValue)
     return arrayOfValue
+  }
+
+  public getArrayOfValue() {
+    return this.calculateStepValue()[0]
   }
 }
 

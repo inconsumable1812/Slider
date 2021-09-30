@@ -27,7 +27,12 @@ class View extends Observer {
     `)
 
     this.components = {
-      track: new Track(this.model.minValue, this.model.maxValue, false),
+      track: new Track(
+        this.model.minValue,
+        this.model.maxValue,
+        this.view.isVertical,
+        this.model.step
+      ),
       firstHandle: new Handle(1, this.model.valueStart, this.view.isTooltipDisabled)
     }
 
@@ -99,6 +104,8 @@ class View extends Observer {
     if (this.view.showScale) {
       this.clickOnScale(scale)
     }
+
+    console.log(scale.getArrayOfValue())
   }
 
   private clickOnTrack(): void {
@@ -167,19 +174,31 @@ class View extends Observer {
 
   private handleMouseMove(event: MouseEvent, handle: Handle) {
     const { track, progress, firstHandle, secondHandle } = this.components
+    const step = this.model.step
+
+    const prevValue = handle.getValue()
 
     let valueInPx = event.pageX - track.element.getBoundingClientRect().left
-    if (valueInPx < 0) {
-      valueInPx = 0
-    } else if (valueInPx > track.element.getBoundingClientRect().width) {
-      valueInPx = track.element.getBoundingClientRect().width
-    }
+    // if (valueInPx < 0) {
+    //   valueInPx = 0
+    // } else if (valueInPx > track.element.getBoundingClientRect().width) {
+    //   valueInPx = track.element.getBoundingClientRect().width
+    // }
 
     const valueInPercent = valueInPx / track.element.getBoundingClientRect().width
 
     const delta = track.getMaxValue() - track.getMinValue()
+    const isValueCorrectOfStep: boolean = !(Math.round(delta * valueInPercent) % step)
 
-    const newValue = +(track.getMinValue() + delta * valueInPercent).toFixed(0)
+    let newValue = isValueCorrectOfStep
+      ? Math.round(track.getMinValue() + delta * valueInPercent)
+      : prevValue
+    if (valueInPercent <= 0) {
+      newValue = track.getMinValue()
+    } else if (valueInPercent >= 1) {
+      newValue = track.getMaxValue()
+    }
+
     handle.setValue(newValue)
 
     const styleValue = this.searchStyleValue(
