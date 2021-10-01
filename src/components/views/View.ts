@@ -104,8 +104,6 @@ class View extends Observer {
     if (this.view.showScale) {
       this.clickOnScale(scale)
     }
-
-    console.log(scale.getArrayOfValue())
   }
 
   private clickOnTrack(): void {
@@ -124,7 +122,12 @@ class View extends Observer {
         if (this.model.range) {
           closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
 
-          if (click > styleValue / 100 && firstHandle.getStyleValue() < styleValue) {
+          if (
+            click > styleValue / 100 &&
+            firstHandle.getStyleValue() < styleValue &&
+            Math.abs(firstHandle.getStyleValue() / 100 - styleValue) >
+              Math.abs(secondHandle.getStyleValue() / 100 - styleValue)
+          ) {
             closetHandle = secondHandle
           }
         }
@@ -142,6 +145,12 @@ class View extends Observer {
           progress.setStart(0)
           progress.setEnd(styleValue)
         }
+        if (closetHandle === firstHandle) {
+          this.emit('viewChanged', { valueStart: closetHandle.getValue() })
+        } else if (closetHandle === secondHandle) {
+          this.emit('viewChanged', { valueEnd: closetHandle.getValue() })
+        }
+
         this.handleMouseDown(event, closetHandle)
       }
     )
@@ -198,41 +207,23 @@ class View extends Observer {
       newValue = track.getMaxValue()
     }
 
-    handle.setValue(newValue)
-
     const styleValue = this.searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
       newValue
     )
 
-    handle.setStyle(styleValue)
     if (this.model.range) {
-      if (handle === firstHandle) {
-        if (handle.getValue() > secondHandle.getValue()) {
-          handle.setValue(secondHandle.getValue() - 1)
-          handle.setStyle(
-            this.searchStyleValue(
-              track.getMinValue(),
-              track.getMaxValue(),
-              secondHandle.getValue() - 1
-            )
-          )
-        }
+      if (handle === firstHandle && newValue < secondHandle.getValue()) {
+        handle.setValue(newValue)
+        handle.setStyle(styleValue)
         if (this.view.showProgress) {
           progress.setStart(styleValue)
         }
-      } else if (handle === secondHandle) {
-        if (handle.getValue() < firstHandle.getValue()) {
-          handle.setValue(firstHandle.getValue() + 1)
-          handle.setStyle(
-            this.searchStyleValue(
-              track.getMinValue(),
-              track.getMaxValue(),
-              firstHandle.getValue() + 1
-            )
-          )
-        }
+      } else if (handle === secondHandle && newValue > firstHandle.getValue()) {
+        handle.setValue(newValue)
+        handle.setStyle(styleValue)
+
         if (this.view.showProgress) {
           progress.setEnd(styleValue)
         }
@@ -240,6 +231,13 @@ class View extends Observer {
     } else if (this.view.showProgress) {
       progress.setStart(0)
       progress.setEnd(styleValue)
+    }
+    if (!this.model.range) {
+      handle.setValue(newValue)
+      handle.setStyle(styleValue)
+    }
+    if (isValueCorrectOfStep) {
+      this.emit('viewChanged', 40)
     }
   }
 
@@ -264,9 +262,9 @@ class View extends Observer {
     const value = +target.textContent
 
     let closetHandle = firstHandle
-    // if (this.model.range) {
-    //   closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
-    // }
+    if (this.model.range) {
+      closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+    }
     closetHandle.setValue(value)
 
     const styleValue = this.searchStyleValue(
@@ -290,21 +288,3 @@ class View extends Observer {
 }
 
 export default View
-
-// private findClosestHandle(
-//   firstHandle: Handle,
-//   secondHandle: Handle,
-//   styleValue: number,
-//   clickValue: number
-// ) {
-//   console.log(clickValue, styleValue)
-
-//   const firstStyleValue = firstHandle.getStyleValue() / 100
-//   const secondStyleValue = secondHandle.getStyleValue() / 100
-
-//   if (clickValue <= styleValue) {
-//     return firstHandle
-//   } else {
-//     return secondHandle
-//   }
-// }

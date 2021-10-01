@@ -1,3 +1,5 @@
+import { ModelOptions } from '../type'
+
 import Model from '../model/Model'
 import View from '../views/View'
 
@@ -18,12 +20,12 @@ class Presenter {
     this.model.getOptions()
   }
 
-  setOptions(modelOptions) {
+  setOptions(modelOptions: Partial<ModelOptions>) {
     this.model.setOptions(modelOptions)
   }
 
   connect() {
-    this.view.subscribe('handle', (value) => console.log(value))
+    this.view.subscribe('viewChanged', (value) => console.log(value))
   }
 }
 
