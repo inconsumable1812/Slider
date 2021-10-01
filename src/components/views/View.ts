@@ -14,11 +14,16 @@ class View extends Observer {
   el: Element
   constructor(
     selector: Element,
-    private model: ModelOptions,
-    private view: ViewOptions = DEFAULT_VIEW_OPTIONS
+    private modelOptions: ModelOptions,
+    private viewOptions: ViewOptions = DEFAULT_VIEW_OPTIONS
   ) {
     super()
     this.el = selector
+  }
+
+  setOptions(modelOptions: Partial<ModelOptions>, viewOptions: Partial<ViewOptions>) {
+    this.modelOptions = { ...this.modelOptions, ...modelOptions }
+    this.viewOptions = { ...this.viewOptions, ...viewOptions }
   }
 
   render() {
@@ -28,32 +33,36 @@ class View extends Observer {
 
     this.components = {
       track: new Track(
-        this.model.minValue,
-        this.model.maxValue,
-        this.view.isVertical,
-        this.model.step
+        this.modelOptions.minValue,
+        this.modelOptions.maxValue,
+        this.viewOptions.isVertical,
+        this.modelOptions.step
       ),
-      firstHandle: new Handle(1, this.model.valueStart, this.view.isTooltipDisabled)
-    }
-
-    if (this.model.range) {
-      this.components.secondHandle = new Handle(
-        2,
-        this.model.valueEnd,
-        this.view.isTooltipDisabled
+      firstHandle: new Handle(
+        1,
+        this.modelOptions.valueStart,
+        this.viewOptions.isTooltipDisabled
       )
     }
 
-    if (this.view.showProgress) {
+    if (this.modelOptions.range) {
+      this.components.secondHandle = new Handle(
+        2,
+        this.modelOptions.valueEnd,
+        this.viewOptions.isTooltipDisabled
+      )
+    }
+
+    if (this.viewOptions.showProgress) {
       this.components.progress = new Progress()
     }
 
-    if (this.view.showScale) {
+    if (this.viewOptions.showScale) {
       this.components.scale = new Scale(
-        this.model.minValue,
-        this.model.maxValue,
-        this.view.scalePointCount,
-        this.model.step
+        this.modelOptions.minValue,
+        this.modelOptions.maxValue,
+        this.viewOptions.scalePointCount,
+        this.modelOptions.step
       )
     }
     this.init()
@@ -62,35 +71,35 @@ class View extends Observer {
   private init() {
     const { track, firstHandle, secondHandle, scale, progress } = this.components
 
-    if (this.view.showProgress) {
+    if (this.viewOptions.showProgress) {
       track.element.append(progress.element)
     }
     this.root.append(track.element)
     this.root.append(firstHandle.element)
-    if (this.model.range) {
+    if (this.modelOptions.range) {
       this.root.append(secondHandle.element)
     }
-    if (this.view.showScale) {
+    if (this.viewOptions.showScale) {
       this.root.append(scale.element)
     }
 
     const firstHandleStyleValue = this.searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
-      this.model.valueStart
+      this.modelOptions.valueStart
     )
     const secondHandleStyleValue = this.searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
-      this.model.valueEnd
+      this.modelOptions.valueEnd
     )
     firstHandle.setStyle(firstHandleStyleValue)
-    if (this.model.range) {
+    if (this.modelOptions.range) {
       secondHandle.setStyle(secondHandleStyleValue)
-      if (this.view.showProgress) {
+      if (this.viewOptions.showProgress) {
         progress.setStyle(firstHandleStyleValue, secondHandleStyleValue)
       }
-    } else if (this.view.showProgress) {
+    } else if (this.viewOptions.showProgress) {
       progress.setStyle(0, firstHandleStyleValue)
     }
 
@@ -98,10 +107,10 @@ class View extends Observer {
 
     this.clickOnTrack()
     this.bindListenersToHandle(firstHandle)
-    if (this.model.range) {
+    if (this.modelOptions.range) {
       this.bindListenersToHandle(secondHandle)
     }
-    if (this.view.showScale) {
+    if (this.viewOptions.showScale) {
       this.clickOnScale(scale)
     }
   }
@@ -119,14 +128,14 @@ class View extends Observer {
           value
         )
 
-        if (this.model.range) {
+        if (this.modelOptions.range) {
           closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
 
           if (
             click > styleValue / 100 &&
             firstHandle.getStyleValue() < styleValue &&
-            Math.abs(firstHandle.getStyleValue() / 100 - styleValue) >
-              Math.abs(secondHandle.getStyleValue() / 100 - styleValue)
+            Math.abs(firstHandle.getStyleValue() / 100 - click) >
+              Math.abs(secondHandle.getStyleValue() / 100 - click)
           ) {
             closetHandle = secondHandle
           }
@@ -135,13 +144,13 @@ class View extends Observer {
         closetHandle.setValue(value)
         closetHandle.setStyle(styleValue)
 
-        if (this.model.range && this.view.showProgress) {
+        if (this.modelOptions.range && this.viewOptions.showProgress) {
           if (closetHandle === firstHandle) {
             progress.setStart(styleValue)
           } else if (closetHandle === secondHandle) {
             progress.setEnd(styleValue)
           }
-        } else if (this.view.showProgress) {
+        } else if (this.viewOptions.showProgress) {
           progress.setStart(0)
           progress.setEnd(styleValue)
         }
@@ -187,7 +196,7 @@ class View extends Observer {
 
   private handleMouseMove(event: MouseEvent, handle: Handle) {
     const { track, progress, firstHandle, secondHandle } = this.components
-    const step = this.model.step
+    const step = this.modelOptions.step
 
     const prevValue = handle.getValue()
 
@@ -213,31 +222,35 @@ class View extends Observer {
       newValue
     )
 
-    if (this.model.range) {
+    if (this.modelOptions.range) {
       if (handle === firstHandle && newValue < secondHandle.getValue()) {
         handle.setValue(newValue)
         handle.setStyle(styleValue)
-        if (this.view.showProgress) {
+        if (this.viewOptions.showProgress) {
           progress.setStart(styleValue)
         }
       } else if (handle === secondHandle && newValue > firstHandle.getValue()) {
         handle.setValue(newValue)
         handle.setStyle(styleValue)
 
-        if (this.view.showProgress) {
+        if (this.viewOptions.showProgress) {
           progress.setEnd(styleValue)
         }
       }
-    } else if (this.view.showProgress) {
+    } else if (this.viewOptions.showProgress) {
       progress.setStart(0)
       progress.setEnd(styleValue)
     }
-    if (!this.model.range) {
+    if (!this.modelOptions.range) {
       handle.setValue(newValue)
       handle.setStyle(styleValue)
     }
     if (isValueCorrectOfStep) {
-      this.emit('viewChanged', 40)
+      if (handle === firstHandle) {
+        this.emit('viewChanged', { valueStart: handle.getValue() })
+      } else if (handle === secondHandle) {
+        this.emit('viewChanged', { valueEnd: handle.getValue() })
+      }
     }
   }
 
@@ -262,7 +275,7 @@ class View extends Observer {
     const value = +target.textContent
 
     let closetHandle = firstHandle
-    if (this.model.range) {
+    if (this.modelOptions.range) {
       closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
     }
     closetHandle.setValue(value)
@@ -274,15 +287,21 @@ class View extends Observer {
     )
 
     closetHandle.setStyle(styleValue)
-    if (this.model.range && this.view.showProgress) {
+    if (this.modelOptions.range && this.viewOptions.showProgress) {
       if (closetHandle === firstHandle) {
         progress.setStart(styleValue)
       } else if (closetHandle === secondHandle) {
         progress.setEnd(styleValue)
       }
-    } else if (this.view.showProgress) {
+    } else if (this.viewOptions.showProgress) {
       progress.setStart(0)
       progress.setEnd(styleValue)
+    }
+
+    if (closetHandle === firstHandle) {
+      this.emit('viewChanged', { valueStart: closetHandle.getValue() })
+    } else if (closetHandle === secondHandle) {
+      this.emit('viewChanged', { valueEnd: closetHandle.getValue() })
     }
   }
 }

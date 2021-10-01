@@ -5,8 +5,5 @@ import View from './views/View'
 const root = document.querySelector('#app')
 
 const model = new Model()
-console.log(model)
 const view = new View(root, model.getOptions())
-console.log(view)
-
 const presenter = new Presenter(model, view)
