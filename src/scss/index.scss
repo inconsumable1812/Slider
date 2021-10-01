@@ -39,6 +39,7 @@ body {
     background: $background-progress;
     border: $handle-border solid white;
     top: -$handle-size/$track-height - $handle-border;
+    transform: translate(-10%);
     &_num_1 {
       left: 10%;
     }

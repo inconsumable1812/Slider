@@ -35,12 +35,16 @@ class Handle {
     return +this.value
   }
 
+  getStyleValue(): number {
+    return +this.elements.handle.style.left.slice(0, -1)
+  }
+
   setValue(value: number) {
     this.value = value
     this.elements.tooltip.textContent = this.value.toString()
   }
   setStyle(value: number) {
-    this.elements.handle.style.left = value - 0.5 + '%'
+    this.elements.handle.style.left = value + '%'
   }
 }
 

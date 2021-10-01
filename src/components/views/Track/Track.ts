@@ -26,11 +26,10 @@ class Track extends Observer {
       const offset = event.offsetX + borderWidth
 
       const progress = offset / widthOrHeight
-      // console.log(progress)
 
       const newValue = calculateNewValue(minValue, maxValue, progress, step)
 
-      this.emit('clickOnTrack', { event, value: newValue })
+      this.emit('clickOnTrack', { event, value: newValue, click: progress })
     }
 
     this.element.addEventListener('mousedown', clickEvent)

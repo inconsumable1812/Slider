@@ -113,19 +113,23 @@ class View extends Observer {
 
     track.subscribe(
       'clickOnTrack',
-      ({ event, value }: { event: MouseEvent; value: number }) => {
+      ({ event, value, click }: { event: MouseEvent; value: number; click: number }) => {
         let closetHandle = firstHandle
-        if (this.model.range) {
-          closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
-        }
-
-        closetHandle.setValue(value)
-
         const styleValue = this.searchStyleValue(
           track.getMinValue(),
           track.getMaxValue(),
           value
         )
+
+        if (this.model.range) {
+          closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+
+          if (click > styleValue / 100 && firstHandle.getStyleValue() < styleValue) {
+            closetHandle = secondHandle
+          }
+        }
+
+        closetHandle.setValue(value)
         closetHandle.setStyle(styleValue)
 
         if (this.model.range && this.view.showProgress) {
@@ -260,9 +264,9 @@ class View extends Observer {
     const value = +target.textContent
 
     let closetHandle = firstHandle
-    if (this.model.range) {
-      closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
-    }
+    // if (this.model.range) {
+    //   closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+    // }
     closetHandle.setValue(value)
 
     const styleValue = this.searchStyleValue(
@@ -286,3 +290,21 @@ class View extends Observer {
 }
 
 export default View
+
+// private findClosestHandle(
+//   firstHandle: Handle,
+//   secondHandle: Handle,
+//   styleValue: number,
+//   clickValue: number
+// ) {
+//   console.log(clickValue, styleValue)
+
+//   const firstStyleValue = firstHandle.getStyleValue() / 100
+//   const secondStyleValue = secondHandle.getStyleValue() / 100
+
+//   if (clickValue <= styleValue) {
+//     return firstHandle
+//   } else {
+//     return secondHandle
+//   }
+// }
