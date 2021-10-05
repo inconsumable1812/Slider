@@ -12,18 +12,20 @@ class Presenter {
     this.connect()
   }
 
-  getOptions() {
-    this.model.getOptions()
+  getModelOptions() {
+    console.log(this.model.getOptions())
+    return this.model.getOptions()
   }
 
   setModelOptions(modelOptions: Partial<ModelOptions>) {
     this.model.setOptions(modelOptions)
-    console.log(this.model.getOptions())
+    // console.log(this.model.getOptions())
   }
   updateValue(valueOptions) {}
 
   connect() {
     this.view.subscribe('viewChanged', this.setModelOptions.bind(this))
+    this.model.subscribe('modelValueChange', () => this.getModelOptions())
   }
 }
 

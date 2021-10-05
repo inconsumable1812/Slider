@@ -3,7 +3,8 @@ import render from '../views/utils/render'
 class Panel {
   root: HTMLElement
   elements: any
-  constructor(private selector: Element) {
+  inputs: any
+  constructor(private selector: Element, private sliderOptions?: any) {
     this.render()
   }
 
@@ -97,7 +98,87 @@ class Panel {
 
     this.selector.append(this.root)
 
-    const input = this.elements.maxValue.querySelector('input')
+    this.inputs = {
+      maxInput: maxValue.querySelector('input'),
+      minInput: minValue.querySelector('input'),
+      firstInput: firstValue.querySelector('input'),
+      secondInput: secondValue.querySelector('input'),
+      tooltipInput: tooltipDisabled.querySelector('input'),
+      rangeInput: range.querySelector('input'),
+      stepInput: step.querySelector('input'),
+      scaleInput: showScale.querySelector('input'),
+      scalePointInput: scalePoint.querySelector('input'),
+      progressInput: progress.querySelector('input'),
+      verticalInput: vertical.querySelector('input')
+    }
+    Object.values(this.inputs).forEach((input) =>
+      (input as HTMLElement).addEventListener('change', () => this.getInputsOptions())
+    )
+
+    this.setOptionsFromSlider()
+  }
+
+  private setOptionsFromSlider() {
+    let {
+      maxInput,
+      minInput,
+      firstInput,
+      secondInput,
+      tooltipInput,
+      rangeInput,
+      stepInput,
+      scaleInput,
+      scalePointInput,
+      progressInput,
+      verticalInput
+    } = this.inputs
+
+    const {
+      scalePointCount,
+      isTooltipDisabled,
+      isVertical,
+      showProgress,
+      showScale,
+      minValue,
+      maxValue,
+      step,
+      valueStart,
+      valueEnd,
+      range
+    } = this.sliderOptions
+
+    maxInput.value = maxValue
+    minInput.value = minValue
+    firstInput.value = valueStart
+  }
+
+  private getInputsOptions() {
+    const {
+      maxInput,
+      minInput,
+      firstInput,
+      secondInput,
+      tooltipInput,
+      rangeInput,
+      stepInput,
+      scaleInput,
+      scalePointInput,
+      progressInput,
+      verticalInput
+    } = this.inputs
+    return console.log({
+      maxInput: Number(maxInput.value),
+      minInput: Number(minInput.value),
+      firstInput: Number(firstInput.value),
+      secondInput: Number(secondInput.value),
+      tooltipInput: tooltipInput.checked,
+      rangeInput: rangeInput.checked,
+      stepInput: Number(stepInput.value),
+      scaleInput: scaleInput.checked,
+      scalePointInput: Number(scalePointInput.value),
+      progressInput: progressInput.checked,
+      verticalInput: verticalInput.checked
+    })
   }
 }
 

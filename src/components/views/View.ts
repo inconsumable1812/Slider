@@ -26,6 +26,10 @@ class View extends Observer {
     this.viewOptions = { ...this.viewOptions, ...viewOptions }
   }
 
+  getOptions() {
+    return { ...this.modelOptions, ...this.viewOptions }
+  }
+
   render() {
     this.root = render(`
     <div class="range-slider">

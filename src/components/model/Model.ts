@@ -22,6 +22,7 @@ class Model extends Observer {
 
   setOptions(modelOptions: Partial<ModelOptions>) {
     this.options = { ...this.options, ...modelOptions }
+    this.emit('modelValueChange', this.options)
   }
 
   checkMinValueLessMax() {
