@@ -36,6 +36,8 @@ class Handle {
   }
 
   getStyleValue(): number {
+    console.log(+this.elements.handle.style.left.slice(0, -1))
+
     return +this.elements.handle.style.left.slice(0, -1)
   }
 
@@ -48,8 +50,6 @@ class Handle {
   }
 
   updateValue(value: number): void {
-    // this.movePin(pxValue);
-
     this.elements.tooltip.textContent = String(value)
   }
 }

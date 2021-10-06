@@ -71,11 +71,9 @@ body {
     &_point {
       position: absolute;
       transform: translate(-25%);
-      &:nth-child(2) {
-        left: 50%;
-      }
-      &:nth-child(3) {
-        left: 100%;
+      &-end {
+        background: white;
+        z-index: 100;
       }
     }
   }

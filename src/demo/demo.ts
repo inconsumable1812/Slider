@@ -5,8 +5,8 @@ const selector = document.querySelector('#app') as HTMLElement
 
 const slider = create(selector)
 slider.setOptions({
-  minValue: 0,
-  maxValue: 100
+  minValue: 30,
+  maxValue: 200
   // valueEnd: 35
   // showProgress: false
 })

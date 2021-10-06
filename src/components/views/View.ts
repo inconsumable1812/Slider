@@ -34,7 +34,15 @@ class View extends Observer {
     const { track, firstHandle, secondHandle, scale, progress } = this.components
 
     firstHandle.updateValue(valueStart)
+    firstHandle.setStyle(this.searchStyleValue(minValue, maxValue, valueStart))
+
     secondHandle.updateValue(valueEnd)
+    secondHandle.setStyle(this.searchStyleValue(minValue, maxValue, valueEnd))
+
+    progress.setStyle(
+      this.searchStyleValue(minValue, maxValue, valueStart),
+      this.searchStyleValue(minValue, maxValue, valueEnd)
+    )
 
     if (scale.getMaxValue() !== maxValue || scale.getMinValue() !== minValue) {
       scale.setMaxMinValue(maxValue, minValue)

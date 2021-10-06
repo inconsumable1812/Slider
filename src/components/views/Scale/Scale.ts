@@ -25,21 +25,6 @@ class Scale extends Observer {
     this.element = render(`
     <div class="range-slider__scale"></div>
     `)
-
-    // const arrayOfValue = this.calculateStepValue()
-    // console.log(arrayOfValue)
-
-    // const arrayOfStepsValue = arrayOfValue[0]
-    // const arrayOfStepsStyleValue = arrayOfValue[1]
-    // const actualCount = arrayOfStepsValue.length
-
-    // for (let i = 0; i < actualCount; i++) {
-    //   this.subElement = render(`
-    //   <div class="range-slider__scale_point">${arrayOfStepsValue[i]}</div>
-    // `)
-    //   this.subElement.style.left = arrayOfStepsStyleValue[i] + '%'
-    //   this.element.append(this.subElement)
-    // }
   }
 
   private renderScalePoint() {
@@ -53,6 +38,9 @@ class Scale extends Observer {
       <div class="range-slider__scale_point">${arrayOfStepsValue[i]}</div>
     `)
       this.subElement.style.left = arrayOfStepsStyleValue[i] + '%'
+      if (i === actualCount - 1) {
+        this.subElement.classList.add('range-slider__scale_point-end')
+      }
       this.element.append(this.subElement)
     }
   }
