@@ -6,12 +6,7 @@ import Observer from '../observer/Observer'
 class Model extends Observer {
   constructor(private options: ModelOptions = DEFAULT_MODEL_OPTIONS) {
     super()
-    this.checkMinValueLessMax()
-    this.checkValueStartInRange()
-    this.checkValueEndInRange()
-    this.checkValueStartLessValueEnd()
-    this.checkValueStartCorrectStep()
-    this.checkValueEndCorrectStep()
+    this.checkOptions()
   }
 
   getOptions(): ModelOptions {
@@ -22,8 +17,18 @@ class Model extends Observer {
     return this.options.valueStart
   }
 
+  private checkOptions() {
+    this.checkMinValueLessMax()
+    this.checkValueStartInRange()
+    this.checkValueEndInRange()
+    this.checkValueStartLessValueEnd()
+    this.checkValueStartCorrectStep()
+    this.checkValueEndCorrectStep()
+  }
+
   setOptions(modelOptions: Partial<ModelOptions>) {
     this.options = { ...this.options, ...modelOptions }
+    this.checkOptions()
     this.emit('modelValueChange', this.options)
   }
 
@@ -71,14 +76,14 @@ class Model extends Observer {
 
   checkValueStartCorrectStep() {
     const { minValue, step, valueStart } = this.options
-    if (valueStart % step) {
+    if (Math.abs(valueStart - minValue) % step) {
       return this.setOptions({ valueStart: minValue })
     }
   }
 
   checkValueEndCorrectStep() {
-    const { maxValue, step, valueEnd } = this.options
-    if (valueEnd % step) {
+    const { maxValue, minValue, step, valueEnd } = this.options
+    if (Math.abs(valueEnd - minValue) % step && valueEnd !== maxValue) {
       return this.setOptions({ valueEnd: maxValue })
     }
   }

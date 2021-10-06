@@ -1,11 +1,11 @@
 import { ModelOptions, ViewOptions } from './type'
 
 const DEFAULT_MODEL_OPTIONS: ModelOptions = {
-  minValue: 20,
+  minValue: 0,
   maxValue: 100,
-  step: 15,
-  valueStart: 0,
-  valueEnd: 100,
+  step: 1,
+  valueStart: 30,
+  valueEnd: 80,
   range: true
 }
 

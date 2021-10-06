@@ -42,9 +42,15 @@ class Track extends Observer {
   getMaxValue() {
     return this.maxValue
   }
+  setMaxMinValueAndStep(maxValue: number, minValue: number, step: number) {
+    this.maxValue = maxValue
+    this.minValue = minValue
+    this.step = step
+  }
 }
 
 export default Track
+
 function calculateNewValue(
   minValue: number,
   maxValue: number,

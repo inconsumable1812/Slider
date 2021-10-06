@@ -150,6 +150,14 @@ class Panel {
     maxInput.value = maxValue
     minInput.value = minValue
     firstInput.value = valueStart
+    secondInput.value = valueEnd
+    tooltipInput.checked = !isTooltipDisabled
+    rangeInput.checked = range
+    stepInput.value = step
+    scaleInput.checked = showScale
+    scalePointInput.value = scalePointCount
+    progressInput.checked = showProgress
+    verticalInput.checked = isVertical
   }
 
   private getInputsOptions() {

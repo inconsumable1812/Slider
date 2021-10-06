@@ -16,19 +16,19 @@ class Presenter {
     return this.model.getOptions()
   }
 
-  getSliderOptions() {
-    return { ...this.model.getOptions(), ...this.view.getOptions() }
-  }
-
   setModelOptions(modelOptions: Partial<ModelOptions>) {
     this.model.setOptions(modelOptions)
     // console.log(this.model.getOptions())
   }
-  updateValue(valueOptions) {}
+  updateView(modelOptions: Partial<ModelOptions>) {
+    this.view.changeModelOptions(modelOptions)
+    this.view.updateView()
+    // console.log(this.view.getModel())
+  }
 
   connect() {
     this.view.subscribe('viewChanged', this.setModelOptions.bind(this))
-    this.model.subscribe('modelValueChange', () => this.getSliderOptions())
+    this.model.subscribe('modelValueChange', this.updateView.bind(this))
   }
 }
 

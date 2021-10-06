@@ -46,6 +46,12 @@ class Handle {
   setStyle(value: number) {
     this.elements.handle.style.left = value + '%'
   }
+
+  updateValue(value: number): void {
+    // this.movePin(pxValue);
+
+    this.elements.tooltip.textContent = String(value)
+  }
 }
 
 export default Handle

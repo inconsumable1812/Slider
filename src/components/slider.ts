@@ -12,11 +12,6 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
 
   const view = new View(selector, modelOptions)
   const presenter = new Presenter(model, view)
-  const sliderOptions = presenter.getSliderOptions()
-
-  const panel = new Panel(selector, sliderOptions)
-
-  console.log(sliderOptions)
 
   function prepareOptions(
     options: sliderOptions,
@@ -41,7 +36,6 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     getOptions() {
       const modelOptions = model.getOptions()
       const viewOptions = view.getOptions()
-      console.log({ ...modelOptions, ...viewOptions })
 
       return { ...modelOptions, ...viewOptions }
     },
@@ -55,11 +49,16 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
         DEFAULT_VIEW_OPTIONS
       ) as Partial<ViewOptions>
 
+      // model.subscribe('modelValueChange', () => model.checkOptions)
+
       const modelOptions = model.setOptions(updateModelOptions)
       const viewOptions = view.setOptions(updateViewOptions)
     },
     getFirstValue() {
       return model.getFirstValue()
+    },
+    addControlPanel() {
+      return new Panel(selector, slider.getOptions())
     }
     // setValue(index: number, value: number) {
     //   return model.setValue(index, value)
@@ -76,4 +75,4 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
   return slider
 }
 
-export default create
+export { create }

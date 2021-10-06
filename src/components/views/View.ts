@@ -25,6 +25,27 @@ class View extends Observer {
     this.viewOptions = { ...this.viewOptions, ...viewOptions }
   }
 
+  changeModelOptions(modelOptions: Partial<ModelOptions>) {
+    this.modelOptions = { ...this.modelOptions, ...modelOptions }
+  }
+
+  updateView() {
+    const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions
+    const { track, firstHandle, secondHandle, scale, progress } = this.components
+
+    firstHandle.updateValue(valueStart)
+    secondHandle.updateValue(valueEnd)
+
+    if (scale.getMaxValue() !== maxValue || scale.getMinValue() !== minValue) {
+      scale.setMaxMinValue(maxValue, minValue)
+    }
+    track.setMaxMinValueAndStep(maxValue, minValue, step)
+  }
+
+  getModel() {
+    return this.modelOptions
+  }
+
   getOptions() {
     return this.viewOptions
   }
@@ -116,6 +137,9 @@ class View extends Observer {
     if (this.viewOptions.showScale) {
       this.clickOnScale(scale)
     }
+    scale.subscribe('stepChanged', (newStep: number) =>
+      this.emit('viewChanged', { step: newStep })
+    )
   }
 
   private clickOnTrack(): void {
@@ -217,6 +241,7 @@ class View extends Observer {
       newValue = track.getMinValue()
     } else if (valueInPercent >= 1) {
       newValue = track.getMaxValue()
+      this.emit('viewChanged', { valueEnd: newValue })
     }
 
     const styleValue = this.searchStyleValue(
