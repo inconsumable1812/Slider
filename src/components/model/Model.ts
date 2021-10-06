@@ -15,9 +15,11 @@ class Model extends Observer {
   }
 
   getOptions(): ModelOptions {
-    const { options } = this
+    return this.options
+  }
 
-    return options
+  getFirstValue() {
+    return this.options.valueStart
   }
 
   setOptions(modelOptions: Partial<ModelOptions>) {

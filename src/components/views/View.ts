@@ -21,13 +21,12 @@ class View extends Observer {
     this.el = selector
   }
 
-  setOptions(modelOptions: Partial<ModelOptions>, viewOptions: Partial<ViewOptions>) {
-    this.modelOptions = { ...this.modelOptions, ...modelOptions }
+  setOptions(viewOptions: Partial<ViewOptions>) {
     this.viewOptions = { ...this.viewOptions, ...viewOptions }
   }
 
   getOptions() {
-    return { ...this.modelOptions, ...this.viewOptions }
+    return this.viewOptions
   }
 
   render() {

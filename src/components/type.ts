@@ -28,4 +28,18 @@ type ViewComponents = {
   scale?: Scale
 }
 
-export { ModelOptions, ViewOptions, ViewComponents }
+type sliderOptions = {
+  minValue?: number
+  maxValue?: number
+  step?: number
+  valueStart?: number
+  valueEnd?: number
+  range?: boolean
+  scalePointCount?: number
+  isTooltipDisabled?: boolean
+  isVertical?: boolean
+  showProgress?: boolean
+  showScale?: boolean
+}
+
+export { ModelOptions, ViewOptions, ViewComponents, sliderOptions }

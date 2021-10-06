@@ -13,8 +13,11 @@ class Presenter {
   }
 
   getModelOptions() {
-    console.log(this.model.getOptions())
     return this.model.getOptions()
+  }
+
+  getSliderOptions() {
+    return { ...this.model.getOptions(), ...this.view.getOptions() }
   }
 
   setModelOptions(modelOptions: Partial<ModelOptions>) {
@@ -25,7 +28,7 @@ class Presenter {
 
   connect() {
     this.view.subscribe('viewChanged', this.setModelOptions.bind(this))
-    this.model.subscribe('modelValueChange', () => this.getModelOptions())
+    this.model.subscribe('modelValueChange', () => this.getSliderOptions())
   }
 }
 
