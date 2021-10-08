@@ -57,7 +57,9 @@ class Scale extends Observer {
     const range = Math.abs(maxValue - minValue)
     const isLastStepBigThanMaxValue = range % step
     const isCountBigThanScalePoint = Math.floor(Math.abs(range / step)) > scalePointCount
-    const actualScaleSize = isCountBigThanScalePoint ? step * 2 : step
+    const actualScaleSize = isCountBigThanScalePoint
+      ? (Math.floor(Math.abs(range / step)) / (scalePointCount - 1)) * step // TODO
+      : step
     let countOfSteps = isCountBigThanScalePoint
       ? scalePointCount - 1
       : Math.floor(Math.abs(range / step))
@@ -67,12 +69,12 @@ class Scale extends Observer {
     const arrayOfStepsValue = []
     const arrayOfStepsStyleValue = []
     for (let i = 0; i <= countOfSteps; i++) {
-      let stepsValue = minValue + actualScaleSize * i
+      let stepsValue = +(minValue + actualScaleSize * i).toFixed(0)
       stepsValue = stepsValue > maxValue ? maxValue : stepsValue
       arrayOfStepsValue.push(stepsValue)
 
       let stepStyleValue = Math.abs(actualScaleSize / range) * i * 100
-      stepStyleValue = stepStyleValue > 100 ? 100 : +stepStyleValue.toFixed(2)
+      stepStyleValue = stepStyleValue > 100 ? 100 : +stepStyleValue.toFixed(0)
       arrayOfStepsStyleValue.push(stepStyleValue)
     }
     const arrayOfValue = [arrayOfStepsValue, arrayOfStepsStyleValue]
@@ -95,10 +97,20 @@ class Scale extends Observer {
     return this.step
   }
 
-  setMaxMinValue(maxValue: number, minValue: number, step: number) {
+  getScaleCount() {
+    return this.scalePointCount
+  }
+
+  setScaleOptions(
+    maxValue: number,
+    minValue: number,
+    step: number,
+    scalePointCount: number
+  ) {
     this.maxValue = maxValue
     this.minValue = minValue
     this.step = step
+    this.scalePointCount = scalePointCount
     this.deleteScalePoint()
     this.renderScalePoint()
   }

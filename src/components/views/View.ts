@@ -23,6 +23,7 @@ class View extends Observer {
 
   setOptions(viewOptions: Partial<ViewOptions>) {
     this.viewOptions = { ...this.viewOptions, ...viewOptions }
+    this.emit('viewChanged', this.viewOptions)
   }
 
   changeModelOptions(modelOptions: Partial<ModelOptions>) {
@@ -31,6 +32,8 @@ class View extends Observer {
 
   updateView() {
     const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions
+    const { scalePointCount, isTooltipDisabled, isVertical, showProgress, showScale } =
+      this.viewOptions
     const { track, firstHandle, secondHandle, scale, progress } = this.components
 
     firstHandle.updateValue(valueStart)
@@ -47,10 +50,12 @@ class View extends Observer {
     if (
       scale.getMaxValue() !== maxValue ||
       scale.getMinValue() !== minValue ||
-      scale.getStep() !== step
+      scale.getStep() !== step ||
+      scale.getScaleCount() !== scalePointCount
     ) {
-      scale.setMaxMinValue(maxValue, minValue, step)
+      scale.setScaleOptions(maxValue, minValue, step, scalePointCount)
     }
+
     track.setMaxMinValueAndStep(maxValue, minValue, step)
   }
 

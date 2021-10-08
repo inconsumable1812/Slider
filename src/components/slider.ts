@@ -49,10 +49,6 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
         DEFAULT_VIEW_OPTIONS
       ) as Partial<ViewOptions>
 
-      console.log(updateModelOptions)
-
-      // model.subscribe('modelValueChange', () => model.checkOptions)
-
       const modelOptions = model.setOptions(updateModelOptions)
       const viewOptions = view.setOptions(updateViewOptions)
     },
@@ -62,16 +58,6 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     addControlPanel() {
       return new Panel(selector, slider)
     }
-    // setValue(index: number, value: number) {
-    //   return model.setValue(index, value)
-    // },
-    // getValues() {
-    //   return model.getValues()
-    // },
-    // setValues(v: number[] = []) {
-    //   return model.setValues(v)
-    // },
-    // addObserver
   }
 
   return slider

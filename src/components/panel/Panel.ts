@@ -111,13 +111,15 @@ class Panel {
       showProgress: progressEl.querySelector('input'),
       isVertical: verticalEl.querySelector('input')
     }
-    Object.values(this.inputs).forEach((input) =>
-      (input as HTMLElement).addEventListener('change', () => {
-        const newOptions = this.getInputsOptions()
-        this.slider.setOptions(newOptions)
-      })
-    )
+    // Object.values(this.inputs).forEach((input) =>
+    //   (input as HTMLElement).addEventListener('change', (e) => {
+    //     const newOptions = this.getInputsOptions()
 
+    //     this.slider.setOptions(newOptions)
+    //   })
+    // )
+
+    this.addListeners()
     this.setOptionsFromSlider()
   }
 
@@ -149,44 +151,148 @@ class Panel {
     this.inputs.isVertical.checked = isVertical
   }
 
-  private setMinValue(e: KeyboardEvent) {
-    if (e.key === 'Enter') {
-      const input = <HTMLInputElement>e.target
-      const minValue = input.value
+  // private getInputsOptions() {
+  //   const {
+  //     scalePointCount,
+  //     isTooltipDisabled,
+  //     isVertical,
+  //     showProgress,
+  //     showScale,
+  //     minValue,
+  //     maxValue,
+  //     step,
+  //     valueStart,
+  //     valueEnd,
+  //     range
+  //   } = this.inputs
 
-      // this.slider.setConfig({ minValue })
-      // this.options = this.slider.getConfig()
-      // input.value = this.options.minValue.toString(10)
+  //   console.log()
+
+  //   return {
+  //     maxValue: maxValue.value === '' ? undefined : Number(maxValue.value),
+  //     minValue: Number(minValue.value),
+  //     valueStart: Number(valueStart.value),
+  //     valueEnd: Number(valueEnd.value),
+  //     isTooltipDisabled: isTooltipDisabled.checked,
+  //     range: range.checked,
+  //     step: Number(step.value),
+  //     showScale: showScale.checked,
+  //     scalePointCount: Number(scalePointCount.value),
+  //     showProgress: showProgress.checked,
+  //     isVertical: isVertical.checked
+  //   }
+  // }
+
+  private getMaxValue() {
+    const { maxValue } = this.inputs
+    return { maxValue: maxValue.value === '' ? undefined : Number(maxValue.value) }
+  }
+
+  private getMinValue() {
+    const { minValue } = this.inputs
+    return { minValue: minValue.value === '' ? undefined : Number(minValue.value) }
+  }
+
+  private getValueStart() {
+    const { valueStart } = this.inputs
+    return { valueStart: valueStart.value === '' ? undefined : Number(valueStart.value) }
+  }
+
+  private getValueEnd() {
+    const { valueEnd } = this.inputs
+    return { valueEnd: valueEnd.value === '' ? undefined : Number(valueEnd.value) }
+  }
+
+  private getStep() {
+    const { step } = this.inputs
+    return { step: step.value === '' ? undefined : Number(step.value) }
+  }
+
+  private getScaleCount() {
+    const { scalePointCount } = this.inputs
+    return {
+      scalePointCount:
+        scalePointCount.value === '' ? undefined : Number(scalePointCount.value)
     }
   }
 
-  private getInputsOptions() {
-    const {
-      scalePointCount,
-      isTooltipDisabled,
-      isVertical,
-      showProgress,
-      showScale,
-      minValue,
-      maxValue,
-      step,
-      valueStart,
-      valueEnd,
-      range
-    } = this.inputs
-    return {
-      maxValue: Number(maxValue.value),
-      minValue: Number(minValue.value),
-      valueStart: Number(valueStart.value),
-      valueEnd: Number(valueEnd.value),
-      isTooltipDisabled: isTooltipDisabled.checked,
-      range: range.checked,
-      step: Number(step.value),
-      showScale: showScale.checked,
-      scalePointCount: Number(scalePointCount.value),
-      showProgress: showProgress.checked,
-      isVertical: isVertical.checked
-    }
+  private addListeners() {
+    // MaxValue
+    this.inputs.maxValue.addEventListener('change', () => {
+      const isUndefined = this.getMaxValue().maxValue
+
+      if (isUndefined === undefined) {
+        const previousValue = this.slider.getOptions().maxValue
+        this.inputs.maxValue.value = previousValue
+      } else if (isUndefined !== undefined) {
+        this.slider.setOptions(this.getMaxValue())
+      }
+    })
+
+    // MinValue
+    this.inputs.minValue.addEventListener('change', () => {
+      const isUndefined = this.getMinValue().minValue
+
+      if (isUndefined === undefined) {
+        const previousValue = this.slider.getOptions().minValue
+        this.inputs.minValue.value = previousValue
+      } else if (isUndefined !== undefined) {
+        this.slider.setOptions(this.getMinValue())
+      }
+    })
+
+    // ValueStart
+    this.inputs.valueStart.addEventListener('change', () => {
+      const isUndefined = this.getValueStart().valueStart
+
+      if (isUndefined === undefined) {
+        const previousValue = this.slider.getOptions().valueStart
+        this.inputs.valueStart.value = previousValue
+      } else if (isUndefined !== undefined) {
+        this.slider.setOptions(this.getValueStart())
+      }
+    })
+
+    // ValueEnd
+    this.inputs.valueEnd.addEventListener('change', () => {
+      const isUndefined = this.getValueEnd().valueEnd
+
+      if (isUndefined === undefined) {
+        const previousValue = this.slider.getOptions().valueEnd
+        this.inputs.valueEnd.value = previousValue
+      } else if (isUndefined !== undefined) {
+        this.slider.setOptions(this.getValueEnd())
+      }
+    })
+
+    // Step
+    this.inputs.step.addEventListener('change', () => {
+      const isUndefined = this.getStep().step
+      const previousValue = this.slider.getOptions().step
+      let newStep = this.getStep().step < 1 ? { step: previousValue } : this.getStep()
+
+      if (isUndefined === undefined || this.getStep().step < 1) {
+        this.inputs.step.value = previousValue
+      } else if (isUndefined !== undefined) {
+        this.slider.setOptions(newStep)
+      }
+    })
+
+    // ScaleCount
+    this.inputs.scalePointCount.addEventListener('change', () => {
+      const isUndefined = this.getScaleCount().scalePointCount
+      const previousValue = this.slider.getOptions().scalePointCount
+      let newScaleCount =
+        this.getScaleCount().scalePointCount < 2
+          ? { scalePointCount: previousValue }
+          : this.getScaleCount()
+
+      if (isUndefined === undefined || this.getScaleCount().scalePointCount < 2) {
+        this.inputs.scalePointCount.value = previousValue
+      } else if (isUndefined !== undefined) {
+        this.slider.setOptions(newScaleCount)
+      }
+    })
   }
 }
 
