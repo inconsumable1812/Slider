@@ -44,8 +44,12 @@ class View extends Observer {
       this.searchStyleValue(minValue, maxValue, valueEnd)
     )
 
-    if (scale.getMaxValue() !== maxValue || scale.getMinValue() !== minValue) {
-      scale.setMaxMinValue(maxValue, minValue)
+    if (
+      scale.getMaxValue() !== maxValue ||
+      scale.getMinValue() !== minValue ||
+      scale.getStep() !== step
+    ) {
+      scale.setMaxMinValue(maxValue, minValue, step)
     }
     track.setMaxMinValueAndStep(maxValue, minValue, step)
   }

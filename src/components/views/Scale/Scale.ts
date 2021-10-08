@@ -57,9 +57,7 @@ class Scale extends Observer {
     const range = Math.abs(maxValue - minValue)
     const isLastStepBigThanMaxValue = range % step
     const isCountBigThanScalePoint = Math.floor(Math.abs(range / step)) > scalePointCount
-    const actualScaleSize = isCountBigThanScalePoint
-      ? Math.floor(Math.abs(range / step)) / (scalePointCount - 1)
-      : step
+    const actualScaleSize = isCountBigThanScalePoint ? step * 2 : step
     let countOfSteps = isCountBigThanScalePoint
       ? scalePointCount - 1
       : Math.floor(Math.abs(range / step))
@@ -93,9 +91,14 @@ class Scale extends Observer {
     return this.minValue
   }
 
-  setMaxMinValue(maxValue: number, minValue: number) {
+  getStep() {
+    return this.step
+  }
+
+  setMaxMinValue(maxValue: number, minValue: number, step: number) {
     this.maxValue = maxValue
     this.minValue = minValue
+    this.step = step
     this.deleteScalePoint()
     this.renderScalePoint()
   }
