@@ -30,7 +30,6 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
 
   const slider = {
     getContainer() {
-      console.log(selector)
       return selector
     },
     getOptions() {
@@ -54,6 +53,9 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     },
     getFirstValue() {
       return model.getFirstValue()
+    },
+    getSecondValue() {
+      return model.getSecondValue()
     },
     addControlPanel() {
       return new Panel(selector, slider)

@@ -58,7 +58,7 @@ class Scale extends Observer {
     const isLastStepBigThanMaxValue = range % step
     const isCountBigThanScalePoint = Math.floor(Math.abs(range / step)) > scalePointCount
     const actualScaleSize = isCountBigThanScalePoint
-      ? (Math.floor(Math.abs(range / step)) / (scalePointCount - 1)) * step // TODO
+      ? (Math.floor(Math.abs(range / step)) / (scalePointCount - 1)) * step
       : step
     let countOfSteps = isCountBigThanScalePoint
       ? scalePointCount - 1

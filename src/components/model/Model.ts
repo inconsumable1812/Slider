@@ -17,6 +17,10 @@ class Model extends Observer {
     return this.options.valueStart
   }
 
+  getSecondValue() {
+    return this.options.valueEnd
+  }
+
   private checkOptions() {
     this.checkMinValueLessMax()
     this.checkValueStartInRange()

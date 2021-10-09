@@ -36,8 +36,6 @@ class Handle {
   }
 
   getStyleValue(): number {
-    console.log(+this.elements.handle.style.left.slice(0, -1))
-
     return +this.elements.handle.style.left.slice(0, -1)
   }
 

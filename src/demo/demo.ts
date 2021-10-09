@@ -11,3 +11,9 @@ slider.setOptions({
   // showProgress: false
 })
 slider.addControlPanel()
+slider.getContainer()
+
+// const track = document.querySelector('.range-slider')
+// track.addEventListener('mousedown', () => {
+//   console.log('track')
+// })
