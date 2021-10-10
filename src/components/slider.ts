@@ -49,7 +49,7 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
       ) as Partial<ViewOptions>
 
       const modelOptions = model.setOptions(updateModelOptions)
-      const viewOptions = view.setOptions(updateViewOptions)
+      // const viewOptions = view.setOptions(updateViewOptions)
     },
     getFirstValue() {
       return model.getFirstValue()

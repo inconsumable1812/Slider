@@ -6,7 +6,7 @@ const DEFAULT_MODEL_OPTIONS: ModelOptions = {
   step: 15,
   valueStart: 30,
   valueEnd: 80,
-  range: true
+  range: false
 }
 
 const DEFAULT_VIEW_OPTIONS: ViewOptions = {

@@ -34,18 +34,36 @@ class View extends Observer {
     const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions
     const { scalePointCount, isTooltipDisabled, isVertical, showProgress, showScale } =
       this.viewOptions
-    const { track, firstHandle, secondHandle, scale, progress } = this.components
+    const { track, firstHandle, scale, progress } = this.components
 
     firstHandle.updateValue(valueStart)
     firstHandle.setStyle(this.searchStyleValue(minValue, maxValue, valueStart))
 
-    secondHandle.updateValue(valueEnd)
-    secondHandle.setStyle(this.searchStyleValue(minValue, maxValue, valueEnd))
+    if (range) {
+      if (this.components.secondHandle === undefined) {
+        this.components.secondHandle = new Handle(
+          2,
+          this.modelOptions.valueEnd,
+          this.viewOptions.isTooltipDisabled
+        )
+      }
 
-    progress.setStyle(
-      this.searchStyleValue(minValue, maxValue, valueStart),
-      this.searchStyleValue(minValue, maxValue, valueEnd)
-    )
+      this.root.append(this.components.secondHandle.element)
+
+      this.components.secondHandle.updateValue(valueEnd)
+      this.components.secondHandle.setStyle(
+        this.searchStyleValue(minValue, maxValue, valueEnd)
+      )
+      progress.setStyle(
+        this.searchStyleValue(minValue, maxValue, valueStart),
+        this.searchStyleValue(minValue, maxValue, valueEnd)
+      )
+    } else {
+      if (this.components.secondHandle !== undefined) {
+        this.components.secondHandle.element.remove()
+      }
+      progress.setStyle(0, this.searchStyleValue(minValue, maxValue, valueStart))
+    }
 
     if (
       scale.getMaxValue() !== maxValue ||
@@ -160,11 +178,12 @@ class View extends Observer {
   }
 
   private clickOnTrack(): void {
-    const { track, firstHandle, secondHandle, progress } = this.components
+    const { track } = this.components
 
     track.subscribe(
       'clickOnTrack',
       ({ event, value, click }: { event: MouseEvent; value: number; click: number }) => {
+        const { track, firstHandle, secondHandle, progress } = this.components
         let closetHandle = firstHandle
         const styleValue = this.searchStyleValue(
           track.getMinValue(),

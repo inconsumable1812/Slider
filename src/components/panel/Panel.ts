@@ -17,14 +17,17 @@ class Panel {
   }
 
   private setValueWhenClickOnSlider() {
+    const setValue = () => {
+      this.inputs.valueStart.value = this.slider.getFirstValue()
+      this.inputs.valueEnd.value = this.slider.getSecondValue()
+    }
     this.track.addEventListener('mousedown', () => {
       this.inputs.valueStart.value = this.slider.getFirstValue()
       this.inputs.valueEnd.value = this.slider.getSecondValue()
+      this.track.addEventListener('mousemove', setValue)
     })
-
-    this.track.addEventListener('mousemove', () => {
-      this.inputs.valueStart.value = this.slider.getFirstValue()
-      this.inputs.valueEnd.value = this.slider.getSecondValue()
+    this.track.addEventListener('mouseup', () => {
+      this.track.removeEventListener('mousemove', setValue)
     })
 
     this.track.addEventListener('click', () => {
@@ -233,6 +236,10 @@ class Panel {
         scalePointCount.value === '' ? undefined : Number(scalePointCount.value)
     }
   }
+  private getRange() {
+    const { range } = this.inputs
+    return { range: range.checked }
+  }
 
   private addListeners() {
     // MaxValue
@@ -256,6 +263,8 @@ class Panel {
       } else if (isUndefined !== undefined) {
         this.slider.setOptions(newValue)
       }
+
+      this.inputs.valueEnd.value = this.slider.getSecondValue()
     })
 
     // MinValue
@@ -279,6 +288,7 @@ class Panel {
       } else if (isUndefined !== undefined) {
         this.slider.setOptions(newValue)
       }
+      this.inputs.valueStart.value = this.slider.getFirstValue()
     })
 
     // ValueStart
@@ -372,6 +382,10 @@ class Panel {
       } else if (isUndefined !== undefined) {
         this.slider.setOptions(newScaleCount)
       }
+    })
+    // Range
+    this.inputs.range.addEventListener('change', () => {
+      this.slider.setOptions(this.getRange())
     })
   }
 }
