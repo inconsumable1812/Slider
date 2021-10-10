@@ -39,6 +39,17 @@ class View extends Observer {
     firstHandle.updateValue(valueStart)
     firstHandle.setStyle(this.searchStyleValue(minValue, maxValue, valueStart))
 
+    if (showProgress) {
+      if (this.components.progress === undefined) {
+        this.components.progress = new Progress()
+      }
+      track.element.append(this.components.progress.element)
+    } else {
+      if (this.components.progress !== undefined) {
+        this.components.progress.element.remove()
+      }
+    }
+
     if (range) {
       if (this.components.secondHandle === undefined) {
         this.components.secondHandle = new Handle(
@@ -46,6 +57,7 @@ class View extends Observer {
           this.modelOptions.valueEnd,
           this.viewOptions.isTooltipDisabled
         )
+        this.bindListenersToHandle(this.components.secondHandle)
       }
 
       this.root.append(this.components.secondHandle.element)
@@ -54,15 +66,22 @@ class View extends Observer {
       this.components.secondHandle.setStyle(
         this.searchStyleValue(minValue, maxValue, valueEnd)
       )
-      progress.setStyle(
-        this.searchStyleValue(minValue, maxValue, valueStart),
-        this.searchStyleValue(minValue, maxValue, valueEnd)
-      )
+      if (showProgress) {
+        progress.setStyle(
+          this.searchStyleValue(minValue, maxValue, valueStart),
+          this.searchStyleValue(minValue, maxValue, valueEnd)
+        )
+      }
     } else {
       if (this.components.secondHandle !== undefined) {
         this.components.secondHandle.element.remove()
       }
-      progress.setStyle(0, this.searchStyleValue(minValue, maxValue, valueStart))
+      if (showProgress) {
+        this.components.progress.setStyle(
+          0,
+          this.searchStyleValue(minValue, maxValue, valueStart)
+        )
+      }
     }
 
     if (
@@ -247,14 +266,14 @@ class View extends Observer {
 
     const handleMouseMove = (event: MouseEvent) => this.handleMouseMove(event, handle)
 
-    document.addEventListener('mousemove', handleMouseMove)
+    this.root.addEventListener('mousemove', handleMouseMove)
 
     const handleMouseUp = (): void => {
-      document.removeEventListener('mouseup', handleMouseUp)
-      document.removeEventListener('mousemove', handleMouseMove)
+      this.root.removeEventListener('mouseup', handleMouseUp)
+      this.root.removeEventListener('mousemove', handleMouseMove)
     }
 
-    document.addEventListener('mouseup', handleMouseUp)
+    this.root.addEventListener('mouseup', handleMouseUp)
   }
 
   private handleMouseMove(event: MouseEvent, handle: Handle) {

@@ -236,9 +236,15 @@ class Panel {
         scalePointCount.value === '' ? undefined : Number(scalePointCount.value)
     }
   }
+
   private getRange() {
     const { range } = this.inputs
     return { range: range.checked }
+  }
+
+  private getProgress() {
+    const { showProgress } = this.inputs
+    return { showProgress: showProgress.checked }
   }
 
   private addListeners() {
@@ -383,9 +389,15 @@ class Panel {
         this.slider.setOptions(newScaleCount)
       }
     })
+
     // Range
     this.inputs.range.addEventListener('change', () => {
       this.slider.setOptions(this.getRange())
+    })
+
+    // Progress
+    this.inputs.showProgress.addEventListener('change', () => {
+      this.slider.setOptions(this.getProgress())
     })
   }
 }
