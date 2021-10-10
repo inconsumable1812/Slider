@@ -11,7 +11,7 @@ const DEFAULT_MODEL_OPTIONS: ModelOptions = {
 
 const DEFAULT_VIEW_OPTIONS: ViewOptions = {
   scalePointCount: 11,
-  isTooltipDisabled: false,
+  showTooltip: true,
   isVertical: false,
   showProgress: false,
   showScale: true

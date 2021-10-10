@@ -7,7 +7,7 @@ class Handle {
   constructor(
     public handleNumber: number = 1,
     public value: number = 10,
-    private isTooltipDisabled: boolean = false,
+    private showTooltip: boolean = false,
     private isVertical: boolean = false
   ) {
     this.toHtml()
@@ -22,9 +22,17 @@ class Handle {
       handle: this.element,
       tooltip: this.element.querySelector(`.js-range-slider__tooltip`) as HTMLElement
     }
-    if (this.isTooltipDisabled) {
-      this.elements.tooltip.remove()
+    if (!this.showTooltip) {
+      this.hideTooltip()
     }
+  }
+
+  showTooltipMethod() {
+    this.elements.tooltip.classList.remove('range-slider__tooltip_hide')
+  }
+
+  hideTooltip() {
+    this.elements.tooltip.classList.add('range-slider__tooltip_hide')
   }
 
   getElement(): HTMLElement {

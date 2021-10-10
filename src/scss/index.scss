@@ -52,6 +52,9 @@ body {
     position: absolute;
     top: -30px;
     left: -50%;
+    &_hide {
+      display: none;
+    }
   }
 
   &__progress {

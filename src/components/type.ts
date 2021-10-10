@@ -14,7 +14,7 @@ type ModelOptions = {
 
 type ViewOptions = {
   scalePointCount: number
-  isTooltipDisabled: boolean
+  showTooltip: boolean
   isVertical: boolean
   showProgress: boolean
   showScale: boolean

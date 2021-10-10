@@ -131,7 +131,7 @@ class Panel {
       minValue: minValueEl.querySelector('input'),
       valueStart: firstValueEl.querySelector('input'),
       valueEnd: secondValueEl.querySelector('input'),
-      isTooltipDisabled: tooltipDisabledEl.querySelector('input'),
+      showTooltip: tooltipDisabledEl.querySelector('input'),
       range: rangeEl.querySelector('input'),
       step: stepEl.querySelector('input'),
       showScale: showScaleEl.querySelector('input'),
@@ -147,7 +147,7 @@ class Panel {
   private setOptionsFromSlider() {
     const {
       scalePointCount,
-      isTooltipDisabled,
+      showTooltip,
       isVertical,
       showProgress,
       showScale,
@@ -163,7 +163,8 @@ class Panel {
     this.inputs.minValue.value = minValue
     this.inputs.valueStart.value = valueStart
     this.inputs.valueEnd.value = valueEnd
-    this.inputs.isTooltipDisabled.checked = !isTooltipDisabled
+    this.inputs.valueEnd.disabled = !range
+    this.inputs.showTooltip.checked = showTooltip
     this.inputs.range.checked = range
     this.inputs.step.value = step
     this.inputs.showScale.checked = showScale
@@ -175,7 +176,7 @@ class Panel {
   // private getInputsOptions() {
   //   const {
   //     scalePointCount,
-  //     isTooltipDisabled,
+  //     showTooltip,
   //     isVertical,
   //     showProgress,
   //     showScale,
@@ -194,7 +195,7 @@ class Panel {
   //     minValue: Number(minValue.value),
   //     valueStart: Number(valueStart.value),
   //     valueEnd: Number(valueEnd.value),
-  //     isTooltipDisabled: isTooltipDisabled.checked,
+  //     showTooltip: showTooltip.checked,
   //     range: range.checked,
   //     step: Number(step.value),
   //     showScale: showScale.checked,
@@ -245,6 +246,11 @@ class Panel {
   private getProgress() {
     const { showProgress } = this.inputs
     return { showProgress: showProgress.checked }
+  }
+
+  private getTooltip() {
+    const { showTooltip } = this.inputs
+    return { showTooltip: showTooltip.checked }
   }
 
   private addListeners() {
@@ -393,11 +399,17 @@ class Panel {
     // Range
     this.inputs.range.addEventListener('change', () => {
       this.slider.setOptions(this.getRange())
+      this.inputs.valueEnd.disabled = !this.getRange().range
     })
 
     // Progress
     this.inputs.showProgress.addEventListener('change', () => {
       this.slider.setOptions(this.getProgress())
+    })
+
+    // Tooltip
+    this.inputs.showTooltip.addEventListener('change', () => {
+      this.slider.setOptions(this.getTooltip())
     })
   }
 }

@@ -32,7 +32,7 @@ class View extends Observer {
 
   updateView() {
     const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions
-    const { scalePointCount, isTooltipDisabled, isVertical, showProgress, showScale } =
+    const { scalePointCount, showTooltip, isVertical, showProgress, showScale } =
       this.viewOptions
     const { track, firstHandle, scale, progress } = this.components
 
@@ -55,7 +55,7 @@ class View extends Observer {
         this.components.secondHandle = new Handle(
           2,
           this.modelOptions.valueEnd,
-          this.viewOptions.isTooltipDisabled
+          this.viewOptions.showTooltip
         )
         this.bindListenersToHandle(this.components.secondHandle)
       }
@@ -93,6 +93,18 @@ class View extends Observer {
       scale.setScaleOptions(maxValue, minValue, step, scalePointCount)
     }
 
+    if (showTooltip) {
+      firstHandle.showTooltipMethod()
+      if (range) {
+        this.components.secondHandle.showTooltipMethod()
+      }
+    } else {
+      firstHandle.hideTooltip()
+      if (range) {
+        this.components.secondHandle.hideTooltip()
+      }
+    }
+
     track.setMaxMinValueAndStep(maxValue, minValue, step)
   }
 
@@ -119,7 +131,7 @@ class View extends Observer {
       firstHandle: new Handle(
         1,
         this.modelOptions.valueStart,
-        this.viewOptions.isTooltipDisabled
+        this.viewOptions.showTooltip
       )
     }
 
@@ -127,7 +139,7 @@ class View extends Observer {
       this.components.secondHandle = new Handle(
         2,
         this.modelOptions.valueEnd,
-        this.viewOptions.isTooltipDisabled
+        this.viewOptions.showTooltip
       )
     }
 
