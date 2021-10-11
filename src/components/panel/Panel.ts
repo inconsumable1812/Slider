@@ -61,7 +61,7 @@ class Panel {
         <input type="number" value=5>
         </div>
       `),
-      tooltipDisabledEl: render(`
+      showTooltipEL: render(`
         <div class="panel__tooltip panel__option">Show tooltip
         <input type="checkbox">
         </div>
@@ -103,7 +103,7 @@ class Panel {
       minValueEl,
       firstValueEl,
       secondValueEl,
-      tooltipDisabledEl,
+      showTooltipEL,
       rangeEl,
       stepEl,
       showScaleEl,
@@ -116,7 +116,7 @@ class Panel {
     this.root.append(minValueEl)
     this.root.append(firstValueEl)
     this.root.append(secondValueEl)
-    this.root.append(tooltipDisabledEl)
+    this.root.append(showTooltipEL)
     this.root.append(rangeEl)
     this.root.append(stepEl)
     this.root.append(showScaleEl)
@@ -131,7 +131,7 @@ class Panel {
       minValue: minValueEl.querySelector('input'),
       valueStart: firstValueEl.querySelector('input'),
       valueEnd: secondValueEl.querySelector('input'),
-      showTooltip: tooltipDisabledEl.querySelector('input'),
+      showTooltip: showTooltipEL.querySelector('input'),
       range: rangeEl.querySelector('input'),
       step: stepEl.querySelector('input'),
       showScale: showScaleEl.querySelector('input'),
@@ -251,6 +251,11 @@ class Panel {
   private getTooltip() {
     const { showTooltip } = this.inputs
     return { showTooltip: showTooltip.checked }
+  }
+
+  private getScale() {
+    const { showScale } = this.inputs
+    return { showScale: showScale.checked }
   }
 
   private addListeners() {
@@ -410,6 +415,11 @@ class Panel {
     // Tooltip
     this.inputs.showTooltip.addEventListener('change', () => {
       this.slider.setOptions(this.getTooltip())
+    })
+
+    //showScale
+    this.inputs.showScale.addEventListener('change', () => {
+      this.slider.setOptions(this.getScale())
     })
   }
 }

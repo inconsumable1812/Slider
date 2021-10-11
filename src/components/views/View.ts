@@ -85,12 +85,15 @@ class View extends Observer {
     }
 
     if (
+      showScale ||
       scale.getMaxValue() !== maxValue ||
       scale.getMinValue() !== minValue ||
       scale.getStep() !== step ||
       scale.getScaleCount() !== scalePointCount
     ) {
       scale.setScaleOptions(maxValue, minValue, step, scalePointCount)
+    } else {
+      scale.deleteScalePoint()
     }
 
     if (showTooltip) {
