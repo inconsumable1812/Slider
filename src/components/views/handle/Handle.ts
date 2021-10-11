@@ -44,7 +44,9 @@ class Handle {
   }
 
   getStyleValue(): number {
-    return +this.elements.handle.style.left.slice(0, -1)
+    return this.isVertical
+      ? +this.elements.handle.style.top.slice(0, -1)
+      : +this.elements.handle.style.left.slice(0, -1)
   }
 
   setValue(value: number) {
@@ -52,11 +54,23 @@ class Handle {
     this.elements.tooltip.textContent = this.value.toString()
   }
   setStyle(value: number) {
-    this.elements.handle.style.left = value + '%'
+    this.isVertical
+      ? (this.elements.handle.style.top = value + '%')
+      : (this.elements.handle.style.left = value + '%')
+  }
+
+  clearStyle() {
+    this.isVertical
+      ? (this.elements.handle.style.left = -4.5 + 'px')
+      : (this.elements.handle.style.top = -4.5 + 'px')
   }
 
   updateValue(value: number): void {
     this.elements.tooltip.textContent = String(value)
+  }
+
+  setOrientation(isVertical: boolean) {
+    this.isVertical = isVertical
   }
 }
 

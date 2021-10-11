@@ -20,10 +20,15 @@ class Track extends Observer {
       event.preventDefault()
       const target = event.target as HTMLElement
       const { minValue, maxValue, isVertical, step } = this
-      const widthOrHeight = target.getBoundingClientRect().width
+      const widthOrHeight = isVertical
+        ? target.getBoundingClientRect().height
+        : target.getBoundingClientRect().width
+
       const borderWidthPx = getComputedStyle(target).borderWidth
       const borderWidth = Math.round(+borderWidthPx.slice(0, -2))
-      const offset = event.offsetX + borderWidth
+      const offset = isVertical
+        ? event.offsetY + borderWidth
+        : event.offsetX + borderWidth
 
       const progress = offset / widthOrHeight
 
@@ -46,6 +51,10 @@ class Track extends Observer {
     this.maxValue = maxValue
     this.minValue = minValue
     this.step = step
+  }
+
+  setOrientation(isVertical: boolean) {
+    this.isVertical = isVertical
   }
 }
 

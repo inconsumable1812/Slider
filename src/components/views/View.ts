@@ -41,9 +41,10 @@ class View extends Observer {
 
     if (showProgress) {
       if (this.components.progress === undefined) {
-        this.components.progress = new Progress()
+        this.components.progress = new Progress(isVertical)
       }
       track.element.append(this.components.progress.element)
+      this.components.progress.setOrientation(isVertical)
     } else {
       if (this.components.progress !== undefined) {
         this.components.progress.element.remove()
@@ -109,6 +110,40 @@ class View extends Observer {
     }
 
     track.setMaxMinValueAndStep(maxValue, minValue, step)
+
+    const styleValueFirst = this.searchStyleValue(
+      track.getMinValue(),
+      track.getMaxValue(),
+      firstHandle.getValue()
+    )
+
+    if (range) {
+      const styleValueSecond = this.searchStyleValue(
+        track.getMinValue(),
+        track.getMaxValue(),
+        this.components.secondHandle.getValue() || 0
+      )
+      this.components.secondHandle.setOrientation(isVertical)
+      this.components.secondHandle.clearStyle()
+      this.components.secondHandle.setStyle(styleValueSecond)
+    }
+
+    scale.setOrientation(isVertical)
+    scale.updateScalePoint()
+
+    track.setOrientation(isVertical)
+    firstHandle.setOrientation(isVertical)
+    firstHandle.clearStyle()
+    firstHandle.setStyle(styleValueFirst)
+    if (showProgress) {
+      this.components.progress.setOrientation(isVertical)
+    }
+
+    if (isVertical) {
+      this.root.classList.add('range-slider_vertical')
+    } else {
+      this.root.classList.remove('range-slider_vertical')
+    }
   }
 
   getModel() {
@@ -147,7 +182,7 @@ class View extends Observer {
     }
 
     if (this.viewOptions.showProgress) {
-      this.components.progress = new Progress()
+      this.components.progress = new Progress(this.viewOptions.isVertical)
     }
 
     if (this.viewOptions.showScale) {
@@ -155,7 +190,8 @@ class View extends Observer {
         this.modelOptions.minValue,
         this.modelOptions.maxValue,
         this.viewOptions.scalePointCount,
-        this.modelOptions.step
+        this.modelOptions.step,
+        this.viewOptions.isVertical
       )
     }
     this.init()
@@ -281,25 +317,32 @@ class View extends Observer {
 
     const handleMouseMove = (event: MouseEvent) => this.handleMouseMove(event, handle)
 
-    this.root.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mousemove', handleMouseMove)
 
     const handleMouseUp = (): void => {
-      this.root.removeEventListener('mouseup', handleMouseUp)
-      this.root.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('mousemove', handleMouseMove)
     }
 
-    this.root.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener('mouseup', handleMouseUp)
   }
 
   private handleMouseMove(event: MouseEvent, handle: Handle) {
     const { track, progress, firstHandle, secondHandle } = this.components
     const step = this.modelOptions.step
+    const { isVertical } = this.viewOptions
 
     const prevValue = handle.getValue()
 
-    let valueInPx = event.pageX - track.element.getBoundingClientRect().left
+    const valueInPx = isVertical
+      ? event.pageY - track.element.getBoundingClientRect().top
+      : event.pageX - track.element.getBoundingClientRect().left
 
-    const valueInPercent = valueInPx / track.element.getBoundingClientRect().width
+    const widthOrHeight = isVertical
+      ? track.element.getBoundingClientRect().height
+      : track.element.getBoundingClientRect().width
+
+    const valueInPercent = valueInPx / widthOrHeight
 
     const delta = track.getMaxValue() - track.getMinValue()
     const isValueCorrectOfStep: boolean = !(Math.round(delta * valueInPercent) % step)
@@ -311,6 +354,7 @@ class View extends Observer {
       newValue = track.getMinValue()
     } else if (valueInPercent >= 1) {
       newValue = track.getMaxValue()
+
       this.emit('viewChanged', { valueEnd: newValue })
     }
 

@@ -10,7 +10,8 @@ class Scale extends Observer {
     private minValue: number,
     private maxValue: number,
     private scalePointCount: number,
-    private step: number
+    private step: number,
+    private isVertical: Boolean
   ) {
     super()
     this.init()
@@ -32,12 +33,15 @@ class Scale extends Observer {
     const arrayOfStepsValue = arrayOfValue[0]
     const arrayOfStepsStyleValue = arrayOfValue[1]
     const actualCount = arrayOfStepsValue.length
+    const { isVertical } = this
+
+    const subElementStyle = isVertical ? 'top' : 'left'
 
     for (let i = 0; i < actualCount; i++) {
       this.subElement = render(`
       <div class="range-slider__scale_point">${arrayOfStepsValue[i]}</div>
     `)
-      this.subElement.style.left = arrayOfStepsStyleValue[i] + '%'
+      this.subElement.style[subElementStyle] = arrayOfStepsStyleValue[i] + '%'
       if (i === actualCount - 1) {
         this.subElement.classList.add('range-slider__scale_point-end')
       }
@@ -50,6 +54,11 @@ class Scale extends Observer {
     for (let point of points) {
       point.remove()
     }
+  }
+
+  updateScalePoint() {
+    this.deleteScalePoint()
+    this.renderScalePoint()
   }
 
   private calculateStepValue(): number[][] {
@@ -99,6 +108,10 @@ class Scale extends Observer {
 
   getScaleCount() {
     return this.scalePointCount
+  }
+
+  setOrientation(isVertical: boolean) {
+    this.isVertical = isVertical
   }
 
   setScaleOptions(

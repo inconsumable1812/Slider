@@ -65,16 +65,22 @@ class Model extends Observer {
 
   checkValueStartLessValueEnd() {
     const { minValue, maxValue, step, valueEnd, valueStart } = this.options
-    if (valueStart === valueEnd) {
-      if (valueEnd === maxValue) {
-        return this.setOptions({ valueStart: valueStart - step })
-      } else if (valueStart === minValue) {
-        return this.setOptions({ valueEnd: valueEnd + step })
-      } else {
-        return this.setOptions({ valueEnd: valueEnd + step })
+    if (this.options.range) {
+      if (valueStart === valueEnd) {
+        if (valueEnd === maxValue) {
+          return this.setOptions({ valueStart: valueStart - step })
+        } else if (valueStart === minValue) {
+          return this.setOptions({ valueEnd: valueEnd + step })
+        } else {
+          return this.setOptions({ valueEnd: valueEnd + step })
+        }
+      } else if (valueStart > valueEnd) {
+        return this.setOptions({ valueStart: minValue })
       }
-    } else if (valueStart > valueEnd) {
-      return this.setOptions({ valueStart: minValue })
+    } else {
+      if (valueStart >= valueEnd) {
+        return this.setOptions({ valueEnd: maxValue })
+      }
     }
   }
 

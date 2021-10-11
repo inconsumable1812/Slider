@@ -3,7 +3,7 @@ import render from '../utils/render'
 class Progress {
   element: HTMLElement
 
-  constructor() {
+  constructor(private isVertical: boolean) {
     this.toHtml()
   }
 
@@ -14,15 +14,23 @@ class Progress {
   }
 
   setStart(start: Number) {
-    this.element.style.left = start + '%'
+    this.isVertical
+      ? (this.element.style.top = start + '%')
+      : (this.element.style.left = start + '%')
   }
   setEnd(end: number) {
-    this.element.style.right = 100 - end + '%'
+    this.isVertical
+      ? (this.element.style.bottom = 100 - end + '%')
+      : (this.element.style.right = 100 - end + '%')
   }
 
   setStyle(start: number, end: number) {
     this.setStart(start)
     this.setEnd(end)
+  }
+
+  setOrientation(isVertical: boolean) {
+    this.isVertical = isVertical
   }
 }
 
