@@ -39,7 +39,7 @@ class View extends Observer {
     const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions
     const { scalePointCount, showTooltip, isVertical, showProgress, showScale } =
       this.viewOptions
-    const { track, firstHandle, scale, progress } = this.components
+    const { track, firstHandle, scale } = this.components
 
     firstHandle.updateValue(valueStart)
     firstHandle.setStyle(this.searchStyleValue(minValue, maxValue, valueStart))
@@ -74,7 +74,7 @@ class View extends Observer {
         this.searchStyleValue(minValue, maxValue, valueEnd)
       )
       if (showProgress) {
-        progress.setStyle(
+        this.components.progress.setStyle(
           this.searchStyleValue(minValue, maxValue, valueStart),
           this.searchStyleValue(minValue, maxValue, valueEnd)
         )
@@ -91,14 +91,10 @@ class View extends Observer {
       }
     }
 
-    if (
-      showScale ||
-      scale.getMaxValue() !== maxValue ||
-      scale.getMinValue() !== minValue ||
-      scale.getStep() !== step ||
-      scale.getScaleCount() !== scalePointCount
-    ) {
+    if (showScale) {
       scale.setScaleOptions(maxValue, minValue, step, scalePointCount)
+      scale.setOrientation(isVertical)
+      scale.updateScalePoint()
     } else {
       scale.deleteScalePoint()
     }
@@ -133,9 +129,6 @@ class View extends Observer {
       this.components.secondHandle.clearStyle()
       this.components.secondHandle.setStyle(styleValueSecond)
     }
-
-    scale.setOrientation(isVertical)
-    scale.updateScalePoint()
 
     track.setOrientation(isVertical)
     firstHandle.setOrientation(isVertical)
@@ -344,8 +337,8 @@ class View extends Observer {
     const prevValue = handle.getValue()
 
     const valueInPx = isVertical
-      ? event.pageY - track.element.getBoundingClientRect().top
-      : event.pageX - track.element.getBoundingClientRect().left
+      ? event.clientY - track.element.getBoundingClientRect().top
+      : event.clientX - track.element.getBoundingClientRect().left
 
     const widthOrHeight = isVertical
       ? track.element.getBoundingClientRect().height

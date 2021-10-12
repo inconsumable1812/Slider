@@ -72,33 +72,17 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
 
     JQSlider(method: string, payload?: any) {
       switch (method) {
-        // case 'getContainer':
-        //   return this.getContainer()
+        case 'getContainer':
+          return this.getContainer()
 
-        // case 'getConfig':
-        //   return this.getConfig()
+        case 'getOptions':
+          return this.getOptions()
 
-        // case 'setConfig':
-        //   return this.setConfig(payload as TSliderOptions)
+        case 'getFirstValue':
+          return this.getFirstValue()
 
-        // case 'getValue':
-        //   return this.getValue((payload as number) || 0)
-
-        // case 'getValues':
-        //   return this.getValues()
-
-        // case 'setValue': {
-        //   const { index, value } = payload
-        //   return this.setValue(index, value)
-        // }
-        // case 'setValues':
-        //   return this.setValues(payload || [])
-
-        // case 'addObserver':
-        //   return this.addObserver(payload)
-
-        // case 'removeObserver':
-        //   return this.addControlPanel()
+        case 'getSecondValue':
+          return this.getSecondValue()
 
         case 'addControlPanel':
           return this.addControlPanel()
