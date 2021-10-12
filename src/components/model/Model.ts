@@ -4,13 +4,18 @@ import { ModelOptions } from '../type'
 import Observer from '../observer/Observer'
 
 class Model extends Observer {
-  constructor(private options: ModelOptions = DEFAULT_MODEL_OPTIONS) {
+  constructor(private options: Partial<ModelOptions> = DEFAULT_MODEL_OPTIONS) {
     super()
+    this.init()
     this.checkOptions()
   }
 
+  init() {
+    this.options = { ...DEFAULT_MODEL_OPTIONS, ...this.options }
+  }
+
   getOptions(): ModelOptions {
-    return this.options
+    return this.options as ModelOptions
   }
 
   getFirstValue() {
@@ -78,7 +83,7 @@ class Model extends Observer {
         return this.setOptions({ valueStart: minValue })
       }
     } else {
-      if (valueStart >= valueEnd) {
+      if (valueStart >= valueEnd && valueStart !== maxValue) {
         return this.setOptions({ valueEnd: maxValue })
       }
     }

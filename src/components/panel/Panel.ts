@@ -24,10 +24,10 @@ class Panel {
     this.track.addEventListener('mousedown', () => {
       this.inputs.valueStart.value = this.slider.getFirstValue()
       this.inputs.valueEnd.value = this.slider.getSecondValue()
-      this.track.addEventListener('mousemove', setValue)
+      document.addEventListener('mousemove', setValue)
     })
     this.track.addEventListener('mouseup', () => {
-      this.track.removeEventListener('mousemove', setValue)
+      document.removeEventListener('mousemove', setValue)
     })
 
     this.track.addEventListener('click', () => {
@@ -313,12 +313,6 @@ class Panel {
       } else if (isUndefined !== undefined) {
         this.slider.setOptions(newValue)
       }
-
-      // if (!this.getRange().range) {
-      //   const maxValue = this.getMaxValue().maxValue
-      //   this.slider.setOptions({ valueEnd: maxValue })
-      //   this.inputs.valueEnd.value = maxValue
-      // }
     })
 
     // ValueEnd

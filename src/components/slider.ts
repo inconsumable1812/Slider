@@ -7,10 +7,19 @@ import Presenter from './presenter/Presenter'
 import View from './views/View'
 
 const create = (selector: HTMLElement, options: sliderOptions = {}) => {
-  const model = new Model()
+  const updateModelOptions = prepareOptions(
+    options,
+    DEFAULT_MODEL_OPTIONS
+  ) as Partial<ModelOptions>
+  const updateViewOptions = prepareOptions(
+    options,
+    DEFAULT_VIEW_OPTIONS
+  ) as Partial<ViewOptions>
+
+  const model = new Model(updateModelOptions)
   const modelOptions = model.getOptions()
 
-  const view = new View(selector, modelOptions)
+  const view = new View(selector, modelOptions, updateViewOptions)
   const presenter = new Presenter(model, view)
 
   function prepareOptions(
@@ -59,6 +68,44 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     },
     addControlPanel() {
       return new Panel(selector, slider)
+    },
+
+    JQSlider(method: string, payload?: any) {
+      switch (method) {
+        // case 'getContainer':
+        //   return this.getContainer()
+
+        // case 'getConfig':
+        //   return this.getConfig()
+
+        // case 'setConfig':
+        //   return this.setConfig(payload as TSliderOptions)
+
+        // case 'getValue':
+        //   return this.getValue((payload as number) || 0)
+
+        // case 'getValues':
+        //   return this.getValues()
+
+        // case 'setValue': {
+        //   const { index, value } = payload
+        //   return this.setValue(index, value)
+        // }
+        // case 'setValues':
+        //   return this.setValues(payload || [])
+
+        // case 'addObserver':
+        //   return this.addObserver(payload)
+
+        // case 'removeObserver':
+        //   return this.addControlPanel()
+
+        case 'addControlPanel':
+          return this.addControlPanel()
+
+        default:
+          return null
+      }
     }
   }
 

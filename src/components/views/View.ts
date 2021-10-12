@@ -15,10 +15,15 @@ class View extends Observer {
   constructor(
     selector: Element,
     private modelOptions: ModelOptions,
-    private viewOptions: ViewOptions = DEFAULT_VIEW_OPTIONS
+    private viewOptions: Partial<ViewOptions> = DEFAULT_VIEW_OPTIONS
   ) {
     super()
     this.el = selector
+    this.initViewOptions()
+  }
+
+  initViewOptions() {
+    this.viewOptions = { ...DEFAULT_VIEW_OPTIONS, ...this.viewOptions }
   }
 
   setOptions(viewOptions: Partial<ViewOptions>) {
@@ -56,7 +61,8 @@ class View extends Observer {
         this.components.secondHandle = new Handle(
           2,
           this.modelOptions.valueEnd,
-          this.viewOptions.showTooltip
+          this.viewOptions.showTooltip,
+          this.viewOptions.isVertical
         )
         this.bindListenersToHandle(this.components.secondHandle)
       }
@@ -155,8 +161,9 @@ class View extends Observer {
   }
 
   render() {
+    const isVertical = this.viewOptions.isVertical ? 'range-slider_vertical' : ''
     this.root = render(`
-    <div class="range-slider">
+    <div class="range-slider ${isVertical}">
     `)
 
     this.components = {
@@ -169,7 +176,8 @@ class View extends Observer {
       firstHandle: new Handle(
         1,
         this.modelOptions.valueStart,
-        this.viewOptions.showTooltip
+        this.viewOptions.showTooltip,
+        this.viewOptions.isVertical
       )
     }
 
@@ -177,7 +185,8 @@ class View extends Observer {
       this.components.secondHandle = new Handle(
         2,
         this.modelOptions.valueEnd,
-        this.viewOptions.showTooltip
+        this.viewOptions.showTooltip,
+        this.viewOptions.isVertical
       )
     }
 
