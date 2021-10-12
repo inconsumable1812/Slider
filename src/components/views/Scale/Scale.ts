@@ -56,11 +56,6 @@ class Scale extends Observer {
     }
   }
 
-  updateScalePoint() {
-    this.deleteScalePoint()
-    this.renderScalePoint()
-  }
-
   private calculateStepValue(): number[][] {
     const { minValue, maxValue, step, scalePointCount } = this
     const range = Math.abs(maxValue - minValue)

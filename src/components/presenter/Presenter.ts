@@ -18,12 +18,10 @@ class Presenter {
 
   setModelOptions(modelOptions: Partial<ModelOptions>) {
     this.model.setOptions(modelOptions)
-    // console.log(this.model.getOptions())
   }
   updateView(modelOptions: Partial<ModelOptions>) {
     this.view.changeModelOptions(modelOptions)
     this.view.updateView()
-    // console.log(this.view.getModel())
   }
 
   connect() {

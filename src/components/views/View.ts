@@ -92,9 +92,8 @@ class View extends Observer {
     }
 
     if (showScale) {
-      scale.setScaleOptions(maxValue, minValue, step, scalePointCount)
       scale.setOrientation(isVertical)
-      scale.updateScalePoint()
+      scale.setScaleOptions(maxValue, minValue, step, scalePointCount)
     } else {
       scale.deleteScalePoint()
     }
@@ -116,14 +115,14 @@ class View extends Observer {
     const styleValueFirst = this.searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
-      firstHandle.getValue()
+      valueStart
     )
 
     if (range) {
       const styleValueSecond = this.searchStyleValue(
         track.getMinValue(),
         track.getMaxValue(),
-        this.components.secondHandle.getValue() || 0
+        valueEnd
       )
       this.components.secondHandle.setOrientation(isVertical)
       this.components.secondHandle.clearStyle()

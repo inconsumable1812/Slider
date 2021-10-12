@@ -11,12 +11,6 @@ const slider = create(selector, {
   maxValue: 200,
   isVertical: false
 })
-// slider.setOptions({
-//   minValue: 30,
-//   maxValue: 200
-//   // valueEnd: 35
-//   // showProgress: false
-// })
 slider.addControlPanel()
 
 const sliderOneConfig = {
@@ -26,3 +20,6 @@ const sliderOneConfig = {
 
 const sliderOne = $('#app_2').JQSlider(sliderOneConfig)
 const sliderOnePanel = sliderOne.JQSlider('addControlPanel')
+
+const sliderSecond = $('#app_3').JQSlider(sliderOneConfig)
+const sliderSecondPanel = sliderSecond.JQSlider('addControlPanel')
