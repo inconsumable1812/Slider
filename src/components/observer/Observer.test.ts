@@ -34,6 +34,7 @@ describe('Observer', () => {
     const secondFn = jest.fn()
     const unsub = observer.subscribe('check', secondFn)
     unsub()
+    observer.emit('check')
     expect(secondFn).not.toHaveBeenCalled()
   })
 })
