@@ -3,7 +3,6 @@ class Observer {
 
   // dispatch, fire, trigger
   // Уведомляем слушателей если они есть
-  // table.emit('table:select', {a: 1})
   emit(event: string, ...args: any) {
     if (!Array.isArray(this.listeners[event])) {
       return false
@@ -17,7 +16,6 @@ class Observer {
   // on, listen
   // Подписываемся на уведомления
   // добавляем нового слушателя
-  // formula.subscribe('table:select', () => {})
   subscribe(event: string, fn: Function) {
     this.listeners[event] = this.listeners[event] || []
     this.listeners[event].push(fn)
