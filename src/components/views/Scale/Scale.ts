@@ -4,7 +4,6 @@ import render from '../utils/render'
 class Scale extends Observer {
   element: HTMLElement
   subElement: HTMLElement
-  endElement: HTMLElement
 
   constructor(
     private minValue: number,
@@ -86,23 +85,12 @@ class Scale extends Observer {
     return arrayOfValue
   }
 
-  public getArrayOfValue() {
+  getArrayOfValue() {
     return this.calculateStepValue()[0]
   }
 
-  getMaxValue() {
-    return this.maxValue
-  }
-  getMinValue() {
-    return this.minValue
-  }
-
-  getStep() {
-    return this.step
-  }
-
-  getScaleCount() {
-    return this.scalePointCount
+  getSubElement() {
+    return this.subElement
   }
 
   setOrientation(isVertical: boolean) {

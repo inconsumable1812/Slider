@@ -1,12 +1,5 @@
 import Handle from './Handle'
 
-const options = {
-  handleNumber: 1,
-  value: 10,
-  showTooltip: true,
-  isVertical: false
-}
-
 const optionsVertical = {
   handleNumber: 2,
   value: 15,
@@ -17,12 +10,7 @@ const optionsVertical = {
 describe('Handle', () => {
   let handel: Handle, handelVertical: Handle
   beforeEach(() => {
-    handel = new Handle(
-      options.handleNumber,
-      options.value,
-      options.showTooltip,
-      options.isVertical
-    )
+    handel = new Handle()
 
     handelVertical = new Handle(
       optionsVertical.handleNumber,
@@ -61,13 +49,13 @@ describe('Handle', () => {
       expect(handelVertical.getElement().style.left).toBe('-4.5px')
     })
 
-    test('correct change orientation to vertical', () => {
+    test('check correct change orientation to vertical', () => {
       handel.setOrientation(true)
       handel.clearStyle()
       expect(handel.getElement().style.left).toBe('-4.5px')
     })
 
-    test('correct change orientation to horizontal', () => {
+    test('check correct change orientation to horizontal', () => {
       handelVertical.setOrientation(false)
       handelVertical.clearStyle()
       expect(handelVertical.getElement().style.top).toBe('-4.5px')

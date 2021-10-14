@@ -21,13 +21,13 @@ describe('progress', () => {
     expect(progressVertical.element.style.bottom).toBe('35%')
   })
 
-  test('correct change orientation to vertical', () => {
+  test('check correct change orientation to vertical', () => {
     progress.setOrientation(true)
     progress.setStart(5)
     expect(progress.element.style.top).toBe('5%')
   })
 
-  test('correct change orientation to horizontal', () => {
+  test('check correct change orientation to horizontal', () => {
     progressVertical.setOrientation(false)
     progressVertical.setStart(33)
     expect(progressVertical.element.style.left).toBe('33%')

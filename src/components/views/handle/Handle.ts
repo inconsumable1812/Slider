@@ -7,7 +7,7 @@ class Handle {
   constructor(
     public handleNumber: number = 1,
     public value: number = 10,
-    private showTooltip: boolean = false,
+    private showTooltip: boolean = true,
     private isVertical: boolean = false
   ) {
     this.toHtml()
