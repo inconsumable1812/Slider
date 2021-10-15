@@ -56,6 +56,22 @@ class View extends Observer {
       }
     }
 
+    if (showScale) {
+      if (this.components.scale === undefined) {
+        this.components.scale = new Scale(
+          minValue,
+          maxValue,
+          scalePointCount,
+          step,
+          isVertical
+        )
+      }
+      this.components.scale.setOrientation(isVertical)
+      this.components.scale.setScaleOptions(maxValue, minValue, step, scalePointCount)
+    } else {
+      this.components.scale.deleteScalePoint()
+    }
+
     if (range) {
       if (this.components.secondHandle === undefined) {
         this.components.secondHandle = new Handle(
@@ -89,13 +105,6 @@ class View extends Observer {
           this.searchStyleValue(minValue, maxValue, valueStart)
         )
       }
-    }
-
-    if (showScale) {
-      scale.setOrientation(isVertical)
-      scale.setScaleOptions(maxValue, minValue, step, scalePointCount)
-    } else {
-      scale.deleteScalePoint()
     }
 
     if (showTooltip) {
@@ -150,6 +159,10 @@ class View extends Observer {
 
   getOptions() {
     return this.viewOptions
+  }
+
+  getComponents() {
+    return this.components
   }
 
   render() {
@@ -243,9 +256,6 @@ class View extends Observer {
     if (this.viewOptions.showScale) {
       this.clickOnScale(scale)
     }
-    scale.subscribe('stepChanged', (newStep: number) =>
-      this.emit('viewChanged', { step: newStep })
-    )
   }
 
   private clickOnTrack(): void {
