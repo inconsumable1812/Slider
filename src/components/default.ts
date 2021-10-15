@@ -4,8 +4,8 @@ const DEFAULT_MODEL_OPTIONS: ModelOptions = {
   minValue: 0,
   maxValue: 100,
   step: 1,
-  valueStart: 44,
-  valueEnd: 80,
+  valueStart: 100,
+  valueEnd: 50,
   range: false
 }
 

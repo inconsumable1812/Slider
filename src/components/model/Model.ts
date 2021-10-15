@@ -51,11 +51,15 @@ class Model extends Observer {
   }
 
   checkValueStartInRange() {
-    const { minValue, maxValue, step, valueStart } = this.options
+    const { minValue, maxValue, step, valueStart, range } = this.options
     if (valueStart < minValue) {
       return this.setOptions({ valueStart: minValue })
     } else if (valueStart > maxValue) {
-      return this.setOptions({ valueStart: maxValue - step })
+      if (range) {
+        return this.setOptions({ valueStart: maxValue - step })
+      } else {
+        return this.setOptions({ valueStart: maxValue })
+      }
     }
   }
 
@@ -84,6 +88,8 @@ class Model extends Observer {
       }
     } else {
       if (valueStart >= valueEnd && valueStart !== maxValue) {
+        return this.setOptions({ valueEnd: maxValue })
+      } else if (valueStart === maxValue && valueEnd !== maxValue) {
         return this.setOptions({ valueEnd: maxValue })
       }
     }
