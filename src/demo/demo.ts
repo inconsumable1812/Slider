@@ -7,8 +7,9 @@ import $ from 'jquery'
 const selector = document.querySelector('#app') as HTMLElement
 
 const slider = create(selector, {
-  minValue: 25,
-  maxValue: 200,
+  minValue: 10,
+  maxValue: 101,
+  step: 31,
   isVertical: false
 })
 slider.addControlPanel()

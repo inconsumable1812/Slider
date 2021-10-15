@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 @import './vars.scss';
@@ -23,6 +25,7 @@ body {
 .range-slider {
   position: relative;
   max-width: 400px;
+  max-height: $track-height;
   cursor: pointer;
 
   &__track {
@@ -37,10 +40,10 @@ body {
     position: absolute;
     height: $handle-size;
     width: $handle-size;
-    border-radius: $handle-size/2;
+    border-radius: math.div($handle-size, 2);
     background: $background-progress;
     border: $handle-border solid white;
-    top: -$handle-size/$track-height - $handle-border;
+    top: math.div(-$handle-size, $track-height) - $handle-border;
     transform: translate(-10%);
     &_num_1 {
       left: 10%;
@@ -85,6 +88,7 @@ body {
 
   &_vertical {
     max-width: $track-height;
+    max-height: none;
     height: 400px;
     .range-slider {
       &__track {
@@ -111,10 +115,10 @@ body {
         position: absolute;
         height: $handle-size;
         width: $handle-size;
-        border-radius: $handle-size/2;
+        border-radius: math.div($handle-size, 2);
         background: $background-progress;
         border: $handle-border solid white;
-        left: -$handle-size/$track-height - $handle-border;
+        left: math.div(-$handle-size, $track-height) - $handle-border;
         transform: translate(0, -30%);
         &_num_1 {
           top: 10%;

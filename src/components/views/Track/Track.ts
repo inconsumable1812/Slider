@@ -1,4 +1,5 @@
 import Observer from '../../observer/Observer'
+import calculateNewValue from '../utils/calculateNewValue'
 import render from '../utils/render'
 
 class Track extends Observer {
@@ -47,6 +48,15 @@ class Track extends Observer {
   getMaxValue() {
     return this.maxValue
   }
+
+  getStep() {
+    return this.step
+  }
+
+  getOrientation() {
+    return this.isVertical
+  }
+
   setMaxMinValueAndStep(maxValue: number, minValue: number, step: number) {
     this.maxValue = maxValue
     this.minValue = minValue
@@ -59,38 +69,3 @@ class Track extends Observer {
 }
 
 export default Track
-
-function calculateNewValue(
-  minValue: number,
-  maxValue: number,
-  progress: number,
-  step: number
-) {
-  let progressValue = Math.round((maxValue - minValue) * progress + minValue)
-  let isCorrectNewValue = !((progressValue - minValue) % step)
-  let value = progressValue
-
-  let i = 1
-  while (!isCorrectNewValue) {
-    if ((progressValue - minValue) % step <= step / 2) {
-      isCorrectNewValue = !((progressValue - i - minValue) % step)
-      value = progressValue - i
-      if (
-        value + step > maxValue &&
-        maxValue - progressValue < Math.abs(value - progressValue)
-      ) {
-        value = maxValue
-        break
-      }
-      i++
-    } else if ((progressValue - minValue) % step > step / 2) {
-      isCorrectNewValue = !((progressValue + i - minValue) % step)
-      value = progressValue + i
-      i++
-    } else {
-      break
-    }
-  }
-
-  return value
-}

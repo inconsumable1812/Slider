@@ -381,8 +381,11 @@ class Panel {
 
     // Range
     this.inputs.range.addEventListener('change', () => {
+      const { valueStart, valueEnd } = this.inputs
       this.slider.setOptions(this.getRange())
       this.inputs.valueEnd.disabled = !this.getRange().range
+      valueStart.value = this.slider.getOptions().valueStart
+      valueEnd.value = this.slider.getOptions().valueEnd
     })
 
     // Progress
