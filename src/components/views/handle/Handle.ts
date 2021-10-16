@@ -65,10 +65,6 @@ class Handle {
       : (this.elements.handle.style.top = -4.5 + 'px')
   }
 
-  updateValue(value: number): void {
-    this.elements.tooltip.textContent = String(value)
-  }
-
   setOrientation(isVertical: boolean) {
     this.isVertical = isVertical
   }

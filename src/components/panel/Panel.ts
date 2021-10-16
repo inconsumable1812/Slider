@@ -283,36 +283,30 @@ class Panel {
 
     // ValueStart
     this.inputs.valueStart.addEventListener('change', () => {
+      const range = this.inputs.range.checked
       const minValue = this.getMinValue().minValue
+      const maxValue = this.getMaxValue().maxValue
       const step = this.getStep().step
       const isUndefined = this.getValueStart().valueStart
       const previousValue = this.slider.getOptions().valueStart
       const newValueLessThanMin = this.getValueStart().valueStart < minValue
+      const newValueBiggerThanMax = this.getValueStart().valueStart > maxValue
       const newValueBiggerThanSecond =
         this.getValueStart().valueStart >= this.getValueEnd().valueEnd
-      const newValueInStepSize = !(
-        (this.getValueStart().valueStart - minValue + step) %
-        step
-      )
 
-      let newValue = newValueLessThanMin
-        ? { valueStart: previousValue }
-        : this.getValueStart()
+      let newValue = newValueLessThanMin ? { valueStart: minValue } : this.getValueStart()
 
-      newValue = newValueBiggerThanSecond
-        ? { valueStart: previousValue }
-        : this.getValueStart()
+      newValue =
+        newValueBiggerThanSecond && range
+          ? { valueStart: previousValue }
+          : this.getValueStart()
 
-      if (
-        isUndefined === undefined ||
-        newValueLessThanMin ||
-        newValueBiggerThanSecond ||
-        !newValueInStepSize
-      ) {
-        this.inputs.valueStart.value = previousValue
-      } else if (isUndefined !== undefined) {
+      newValue = newValueBiggerThanMax ? { valueStart: maxValue } : this.getValueStart()
+
+      if (isUndefined !== undefined) {
         this.slider.setOptions(newValue)
       }
+      this.inputs.valueStart.value = this.slider.getOptions().valueStart
     })
 
     // ValueEnd
@@ -349,6 +343,7 @@ class Panel {
     this.inputs.step.addEventListener('change', () => {
       const isUndefined = this.getStep().step
       const previousValue = this.slider.getOptions().step
+      const { valueStart, valueEnd, minValue, maxValue } = this.inputs
 
       let newStep = this.getStep().step < 1 ? { step: previousValue } : this.getStep()
       const isStepBiggerRange =
@@ -360,6 +355,13 @@ class Panel {
         this.inputs.step.value = previousValue
       } else if (isUndefined !== undefined) {
         this.slider.setOptions(newStep)
+      }
+      if (valueStart.value % newStep.step) {
+        valueStart.value = minValue.value
+      }
+
+      if (valueEnd.value % newStep.step) {
+        valueEnd.value = maxValue.value
       }
     })
 

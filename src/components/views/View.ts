@@ -41,7 +41,7 @@ class View extends Observer {
       this.viewOptions
     const { track, firstHandle, scale } = this.components
 
-    firstHandle.updateValue(valueStart)
+    firstHandle.setValue(valueStart)
     firstHandle.setStyle(this.searchStyleValue(minValue, maxValue, valueStart))
 
     if (showProgress) {
@@ -85,7 +85,7 @@ class View extends Observer {
 
       this.root.append(this.components.secondHandle.element)
 
-      this.components.secondHandle.updateValue(valueEnd)
+      this.components.secondHandle.setValue(valueEnd)
       this.components.secondHandle.setStyle(
         this.searchStyleValue(minValue, maxValue, valueEnd)
       )

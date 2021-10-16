@@ -80,11 +80,4 @@ describe('Handle', () => {
       '50'
     )
   })
-
-  test('return correct text content of value when slider update', () => {
-    handel.updateValue(33)
-    expect(handel.getElement().querySelector('.range-slider__tooltip').textContent).toBe(
-      '33'
-    )
-  })
 })
