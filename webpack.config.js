@@ -4,16 +4,23 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
+// const TerserPlugin = require('terser-webpack-plugin')
 
 const isProd = process.env.NODE_ENV === 'production'
 const isDev = !isProd
 
-const filename = (ext) => (isDev ? `bundle.${ext}` : `bundle[hash].${ext}`)
+const filename = (ext) => (isDev ? `[name].${ext}` : `[name][hash].${ext}`)
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
+  externals: {
+    jquery: '$'
+  },
   mode: 'development',
-  entry: ['@babel/polyfill', './index.ts'],
+  entry: {
+    index: ['@babel/polyfill', './index.ts'],
+    plugin: ['./components/JQplugin.ts']
+  },
   output: {
     filename: filename('js'),
     path: path.resolve(__dirname, 'dist')
@@ -24,6 +31,11 @@ module.exports = {
       '@': path.resolve(__dirname, 'src')
     }
   },
+
+  // optimization: {
+  //   minimize: true,
+  //   minimizer: [new TerserPlugin()]
+  // },
   devtool: isDev ? 'source-map' : false,
   devServer: {
     port: 3000,
