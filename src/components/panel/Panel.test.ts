@@ -32,6 +32,7 @@ describe('Panel', () => {
   beforeEach(() => {
     slider = create(selector, options)
     panel = new Panel(selector, slider)
+    panel.init()
   })
 
   test('root is HTMLElement', () => {
@@ -211,7 +212,7 @@ describe('Panel', () => {
       const maxValue = panel.getInputs().maxValue
       maxValue.value = newMax.toString()
       maxValue.dispatchEvent(changeEvent)
-      expect(slider.getOptions().maxValue).toBe(100)
+      expect(slider.getOptions().maxValue).toBe(-5)
     })
 
     test('when new maxValue bigger than range', () => {
