@@ -20,14 +20,25 @@ class View extends Observer {
     super()
     this.el = selector
     this.initViewOptions()
+    this.checkScalePointCount()
   }
 
   initViewOptions() {
     this.viewOptions = { ...DEFAULT_VIEW_OPTIONS, ...this.viewOptions }
   }
 
+  checkScalePointCount() {
+    const { scalePointCount } = this.viewOptions
+    if (scalePointCount < 2) {
+      return this.setOptions({ scalePointCount: 2 })
+    } else if (scalePointCount > 11) {
+      return this.setOptions({ scalePointCount: 11 })
+    }
+  }
+
   setOptions(viewOptions: Partial<ViewOptions>) {
     this.viewOptions = { ...this.viewOptions, ...viewOptions }
+    this.checkScalePointCount()
     this.emit('viewChanged', this.viewOptions)
   }
 

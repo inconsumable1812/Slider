@@ -7,6 +7,20 @@ const optionsMinBiggerMax: Partial<ModelOptions> = {
   range: false
 }
 
+const optionsRangeLessThanStepSize: Partial<ModelOptions> = {
+  minValue: 5,
+  maxValue: 100,
+  step: 99,
+  range: false
+}
+
+const optionsStepNotLess1: Partial<ModelOptions> = {
+  minValue: 5,
+  maxValue: 100,
+  step: -5,
+  range: false
+}
+
 const optionsMinEqualMax: Partial<ModelOptions> = {
   minValue: 26,
   maxValue: 26,
@@ -131,6 +145,16 @@ describe('Model', () => {
     expect(modelMinBiggerMax.getOptions().minValue).toBeLessThan(
       modelMinBiggerMax.getOptions().maxValue
     )
+  })
+
+  test('check step always not less than 1', () => {
+    const modelRangeLessThanStepSize = new Model(optionsRangeLessThanStepSize)
+    expect(modelRangeLessThanStepSize.getOptions().minValue).toBe(1)
+  })
+
+  test('check when range are less than step size', () => {
+    const modelsStepNotLess1 = new Model(optionsStepNotLess1)
+    expect(modelsStepNotLess1.getOptions().step).toBe(1)
   })
 
   test('check when min value are equal max value', () => {

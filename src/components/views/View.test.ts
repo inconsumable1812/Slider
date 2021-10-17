@@ -33,7 +33,7 @@ const viewOptions2: ViewOptions = {
 }
 
 const viewOptions3: ViewOptions = {
-  scalePointCount: 5,
+  scalePointCount: 0,
   showTooltip: false,
   isVertical: false,
   showProgress: false,
@@ -41,7 +41,7 @@ const viewOptions3: ViewOptions = {
 }
 
 const viewOptions4: ViewOptions = {
-  scalePointCount: 5,
+  scalePointCount: 15,
   showTooltip: false,
   isVertical: false,
   showProgress: true,

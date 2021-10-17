@@ -27,7 +27,9 @@ class Model extends Observer {
   }
 
   private checkOptions() {
+    this.checkStep()
     this.checkMinValueLessMax()
+    this.checkRangeLessThanStepSize()
     this.checkValueStartInRange()
     this.checkValueEndInRange()
     this.checkValueStartLessValueEnd()
@@ -41,11 +43,27 @@ class Model extends Observer {
     this.emit('modelValueChange', this.options)
   }
 
+  checkStep() {
+    const { step } = this.options
+    if (step < 1) {
+      return this.setOptions({ step: 1 })
+    }
+  }
+
   checkMinValueLessMax() {
     const { minValue, maxValue, step } = this.options
     if (minValue === maxValue) {
       return this.setOptions({ maxValue: minValue + step })
     } else if (minValue > maxValue) {
+      return this.setOptions({ minValue: maxValue - step })
+    }
+  }
+
+  checkRangeLessThanStepSize() {
+    const { minValue, maxValue, step } = this.options
+    const range = Math.abs(maxValue - minValue)
+    const rangeLess: boolean = range < step
+    if (rangeLess) {
       return this.setOptions({ minValue: maxValue - step })
     }
   }

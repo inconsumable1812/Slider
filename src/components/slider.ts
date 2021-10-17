@@ -38,16 +38,19 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
   }
 
   const slider = {
-    getContainer() {
+    getContainer(): HTMLElement {
       return selector
     },
-    getOptions() {
+    getViewRoot(): HTMLElement {
+      return view.root
+    },
+    getOptions(): sliderOptions {
       const modelOptions = model.getOptions()
       const viewOptions = view.getOptions()
 
       return { ...modelOptions, ...viewOptions }
     },
-    setOptions(options: sliderOptions) {
+    setOptions(options: sliderOptions): void {
       const updateModelOptions = prepareOptions(
         options,
         DEFAULT_MODEL_OPTIONS
@@ -60,13 +63,13 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
       const modelOptions = model.setOptions(updateModelOptions)
       const viewOptions = view.setOptions(updateViewOptions)
     },
-    getFirstValue() {
+    getFirstValue(): number {
       return model.getFirstValue()
     },
-    getSecondValue() {
+    getSecondValue(): number {
       return model.getSecondValue()
     },
-    addControlPanel() {
+    addControlPanel(): Panel {
       return new Panel(selector, slider)
     },
 

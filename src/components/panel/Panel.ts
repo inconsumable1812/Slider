@@ -4,7 +4,7 @@ class Panel {
   root: HTMLElement
   elements: any
   inputs: any
-  track: any
+  track: HTMLElement
 
   constructor(private selector: Element, private slider: any) {
     this.render()
@@ -13,7 +13,11 @@ class Panel {
   }
 
   private getTrack() {
-    this.track = this.slider.getContainer().querySelector('.range-slider')
+    this.track = this.slider.getViewRoot()
+  }
+
+  public getInputs() {
+    return this.inputs
   }
 
   private setValueWhenClickOnSlider() {
@@ -260,125 +264,88 @@ class Panel {
     // MinValue
     this.inputs.minValue.addEventListener('change', () => {
       const isUndefined = this.getMinValue().minValue
-      const previousValue = this.slider.getOptions().minValue
-      const minValueBiggerThanMax =
-        this.getMinValue().minValue >= this.getMaxValue().maxValue
-      const rangeLessThanStep =
-        Math.abs(this.getMaxValue().maxValue - this.getMinValue().minValue) <
-        this.getStep().step
 
-      let newValue = minValueBiggerThanMax
-        ? { minValue: previousValue }
-        : this.getMinValue()
+      const newValue = this.getMinValue()
 
-      newValue = rangeLessThanStep ? { minValue: previousValue } : this.getMinValue()
-
-      if (isUndefined === undefined || minValueBiggerThanMax || rangeLessThanStep) {
-        this.inputs.minValue.value = previousValue
-      } else if (isUndefined !== undefined) {
+      if (isUndefined !== undefined) {
         this.slider.setOptions(newValue)
       }
+      this.inputs.minValue.value = this.slider.getOptions().minValue
       this.inputs.valueStart.value = this.slider.getFirstValue()
     })
 
     // ValueStart
     this.inputs.valueStart.addEventListener('change', () => {
       const range = this.inputs.range.checked
-      const minValue = this.getMinValue().minValue
       const maxValue = this.getMaxValue().maxValue
-      const step = this.getStep().step
       const isUndefined = this.getValueStart().valueStart
       const previousValue = this.slider.getOptions().valueStart
-      const newValueLessThanMin = this.getValueStart().valueStart < minValue
       const newValueBiggerThanMax = this.getValueStart().valueStart > maxValue
       const newValueBiggerThanSecond =
         this.getValueStart().valueStart >= this.getValueEnd().valueEnd
 
-      let newValue = newValueLessThanMin ? { valueStart: minValue } : this.getValueStart()
+      let newValue = this.getValueStart()
+
+      newValue = newValueBiggerThanMax ? { valueStart: maxValue } : this.getValueStart()
 
       newValue =
         newValueBiggerThanSecond && range
           ? { valueStart: previousValue }
           : this.getValueStart()
 
-      newValue = newValueBiggerThanMax ? { valueStart: maxValue } : this.getValueStart()
-
       if (isUndefined !== undefined) {
         this.slider.setOptions(newValue)
       }
-      this.inputs.valueStart.value = this.slider.getOptions().valueStart
+      this.inputs.valueStart.value = this.slider.getFirstValue()
     })
 
     // ValueEnd
     this.inputs.valueEnd.addEventListener('change', () => {
-      const minValue = this.getMinValue().minValue
-      const maxValue = this.getMaxValue().maxValue
-      const step = this.getStep().step
       const previousValue = this.slider.getOptions().valueEnd
       const isUndefined = this.getValueEnd().valueEnd
-      const newValueBiggerThanMax = this.getValueEnd().valueEnd > maxValue
       const newValueLessThanFirst =
         this.getValueEnd().valueEnd <= this.getValueStart().valueStart
-      const newValueInStepSize = !((this.getValueEnd().valueEnd - minValue + step) % step)
 
-      let newValue = newValueBiggerThanMax
-        ? { valueEnd: previousValue }
-        : this.getValueEnd()
-
+      let newValue = this.getValueEnd()
       newValue = newValueLessThanFirst ? { valueEnd: previousValue } : this.getValueEnd()
 
-      if (
-        isUndefined === undefined ||
-        newValueBiggerThanMax ||
-        newValueLessThanFirst ||
-        (!newValueInStepSize && newValue.valueEnd !== maxValue)
-      ) {
-        this.inputs.valueEnd.value = previousValue
-      } else if (isUndefined !== undefined) {
+      if (isUndefined !== undefined) {
         this.slider.setOptions(newValue)
       }
+
+      this.inputs.valueEnd.value = this.slider.getSecondValue()
     })
 
     // Step
     this.inputs.step.addEventListener('change', () => {
       const isUndefined = this.getStep().step
       const previousValue = this.slider.getOptions().step
-      const { valueStart, valueEnd, minValue, maxValue } = this.inputs
 
-      let newStep = this.getStep().step < 1 ? { step: previousValue } : this.getStep()
+      let newStep = this.getStep()
       const isStepBiggerRange =
         Math.abs(this.getMaxValue().maxValue - this.getMinValue().minValue) <=
         newStep.step
       newStep = isStepBiggerRange ? { step: previousValue } : this.getStep()
 
-      if (isUndefined === undefined || this.getStep().step < 1 || isStepBiggerRange) {
-        this.inputs.step.value = previousValue
-      } else if (isUndefined !== undefined) {
+      if (isUndefined !== undefined) {
         this.slider.setOptions(newStep)
       }
-      if (valueStart.value % newStep.step) {
-        valueStart.value = minValue.value
-      }
 
-      if (valueEnd.value % newStep.step) {
-        valueEnd.value = maxValue.value
-      }
+      this.inputs.step.value = this.slider.getOptions().step
+      this.inputs.valueStart.value = this.slider.getFirstValue()
+      this.inputs.valueEnd.value = this.slider.getSecondValue()
     })
 
     // ScaleCount
     this.inputs.scalePointCount.addEventListener('change', () => {
       const isUndefined = this.getScaleCount().scalePointCount
       const previousValue = this.slider.getOptions().scalePointCount
-      const newScaleCount =
-        this.getScaleCount().scalePointCount < 2
-          ? { scalePointCount: previousValue }
-          : this.getScaleCount()
+      const newScaleCount = this.getScaleCount()
 
-      if (isUndefined === undefined || this.getScaleCount().scalePointCount < 2) {
-        this.inputs.scalePointCount.value = previousValue
-      } else if (isUndefined !== undefined) {
+      if (isUndefined !== undefined) {
         this.slider.setOptions(newScaleCount)
       }
+      this.inputs.scalePointCount.value = this.slider.getOptions().scalePointCount
     })
 
     // Range

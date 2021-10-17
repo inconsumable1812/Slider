@@ -1,3 +1,4 @@
+import Panel from './panel/Panel'
 import Handle from './views/handle/Handle'
 import Progress from './views/progress/Progress'
 import Scale from './views/Scale/Scale'
@@ -36,10 +37,20 @@ type sliderOptions = {
   valueEnd?: number
   range?: boolean
   scalePointCount?: number
-  isTooltipDisabled?: boolean
+  showTooltip?: boolean
   isVertical?: boolean
   showProgress?: boolean
   showScale?: boolean
 }
 
-export { ModelOptions, ViewOptions, ViewComponents, sliderOptions }
+type Slider = {
+  getContainer(): HTMLElement
+  getViewRoot(): HTMLElement
+  getOptions(): sliderOptions
+  setOptions(options: sliderOptions): void
+  getFirstValue(): number
+  getSecondValue(): number
+  addControlPanel(): Panel
+}
+
+export { ModelOptions, ViewOptions, ViewComponents, sliderOptions, Slider }
