@@ -73,13 +73,16 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
       return new Panel(selector, slider)
     },
 
-    JQSlider(method: string, payload?: any) {
+    JQSlider(method: string, newOptions?: Partial<sliderOptions>) {
       switch (method) {
         case 'getContainer':
           return this.getContainer()
 
         case 'getOptions':
           return this.getOptions()
+
+        case 'setOptions':
+          return this.setOptions(newOptions)
 
         case 'getFirstValue':
           return this.getFirstValue()

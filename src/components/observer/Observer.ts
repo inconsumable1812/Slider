@@ -3,7 +3,7 @@ class Observer {
 
   // dispatch, fire, trigger
   // Уведомляем слушателей если они есть
-  emit(event: string, ...args: any) {
+  emit(event: string, ...args: any): boolean {
     if (!Array.isArray(this.listeners[event])) {
       return false
     }
@@ -16,7 +16,7 @@ class Observer {
   // on, listen
   // Подписываемся на уведомления
   // добавляем нового слушателя
-  subscribe(event: string, fn: Function) {
+  subscribe(event: string, fn: Function): Function {
     this.listeners[event] = this.listeners[event] || []
     this.listeners[event].push(fn)
     return () => {

@@ -27,11 +27,11 @@ class Handle {
     }
   }
 
-  showTooltipMethod() {
+  showTooltipMethod(): void {
     this.elements.tooltip.classList.remove('range-slider__tooltip_hide')
   }
 
-  hideTooltip() {
+  hideTooltip(): void {
     this.elements.tooltip.classList.add('range-slider__tooltip_hide')
   }
 
@@ -49,23 +49,23 @@ class Handle {
       : +this.elements.handle.style.left.slice(0, -1)
   }
 
-  setValue(value: number) {
+  setValue(value: number): void {
     this.value = value
     this.elements.tooltip.textContent = this.value.toString()
   }
-  setStyle(value: number) {
+  setStyle(value: number): void {
     this.isVertical
       ? (this.elements.handle.style.top = value + '%')
       : (this.elements.handle.style.left = value + '%')
   }
 
-  clearStyle() {
+  clearStyle(): void {
     this.isVertical
       ? (this.elements.handle.style.left = -4.5 + 'px')
       : (this.elements.handle.style.top = -4.5 + 'px')
   }
 
-  setOrientation(isVertical: boolean) {
+  setOrientation(isVertical: boolean): void {
     this.isVertical = isVertical
   }
 }

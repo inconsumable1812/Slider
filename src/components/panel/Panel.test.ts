@@ -41,7 +41,7 @@ describe('Panel', () => {
   test('check correct change minValue', () => {
     const newMin = 20
     const minValue = panel.getInputs().minValue
-    minValue.value = newMin
+    minValue.value = newMin.toString()
     minValue.dispatchEvent(changeEvent)
     expect(slider.getOptions().minValue).toBe(newMin)
   })
@@ -49,7 +49,7 @@ describe('Panel', () => {
   test('check correct change maxValue', () => {
     const newMax = 200
     const maxValue = panel.getInputs().maxValue
-    maxValue.value = newMax
+    maxValue.value = newMax.toString()
     maxValue.dispatchEvent(changeEvent)
     expect(slider.getOptions().maxValue).toBe(newMax)
   })
@@ -57,7 +57,7 @@ describe('Panel', () => {
   test('check correct change valueStart', () => {
     const newValue = 15
     const valueStart = panel.getInputs().valueStart
-    valueStart.value = newValue
+    valueStart.value = newValue.toString()
     valueStart.dispatchEvent(changeEvent)
     expect(slider.getOptions().valueStart).toBe(newValue)
   })
@@ -65,7 +65,7 @@ describe('Panel', () => {
   test('check correct change valueEnd', () => {
     const newValue = 80
     const valueEnd = panel.getInputs().valueEnd
-    valueEnd.value = newValue
+    valueEnd.value = newValue.toString()
     valueEnd.dispatchEvent(changeEvent)
     expect(slider.getOptions().valueEnd).toBe(newValue)
   })
@@ -73,7 +73,7 @@ describe('Panel', () => {
   test('check correct change step', () => {
     const newStep = 3
     const step = panel.getInputs().step
-    step.value = newStep
+    step.value = newStep.toString()
     step.dispatchEvent(changeEvent)
     expect(slider.getOptions().step).toBe(newStep)
   })
@@ -81,7 +81,7 @@ describe('Panel', () => {
   test('check correct change scale point', () => {
     const newPoint = 5
     const scalePointCount = panel.getInputs().scalePointCount
-    scalePointCount.value = newPoint
+    scalePointCount.value = newPoint.toString()
     scalePointCount.dispatchEvent(changeEvent)
     expect(slider.getOptions().scalePointCount).toBe(newPoint)
   })
@@ -189,7 +189,7 @@ describe('Panel', () => {
     test('when new minValue bigger maxValue', () => {
       const newMin = 101
       const minValue = panel.getInputs().minValue
-      minValue.value = newMin
+      minValue.value = newMin.toString()
       minValue.dispatchEvent(changeEvent)
       expect(slider.getOptions().minValue).toBe(99)
     })
@@ -199,9 +199,9 @@ describe('Panel', () => {
       const newStep = 99
       const minValue = panel.getInputs().minValue
       const step = panel.getInputs().step
-      step.value = newStep
+      step.value = newStep.toString()
       step.dispatchEvent(changeEvent)
-      minValue.value = newMin
+      minValue.value = newMin.toString()
       minValue.dispatchEvent(changeEvent)
       expect(slider.getOptions().minValue).toBe(1)
     })
@@ -209,7 +209,7 @@ describe('Panel', () => {
     test('when new maxValue less minValue', () => {
       const newMax = -5
       const maxValue = panel.getInputs().maxValue
-      maxValue.value = newMax
+      maxValue.value = newMax.toString()
       maxValue.dispatchEvent(changeEvent)
       expect(slider.getOptions().maxValue).toBe(100)
     })
@@ -219,9 +219,9 @@ describe('Panel', () => {
       const newStep = 99
       const maxValue = panel.getInputs().maxValue
       const step = panel.getInputs().step
-      step.value = newStep
+      step.value = newStep.toString()
       step.dispatchEvent(changeEvent)
-      maxValue.value = newMax
+      maxValue.value = newMax.toString()
       maxValue.dispatchEvent(changeEvent)
       expect(slider.getOptions().maxValue).toBe(100)
     })
@@ -229,7 +229,7 @@ describe('Panel', () => {
     test('when new valueStart less minValue', () => {
       const newValue = -5
       const valueStart = panel.getInputs().valueStart
-      valueStart.value = newValue
+      valueStart.value = newValue.toString()
       valueStart.dispatchEvent(changeEvent)
       expect(slider.getOptions().valueStart).toBe(0)
     })
@@ -237,7 +237,7 @@ describe('Panel', () => {
     test('when new valueStart bigger maxValue', () => {
       const newValue = 150
       const valueStart = panel.getInputs().valueStart
-      valueStart.value = newValue
+      valueStart.value = newValue.toString()
       valueStart.dispatchEvent(changeEvent)
       expect(slider.getOptions().valueStart).toBe(100)
     })
@@ -249,7 +249,7 @@ describe('Panel', () => {
       const range = panel.getInputs().range
       range.checked = rangeOptions
       range.dispatchEvent(changeEvent)
-      valueStart.value = newValue
+      valueStart.value = newValue.toString()
       valueStart.dispatchEvent(changeEvent)
       expect(slider.getOptions().valueStart).toBe(40)
     })
@@ -257,7 +257,7 @@ describe('Panel', () => {
     test('when new valueEnd less minValue', () => {
       const newValue = -5
       const valueEnd = panel.getInputs().valueEnd
-      valueEnd.value = newValue
+      valueEnd.value = newValue.toString()
       valueEnd.dispatchEvent(changeEvent)
       expect(slider.getOptions().valueEnd).toBe(50)
     })
@@ -265,7 +265,7 @@ describe('Panel', () => {
     test('when new valueEnd bigger maxValue', () => {
       const newValue = 150
       const valueEnd = panel.getInputs().valueEnd
-      valueEnd.value = newValue
+      valueEnd.value = newValue.toString()
       valueEnd.dispatchEvent(changeEvent)
       expect(slider.getOptions().valueEnd).toBe(100)
     })
@@ -277,7 +277,7 @@ describe('Panel', () => {
       const range = panel.getInputs().range
       range.checked = rangeOptions
       range.dispatchEvent(changeEvent)
-      valueEnd.value = newValue
+      valueEnd.value = newValue.toString()
       valueEnd.dispatchEvent(changeEvent)
       expect(slider.getOptions().valueEnd).toBe(50)
     })
@@ -285,7 +285,7 @@ describe('Panel', () => {
     test('when new step bigger than range', () => {
       const newStep = 150
       const step = panel.getInputs().step
-      step.value = newStep
+      step.value = newStep.toString()
       step.dispatchEvent(changeEvent)
       expect(slider.getOptions().step).toBe(1)
     })
@@ -293,7 +293,7 @@ describe('Panel', () => {
     test('when new scale point less than 2 ', () => {
       const newScalePoint = -3
       const scalePointCount = panel.getInputs().scalePointCount
-      scalePointCount.value = newScalePoint
+      scalePointCount.value = newScalePoint.toString()
       scalePointCount.dispatchEvent(changeEvent)
       expect(slider.getOptions().scalePointCount).toBe(2)
     })
@@ -301,7 +301,7 @@ describe('Panel', () => {
     test('when new scale point bigger than 11 ', () => {
       const newScalePoint = 333
       const scalePointCount = panel.getInputs().scalePointCount
-      scalePointCount.value = newScalePoint
+      scalePointCount.value = newScalePoint.toString()
       scalePointCount.dispatchEvent(changeEvent)
       expect(slider.getOptions().scalePointCount).toBe(11)
     })

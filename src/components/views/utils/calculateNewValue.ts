@@ -3,9 +3,9 @@ function calculateNewValue(
   maxValue: number,
   progressInPercents: number,
   step: number
-) {
+): number {
   let progressValue = Math.round((maxValue - minValue) * progressInPercents + minValue)
-  let isCorrectNewValue = !((progressValue - minValue) % step)
+  let isCorrectNewValue: boolean = !((progressValue - minValue) % step)
   let value = progressValue
 
   let i = 1

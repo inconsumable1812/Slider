@@ -41,29 +41,29 @@ class Track extends Observer {
     this.element.addEventListener('mousedown', clickEvent)
   }
 
-  getMinValue() {
+  getMinValue(): number {
     return this.minValue
   }
 
-  getMaxValue() {
+  getMaxValue(): number {
     return this.maxValue
   }
 
-  getStep() {
+  getStep(): number {
     return this.step
   }
 
-  getOrientation() {
+  getOrientation(): boolean {
     return this.isVertical
   }
 
-  setMaxMinValueAndStep(maxValue: number, minValue: number, step: number) {
+  setMaxMinValueAndStep(maxValue: number, minValue: number, step: number): void {
     this.maxValue = maxValue
     this.minValue = minValue
     this.step = step
   }
 
-  setOrientation(isVertical: boolean) {
+  setOrientation(isVertical: boolean): void {
     this.isVertical = isVertical
   }
 }

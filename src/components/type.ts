@@ -53,4 +53,40 @@ type Slider = {
   addControlPanel(): Panel
 }
 
-export { ModelOptions, ViewOptions, ViewComponents, sliderOptions, Slider }
+type panelElements = {
+  maxValueEl: HTMLElement
+  minValueEl: HTMLElement
+  firstValueEl: HTMLElement
+  secondValueEl: HTMLElement
+  showTooltipEL: HTMLElement
+  rangeEl: HTMLElement
+  stepEl: HTMLElement
+  showScaleEl: HTMLElement
+  scalePointEl: HTMLElement
+  progressEl: HTMLElement
+  verticalEl: HTMLElement
+}
+
+type panelInputs = {
+  maxValue: HTMLInputElement
+  minValue: HTMLInputElement
+  valueStart: HTMLInputElement
+  valueEnd: HTMLInputElement
+  showTooltip: HTMLInputElement
+  range: HTMLInputElement
+  step: HTMLInputElement
+  showScale: HTMLInputElement
+  scalePointCount: HTMLInputElement
+  showProgress: HTMLInputElement
+  isVertical: HTMLInputElement
+}
+
+export {
+  ModelOptions,
+  ViewOptions,
+  ViewComponents,
+  sliderOptions,
+  Slider,
+  panelElements,
+  panelInputs
+}

@@ -23,11 +23,11 @@ class View extends Observer {
     this.checkScalePointCount()
   }
 
-  initViewOptions() {
+  initViewOptions(): void {
     this.viewOptions = { ...DEFAULT_VIEW_OPTIONS, ...this.viewOptions }
   }
 
-  checkScalePointCount() {
+  checkScalePointCount(): void | Partial<ViewOptions> {
     const { scalePointCount } = this.viewOptions
     if (scalePointCount < 2) {
       return this.setOptions({ scalePointCount: 2 })
@@ -36,17 +36,17 @@ class View extends Observer {
     }
   }
 
-  setOptions(viewOptions: Partial<ViewOptions>) {
+  setOptions(viewOptions: Partial<ViewOptions>): void {
     this.viewOptions = { ...this.viewOptions, ...viewOptions }
     this.checkScalePointCount()
     this.emit('viewChanged', this.viewOptions)
   }
 
-  changeModelOptions(modelOptions: Partial<ModelOptions>) {
+  changeModelOptions(modelOptions: Partial<ModelOptions>): void {
     this.modelOptions = { ...this.modelOptions, ...modelOptions }
   }
 
-  updateView() {
+  updateView(): void {
     const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions
     const { scalePointCount, showTooltip, isVertical, showProgress, showScale } =
       this.viewOptions
@@ -164,19 +164,19 @@ class View extends Observer {
     }
   }
 
-  getModel() {
+  getModel(): ModelOptions {
     return this.modelOptions
   }
 
-  getOptions() {
-    return this.viewOptions
+  getOptions(): ViewOptions {
+    return this.viewOptions as ViewOptions
   }
 
-  getComponents() {
+  getComponents(): ViewComponents {
     return this.components
   }
 
-  render() {
+  render(): void {
     const isVertical = this.viewOptions.isVertical ? 'range-slider_vertical' : ''
     this.root = render(`
     <div class="range-slider ${isVertical}">
@@ -222,7 +222,7 @@ class View extends Observer {
     this.init()
   }
 
-  private init() {
+  private init(): void {
     const { track, firstHandle, secondHandle, scale, progress } = this.components
 
     if (this.viewOptions.showProgress) {
@@ -324,9 +324,9 @@ class View extends Observer {
     firstHandle: Handle,
     secondHandle: Handle,
     clickValue: number
-  ) {
-    const firstValue = firstHandle.getValue()
-    const secondValue = secondHandle.getValue()
+  ): Handle {
+    const firstValue: number = firstHandle.getValue()
+    const secondValue: number = secondHandle.getValue()
     if (Math.abs(firstValue - clickValue) <= Math.abs(secondValue - clickValue)) {
       return firstHandle
     } else {
@@ -334,7 +334,7 @@ class View extends Observer {
     }
   }
 
-  private handleMouseDown(event: MouseEvent, handle: Handle) {
+  private handleMouseDown(event: MouseEvent, handle: Handle): void {
     event.preventDefault()
 
     const handleMouseMove = (event: MouseEvent) => this.handleMouseMove(event, handle)
@@ -349,27 +349,27 @@ class View extends Observer {
     document.addEventListener('mouseup', handleMouseUp)
   }
 
-  private handleMouseMove(event: MouseEvent, handle: Handle) {
+  private handleMouseMove(event: MouseEvent, handle: Handle): void {
     const { track, progress, firstHandle, secondHandle } = this.components
-    const step = this.modelOptions.step
+    const step: number = this.modelOptions.step
     const { isVertical } = this.viewOptions
 
-    const prevValue = handle.getValue()
+    const prevValue: number = handle.getValue()
 
-    const valueInPx = isVertical
+    const valueInPx: number = isVertical
       ? event.clientY - track.element.getBoundingClientRect().top
       : event.clientX - track.element.getBoundingClientRect().left
 
-    const widthOrHeight = isVertical
+    const widthOrHeight: number = isVertical
       ? track.element.getBoundingClientRect().height
       : track.element.getBoundingClientRect().width
 
-    const valueInPercent = valueInPx / widthOrHeight
+    const valueInPercent: number = valueInPx / widthOrHeight
 
-    const delta = track.getMaxValue() - track.getMinValue()
+    const delta: number = track.getMaxValue() - track.getMinValue()
     const isValueCorrectOfStep: boolean = !(Math.round(delta * valueInPercent) % step)
 
-    let newValue = isValueCorrectOfStep
+    let newValue: number = isValueCorrectOfStep
       ? Math.round(track.getMinValue() + delta * valueInPercent)
       : prevValue
     if (valueInPercent <= 0) {
@@ -380,7 +380,7 @@ class View extends Observer {
       this.emit('viewChanged', { valueEnd: newValue })
     }
 
-    const styleValue = this.searchStyleValue(
+    const styleValue: number = this.searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
       newValue
@@ -424,27 +424,27 @@ class View extends Observer {
     )
   }
 
-  private searchStyleValue(minValue: number, maxValue: number, progress: number) {
+  private searchStyleValue(minValue: number, maxValue: number, progress: number): number {
     return (100 / (maxValue - minValue)) * (progress - minValue)
   }
 
-  private clickOnScale(scale: Scale) {
+  private clickOnScale(scale: Scale): void {
     scale.element.addEventListener('click', (event) => this.clickOnScaleFunction(event))
   }
 
-  private clickOnScaleFunction(event: MouseEvent) {
+  private clickOnScaleFunction(event: MouseEvent): void {
     const { firstHandle, secondHandle, progress, track } = this.components
 
-    const target = event.target as HTMLElement
-    const value = +target.textContent
+    const target: HTMLElement = event.target as HTMLElement
+    const value: number = +target.textContent
 
-    let closetHandle = firstHandle
+    let closetHandle: Handle = firstHandle
     if (this.modelOptions.range) {
       closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
     }
     closetHandle.setValue(value)
 
-    const styleValue = this.searchStyleValue(
+    const styleValue: number = this.searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
       value

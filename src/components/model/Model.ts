@@ -10,7 +10,7 @@ class Model extends Observer {
     this.checkOptions()
   }
 
-  init() {
+  init(): void {
     this.options = { ...DEFAULT_MODEL_OPTIONS, ...this.options }
   }
 
@@ -18,15 +18,15 @@ class Model extends Observer {
     return this.options as ModelOptions
   }
 
-  getFirstValue() {
+  getFirstValue(): number {
     return this.options.valueStart
   }
 
-  getSecondValue() {
+  getSecondValue(): number {
     return this.options.valueEnd
   }
 
-  private checkOptions() {
+  private checkOptions(): void {
     this.checkStep()
     this.checkMinValueLessMax()
     this.checkRangeLessThanStepSize()
@@ -37,20 +37,20 @@ class Model extends Observer {
     this.checkValueEndCorrectStep()
   }
 
-  setOptions(modelOptions: Partial<ModelOptions>) {
+  setOptions(modelOptions: Partial<ModelOptions>): void {
     this.options = { ...this.options, ...modelOptions }
     this.checkOptions()
     this.emit('modelValueChange', this.options)
   }
 
-  checkStep() {
+  checkStep(): void {
     const { step } = this.options
     if (step < 1) {
       return this.setOptions({ step: 1 })
     }
   }
 
-  checkMinValueLessMax() {
+  checkMinValueLessMax(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step } = this.options
     if (minValue === maxValue) {
       return this.setOptions({ maxValue: minValue + step })
@@ -59,7 +59,7 @@ class Model extends Observer {
     }
   }
 
-  checkRangeLessThanStepSize() {
+  checkRangeLessThanStepSize(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step } = this.options
     const range = Math.abs(maxValue - minValue)
     const rangeLess: boolean = range < step
@@ -68,7 +68,7 @@ class Model extends Observer {
     }
   }
 
-  checkValueStartInRange() {
+  checkValueStartInRange(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step, valueStart, range } = this.options
     if (valueStart < minValue) {
       return this.setOptions({ valueStart: minValue })
@@ -81,7 +81,7 @@ class Model extends Observer {
     }
   }
 
-  checkValueEndInRange() {
+  checkValueEndInRange(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step, valueEnd } = this.options
     if (valueEnd < minValue) {
       return this.setOptions({ valueEnd: minValue + step })
@@ -90,7 +90,7 @@ class Model extends Observer {
     }
   }
 
-  checkValueStartLessValueEnd() {
+  checkValueStartLessValueEnd(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step, valueEnd, valueStart } = this.options
     if (this.options.range) {
       if (valueStart === valueEnd) {
@@ -113,14 +113,14 @@ class Model extends Observer {
     }
   }
 
-  checkValueStartCorrectStep() {
+  checkValueStartCorrectStep(): void | Partial<ModelOptions> {
     const { minValue, step, valueStart } = this.options
     if (Math.abs(valueStart - minValue) % step) {
       return this.setOptions({ valueStart: minValue })
     }
   }
 
-  checkValueEndCorrectStep() {
+  checkValueEndCorrectStep(): void | Partial<ModelOptions> {
     const { maxValue, minValue, step, valueEnd } = this.options
     if (Math.abs(valueEnd - minValue) % step && valueEnd !== maxValue) {
       return this.setOptions({ valueEnd: maxValue })

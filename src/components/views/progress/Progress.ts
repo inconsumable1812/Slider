@@ -13,23 +13,23 @@ class Progress {
     `)
   }
 
-  setStart(start: Number) {
+  setStart(start: Number): void {
     this.isVertical
       ? (this.element.style.top = start + '%')
       : (this.element.style.left = start + '%')
   }
-  setEnd(end: number) {
+  setEnd(end: number): void {
     this.isVertical
       ? (this.element.style.bottom = 100 - end + '%')
       : (this.element.style.right = 100 - end + '%')
   }
 
-  setStyle(start: number, end: number) {
+  setStyle(start: number, end: number): void {
     this.setStart(start)
     this.setEnd(end)
   }
 
-  setOrientation(isVertical: boolean) {
+  setOrientation(isVertical: boolean): void {
     this.isVertical = isVertical
   }
 }
