@@ -22,6 +22,8 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
   const view = new View(selector, modelOptions, updateViewOptions)
   const presenter = new Presenter(model, view)
 
+  let panel: Panel
+
   function prepareOptions(
     options: sliderOptions,
     target: ViewOptions | ModelOptions
@@ -60,8 +62,11 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
         DEFAULT_VIEW_OPTIONS
       ) as Partial<ViewOptions>
 
-      const modelOptions = model.setOptions(updateModelOptions)
-      const viewOptions = view.setOptions(updateViewOptions)
+      model.setOptions(updateModelOptions)
+      view.setOptions(updateViewOptions)
+      if (panel) {
+        panel.setOptionsFromSlider()
+      }
     },
     getFirstValue(): number {
       return model.getFirstValue()
@@ -70,7 +75,9 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
       return model.getSecondValue()
     },
     addControlPanel(): Panel {
-      return new Panel(selector, slider)
+      panel = new Panel(selector, slider)
+      panel.init()
+      return panel
     },
 
     JQSlider(method: string, newOptions?: Partial<sliderOptions>) {

@@ -36,6 +36,9 @@ module.exports = {
   //   minimize: true,
   //   minimizer: [new TerserPlugin()]
   // },
+  optimization: {
+    runtimeChunk: 'single'
+  },
   devtool: isDev ? 'source-map' : false,
   devServer: {
     port: 3000,

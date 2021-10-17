@@ -4,23 +4,22 @@ import '../components/JQplugin'
 
 import $ from 'jquery'
 
-const selector = document.querySelector('#app') as HTMLElement
+const slider = $('#app').JQSlider()
+slider.JQSlider('addControlPanel')
 
-const slider = create(selector, {
-  // minValue: 10,
-  // maxValue: 100,
-  // step: 1,
-  isVertical: false
-})
-slider.addControlPanel()
-
-const sliderOneConfig = {
+const sliderSecondConfig = {
   minValue: 500,
   maxValue: 1000
 }
 
-const sliderOne = $('#app_2').JQSlider(sliderOneConfig)
-const sliderOnePanel = sliderOne.JQSlider('addControlPanel')
+const sliderThirdConfig = {
+  minValue: 500,
+  maxValue: 1000
+}
 
-const sliderSecond = $('#app_3').JQSlider(sliderOneConfig)
+const sliderSecond = $('#app_2').JQSlider()
 const sliderSecondPanel = sliderSecond.JQSlider('addControlPanel')
+sliderSecond.JQSlider('setOptions', { minValue: 5 })
+
+const sliderThird = $('#app_3').JQSlider(sliderThirdConfig)
+const sliderThirdPanel = sliderThird.JQSlider('addControlPanel')

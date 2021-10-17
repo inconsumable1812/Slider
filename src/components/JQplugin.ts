@@ -4,7 +4,7 @@ import $ from 'jquery'
 
 declare global {
   interface JQuery {
-    JQSlider(options?: sliderOptions | string): JQuery
+    JQSlider(methodOrOptions?: string | sliderOptions, newOptions?: sliderOptions): JQuery
   }
 }
 
