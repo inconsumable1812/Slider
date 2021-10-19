@@ -276,7 +276,7 @@ class Panel {
     })
     this.inputs.minValue.addEventListener('blur', () => {
       if (this.inputs.minValue.value === '') {
-        this.inputs.minValue.value = this.slider.getOptions().minValue?.toString() ?? ''
+        this.inputs.minValue.value = this.slider.getOptions().minValue!.toString()
       }
     })
 
@@ -306,8 +306,7 @@ class Panel {
     })
     this.inputs.valueStart.addEventListener('blur', () => {
       if (this.inputs.valueStart.value === '') {
-        this.inputs.valueStart.value =
-          this.slider.getOptions().valueStart?.toString() ?? ''
+        this.inputs.valueStart.value = this.slider.getOptions().valueStart!.toString()
       }
     })
 
@@ -327,7 +326,7 @@ class Panel {
     })
     this.inputs.valueEnd.addEventListener('blur', () => {
       if (this.inputs.valueEnd.value === '') {
-        this.inputs.valueEnd.value = this.slider.getOptions().valueEnd?.toString() ?? ''
+        this.inputs.valueEnd.value = this.slider.getOptions().valueEnd!.toString()
       }
     })
 
@@ -352,7 +351,7 @@ class Panel {
     })
     this.inputs.step.addEventListener('blur', () => {
       if (this.inputs.step.value === '') {
-        this.inputs.step.value = this.slider.getOptions().step?.toString() ?? ''
+        this.inputs.step.value = this.slider.getOptions().step!.toString()
       }
     })
 
@@ -370,8 +369,9 @@ class Panel {
     })
     this.inputs.scalePointCount.addEventListener('blur', () => {
       if (this.inputs.scalePointCount.value === '') {
-        this.inputs.scalePointCount.value =
-          this.slider.getOptions().scalePointCount?.toString() ?? ''
+        this.inputs.scalePointCount.value = this.slider
+          .getOptions()
+          .scalePointCount!.toString()
       }
     })
 

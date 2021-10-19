@@ -30,6 +30,8 @@ describe('Panel', () => {
   const mouseup = new Event('mouseup')
   const mousemove = new Event('mousemove')
   const click = new Event('click')
+  const focus = new Event('focus')
+  const blur = new Event('blur')
 
   beforeEach(() => {
     slider = create(selector, options)
@@ -307,6 +309,62 @@ describe('Panel', () => {
       scalePointCount.value = newScalePoint.toString()
       scalePointCount.dispatchEvent(changeEvent)
       expect(slider.getOptions().scalePointCount).toBe(11)
+    })
+  })
+
+  describe('blur when input value is empty', () => {
+    test('maxValue', () => {
+      const newMax = ''
+      const maxValue = panel.getInputs().maxValue
+      maxValue.dispatchEvent(focus)
+      maxValue.value = newMax
+      maxValue.dispatchEvent(blur)
+      expect(+maxValue.value).toBe(slider.getOptions().maxValue)
+    })
+
+    test('minValue', () => {
+      const newMin = ''
+      const minValue = panel.getInputs().minValue
+      minValue.dispatchEvent(focus)
+      minValue.value = newMin
+      minValue.dispatchEvent(blur)
+      expect(+minValue.value).toBe(slider.getOptions().minValue)
+    })
+
+    test('valueStart', () => {
+      const newValue = ''
+      const valueStart = panel.getInputs().valueStart
+      valueStart.dispatchEvent(focus)
+      valueStart.value = newValue
+      valueStart.dispatchEvent(blur)
+      expect(+valueStart.value).toBe(slider.getOptions().valueStart)
+    })
+
+    test('valueEnd', () => {
+      const newValue = ''
+      const valueEnd = panel.getInputs().valueEnd
+      valueEnd.dispatchEvent(focus)
+      valueEnd.value = newValue
+      valueEnd.dispatchEvent(blur)
+      expect(+valueEnd.value).toBe(slider.getOptions().valueEnd)
+    })
+
+    test('step', () => {
+      const newStep = ''
+      const step = panel.getInputs().step
+      step.dispatchEvent(focus)
+      step.value = newStep
+      step.dispatchEvent(blur)
+      expect(+step.value).toBe(slider.getOptions().step)
+    })
+
+    test('scalePointCount', () => {
+      const newScaleCount = ''
+      const scalePointCount = panel.getInputs().scalePointCount
+      scalePointCount.dispatchEvent(focus)
+      scalePointCount.value = newScaleCount
+      scalePointCount.dispatchEvent(blur)
+      expect(+scalePointCount.value).toBe(slider.getOptions().scalePointCount)
     })
   })
 })
