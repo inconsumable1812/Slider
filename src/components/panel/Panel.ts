@@ -3,13 +3,13 @@ import render from '../views/utils/render'
 
 class Panel {
   root!: HTMLElement
-  elements!: panelElements
-  inputs!: panelInputs
-  track!: HTMLElement
+  private elements!: panelElements
+  private inputs!: panelInputs
+  private track!: HTMLElement
 
   constructor(private selector: Element, private slider: Slider) {}
 
-  public init() {
+  public init(): void {
     this.render()
     this.getTrack()
     this.setValueWhenClickOnSlider()
@@ -43,7 +43,7 @@ class Panel {
     })
   }
 
-  render(): void {
+  private render(): void {
     this.root = render(`
     <div class="panel"></div>
     `)

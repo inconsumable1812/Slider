@@ -7,7 +7,7 @@ class Presenter {
   constructor(private model: Model, private view: View) {
     this.render()
   }
-  render(): void {
+  private render(): void {
     this.view.render()
     this.connect()
   }
@@ -24,7 +24,7 @@ class Presenter {
     this.view.updateView()
   }
 
-  connect(): void {
+  private connect(): void {
     this.view.subscribe('viewChanged', this.setModelOptions.bind(this))
     this.model.subscribe('modelValueChange', this.updateView.bind(this))
   }

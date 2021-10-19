@@ -14,7 +14,7 @@ class Track extends Observer {
     super()
     this.toHtml()
   }
-  toHtml(): void {
+  private toHtml(): void {
     this.element = render(`<div class="range-slider__track"></div>`)
 
     const clickEvent = (event: MouseEvent) => {

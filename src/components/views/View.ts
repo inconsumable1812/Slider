@@ -12,7 +12,7 @@ import render from './utils/render'
 class View extends Observer {
   private components!: ViewComponents
   root!: HTMLElement
-  el: Element
+  private el: Element
   constructor(
     selector: Element,
     private modelOptions: ModelOptions,
@@ -24,12 +24,12 @@ class View extends Observer {
     this.checkScalePointCount()
   }
 
-  initViewOptions(): void {
+  private initViewOptions(): void {
     this.viewOptions = { ...DEFAULT_VIEW_OPTIONS, ...this.viewOptions }
   }
 
   // eslint-disable-next-line consistent-return
-  checkScalePointCount(): void | Partial<ViewOptions> {
+  private checkScalePointCount(): void | Partial<ViewOptions> {
     const { scalePointCount } = this.viewOptions
     if (scalePointCount! < 2) {
       return this.setOptions({ scalePointCount: 2 })

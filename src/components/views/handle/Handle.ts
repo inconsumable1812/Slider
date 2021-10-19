@@ -6,15 +6,15 @@ class Handle {
   element!: HTMLElement
 
   constructor(
-    public handleNumber: number = 1,
-    public value: number = 10,
+    private handleNumber: number = 1,
+    private value: number = 10,
     private showTooltip: boolean = true,
     private isVertical: boolean = false
   ) {
     this.toHtml()
   }
 
-  toHtml(): void {
+  private toHtml(): void {
     this.element = render(`
     <div class="range-slider__handle range-slider__handle_num_${this.handleNumber}">
       <div class="range-slider__tooltip js-range-slider__tooltip">${this.value}</div>

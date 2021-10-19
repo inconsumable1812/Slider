@@ -8,7 +8,7 @@ class Progress {
     this.toHtml()
   }
 
-  toHtml(): void {
+  private toHtml(): void {
     this.element = render(`
     <div class="range-slider__progress"></div>
     `)

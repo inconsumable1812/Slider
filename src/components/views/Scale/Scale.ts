@@ -21,7 +21,7 @@ class Scale extends Observer {
     this.renderScalePoint()
   }
 
-  toHtml(): void {
+  private toHtml(): void {
     this.element = render(`
     <div class="range-slider__scale"></div>
     `)
