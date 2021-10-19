@@ -3,7 +3,8 @@ import Progress from './Progress'
 const isVertical = true
 
 describe('progress', () => {
-  let progress: Progress, progressVertical: Progress
+  let progress: Progress
+  let progressVertical: Progress
   beforeEach(() => {
     progress = new Progress(!isVertical)
     progressVertical = new Progress(isVertical)

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { DEFAULT_MODEL_OPTIONS } from '../default'
 import { ModelOptions } from '../type'
 
@@ -19,11 +20,11 @@ class Model extends Observer {
   }
 
   getFirstValue(): number {
-    return this.options.valueStart
+    return this.options.valueStart!
   }
 
   getSecondValue(): number {
-    return this.options.valueEnd
+    return this.options.valueEnd!
   }
 
   private checkOptions(): void {
@@ -45,7 +46,7 @@ class Model extends Observer {
 
   checkStep(): void {
     const { step } = this.options
-    if (step < 1) {
+    if (step! < 1) {
       return this.setOptions({ step: 1 })
     }
   }
@@ -53,39 +54,41 @@ class Model extends Observer {
   checkMinValueLessMax(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step } = this.options
     if (minValue === maxValue) {
-      return this.setOptions({ maxValue: minValue + step })
-    } else if (minValue > maxValue) {
-      return this.setOptions({ minValue: maxValue - step })
+      return this.setOptions({ maxValue: minValue! + step! })
+    }
+    if (minValue! > maxValue!) {
+      return this.setOptions({ minValue: maxValue! - step! })
     }
   }
 
   checkRangeLessThanStepSize(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step } = this.options
-    const range = Math.abs(maxValue - minValue)
-    const rangeLess: boolean = range < step
+    const range = Math.abs(maxValue! - minValue!)
+    const rangeLess: boolean = range < step!
     if (rangeLess) {
-      return this.setOptions({ minValue: maxValue - step })
+      return this.setOptions({ minValue: maxValue! - step! })
     }
   }
 
   checkValueStartInRange(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step, valueStart, range } = this.options
-    if (valueStart < minValue) {
+    if (valueStart! < minValue!) {
       return this.setOptions({ valueStart: minValue })
-    } else if (valueStart > maxValue) {
+    }
+    if (valueStart! > maxValue!) {
       if (range) {
-        return this.setOptions({ valueStart: maxValue - step })
-      } else {
-        return this.setOptions({ valueStart: maxValue })
+        return this.setOptions({ valueStart: maxValue! - step! })
       }
+      return this.setOptions({ valueStart: maxValue })
     }
   }
 
   checkValueEndInRange(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step, valueEnd } = this.options
-    if (valueEnd < minValue) {
-      return this.setOptions({ valueEnd: minValue + step })
-    } else if (valueEnd > maxValue) {
+    if (valueEnd! < minValue!) {
+      return this.setOptions({ valueEnd: minValue! + step! })
+    }
+    if (valueEnd! > maxValue!) {
       return this.setOptions({ valueEnd: maxValue })
     }
   }
@@ -95,34 +98,33 @@ class Model extends Observer {
     if (this.options.range) {
       if (valueStart === valueEnd) {
         if (valueEnd === maxValue) {
-          return this.setOptions({ valueStart: valueStart - step })
-        } else if (valueStart === minValue) {
-          return this.setOptions({ valueEnd: valueEnd + step })
-        } else {
-          return this.setOptions({ valueEnd: valueEnd + step })
+          return this.setOptions({ valueStart: valueStart! - step! })
         }
-      } else if (valueStart > valueEnd) {
+        if (valueStart === minValue) {
+          return this.setOptions({ valueEnd: valueEnd! + step! })
+        }
+        return this.setOptions({ valueEnd: valueEnd! + step! })
+      }
+      if (valueStart! > valueEnd!) {
         return this.setOptions({ valueStart: minValue })
       }
-    } else {
-      if (valueStart >= valueEnd && valueStart !== maxValue) {
-        return this.setOptions({ valueEnd: maxValue })
-      } else if (valueStart === maxValue && valueEnd !== maxValue) {
-        return this.setOptions({ valueEnd: maxValue })
-      }
+    } else if (valueStart! >= valueEnd! && valueStart !== maxValue) {
+      return this.setOptions({ valueEnd: maxValue })
+    } else if (valueStart === maxValue && valueEnd !== maxValue) {
+      return this.setOptions({ valueEnd: maxValue })
     }
   }
 
   checkValueStartCorrectStep(): void | Partial<ModelOptions> {
     const { minValue, step, valueStart } = this.options
-    if (Math.abs(valueStart - minValue) % step) {
+    if (Math.abs(valueStart! - minValue!) % step!) {
       return this.setOptions({ valueStart: minValue })
     }
   }
 
   checkValueEndCorrectStep(): void | Partial<ModelOptions> {
     const { maxValue, minValue, step, valueEnd } = this.options
-    if (Math.abs(valueEnd - minValue) % step && valueEnd !== maxValue) {
+    if (Math.abs(valueEnd! - minValue!) % step! && valueEnd !== maxValue) {
       return this.setOptions({ valueEnd: maxValue })
     }
   }

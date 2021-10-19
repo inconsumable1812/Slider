@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-expressions */
 import render from '../utils/render'
 
 class Handle {
-  private elements: { handle: HTMLElement; tooltip: HTMLElement }
-  element: HTMLElement
+  private elements!: { handle: HTMLElement; tooltip: HTMLElement }
+  element!: HTMLElement
 
   constructor(
     public handleNumber: number = 1,
@@ -37,6 +38,10 @@ class Handle {
 
   getElement(): HTMLElement {
     return this.elements.handle
+  }
+
+  getTooltip(): HTMLElement {
+    return this.elements.tooltip
   }
 
   getValue(): number {

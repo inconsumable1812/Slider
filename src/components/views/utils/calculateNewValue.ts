@@ -4,8 +4,8 @@ function calculateNewValue(
   progressInPercents: number,
   step: number
 ): number {
-  let progressValue = Math.round((maxValue - minValue) * progressInPercents + minValue)
-  let isCorrectNewValue: boolean = !((progressValue - minValue) % step)
+  const progressValue = Math.round((maxValue - minValue) * progressInPercents + minValue)
+  let isCorrectNewValue = !((progressValue - minValue) % step)
   let value = progressValue
 
   let i = 1
@@ -14,7 +14,7 @@ function calculateNewValue(
       isCorrectNewValue = !((progressValue - i - minValue) % step)
       value = progressValue - i
 
-      i++
+      i += 1
     } else if ((progressValue - minValue) % step > step / 2) {
       isCorrectNewValue = !((progressValue + i - minValue) % step)
       if (value >= maxValue) {
@@ -22,7 +22,7 @@ function calculateNewValue(
         break
       }
       value = progressValue + i
-      i++
+      i += 1
     } else {
       break
     }

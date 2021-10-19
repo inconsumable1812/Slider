@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import Observer from './Observer'
 
 describe('Observer', () => {
@@ -14,7 +15,7 @@ describe('Observer', () => {
     observer.subscribe('check', secondFn)
     observer.subscribe('check', thirdFn)
 
-    expect(observer.listeners['check'].length).toBe(3)
+    expect(observer.listeners['check']!.length).toBe(3)
   })
 
   test('check emit', () => {

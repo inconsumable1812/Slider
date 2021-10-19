@@ -15,7 +15,8 @@ const optionsVertical = {
 }
 
 describe('Track', () => {
-  let track: Track, trackVertical: Track
+  let track: Track
+  let trackVertical: Track
   beforeEach(() => {
     track = new Track(
       options.minValue,

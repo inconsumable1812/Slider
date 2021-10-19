@@ -2,6 +2,7 @@ import { create } from '../slider'
 import { Slider, sliderOptions } from '../type'
 import Panel from './Panel'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
 const dom = new JSDOM(`<!DOCTYPE html><div id="app" class="container"></div>`)
@@ -22,7 +23,8 @@ const options: sliderOptions = {
 }
 
 describe('Panel', () => {
-  let panel: Panel, slider: Slider
+  let panel: Panel
+  let slider: Slider
   const changeEvent = new InputEvent('change')
   const mousedown = new Event('mousedown')
   const mouseup = new Event('mouseup')
@@ -136,7 +138,7 @@ describe('Panel', () => {
     expect(slider.getOptions().valueStart).toBe(40)
   })
 
-  describe('if new value is undefined ', () => {
+  describe('if new value is undefined', () => {
     test('check correct change minValue', () => {
       const newMin = ''
       const minValue = panel.getInputs().minValue
@@ -291,7 +293,7 @@ describe('Panel', () => {
       expect(slider.getOptions().step).toBe(1)
     })
 
-    test('when new scale point less than 2 ', () => {
+    test('when new scale point less than 2', () => {
       const newScalePoint = -3
       const scalePointCount = panel.getInputs().scalePointCount
       scalePointCount.value = newScalePoint.toString()
@@ -299,7 +301,7 @@ describe('Panel', () => {
       expect(slider.getOptions().scalePointCount).toBe(2)
     })
 
-    test('when new scale point bigger than 11 ', () => {
+    test('when new scale point bigger than 11', () => {
       const newScalePoint = 333
       const scalePointCount = panel.getInputs().scalePointCount
       scalePointCount.value = newScalePoint.toString()

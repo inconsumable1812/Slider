@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS } from './default'
 import { ModelOptions, sliderOptions, ViewOptions } from './type'
 
@@ -7,6 +8,20 @@ import Presenter from './presenter/Presenter'
 import View from './views/View'
 
 const create = (selector: HTMLElement, options: sliderOptions = {}) => {
+  function prepareOptions(
+    newOptions: sliderOptions,
+    target: ViewOptions | ModelOptions
+  ): Partial<ModelOptions> | Partial<ViewOptions> {
+    const state: Partial<ViewOptions | ModelOptions> = {}
+    const keys = Object.keys(target) as Array<keyof typeof target>
+    return keys.reduce((acc, key) => {
+      if (newOptions[key] !== undefined) {
+        acc[key] = newOptions[key]
+      }
+
+      return acc
+    }, state)
+  }
   const updateModelOptions = prepareOptions(
     options,
     DEFAULT_MODEL_OPTIONS
@@ -17,27 +32,13 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
   ) as Partial<ViewOptions>
 
   const model = new Model(updateModelOptions)
-  const modelOptions = model.getOptions()
+  const modelOptionsInit = model.getOptions()
 
-  const view = new View(selector, modelOptions, updateViewOptions)
+  const view = new View(selector, modelOptionsInit, updateViewOptions)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const presenter = new Presenter(model, view)
 
   let panel: Panel
-
-  function prepareOptions(
-    options: sliderOptions,
-    target: ViewOptions | ModelOptions
-  ): Partial<ModelOptions> | Partial<ViewOptions> {
-    const state: Partial<ViewOptions | ModelOptions> = {}
-    const keys = Object.keys(target) as Array<keyof typeof target>
-    return keys.reduce((acc, key) => {
-      if (options[key] !== undefined) {
-        acc[key] = options[key]
-      }
-
-      return acc
-    }, state)
-  }
 
   const slider = {
     getContainer(): HTMLElement {
@@ -89,7 +90,7 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
           return this.getOptions()
 
         case 'setOptions':
-          return this.setOptions(newOptions)
+          return this.setOptions(newOptions!)
 
         case 'getFirstValue':
           return this.getFirstValue()

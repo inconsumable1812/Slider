@@ -8,7 +8,8 @@ const optionsVertical = {
 }
 
 describe('Handle', () => {
-  let handel: Handle, handelVertical: Handle
+  let handel: Handle
+  let handelVertical: Handle
   beforeEach(() => {
     handel = new Handle()
 
@@ -76,8 +77,6 @@ describe('Handle', () => {
 
   test('return correct text content of value when set new value', () => {
     handel.setValue(50)
-    expect(handel.getElement().querySelector('.range-slider__tooltip').textContent).toBe(
-      '50'
-    )
+    expect(handel.getTooltip().textContent).toBe('50')
   })
 })

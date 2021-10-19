@@ -31,7 +31,7 @@ describe('calculate new value', () => {
     ).toBe(41)
   })
 
-  test('check return correct closest value with options2', () => {
+  test('another check return correct closest value with options2', () => {
     expect(
       calculateNewValue(options2.minValue, options2.maxValue, 0.55, options2.step)
     ).toBe(72)

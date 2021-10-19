@@ -2,10 +2,10 @@ import { ModelOptions, panelElements, panelInputs, Slider, ViewOptions } from '.
 import render from '../views/utils/render'
 
 class Panel {
-  root: HTMLElement
-  elements: panelElements
-  inputs: panelInputs
-  track: HTMLElement
+  root!: HTMLElement
+  elements!: panelElements
+  inputs!: panelInputs
+  track!: HTMLElement
 
   constructor(private selector: Element, private slider: Slider) {}
 
@@ -134,17 +134,17 @@ class Panel {
     this.selector.append(this.root)
 
     this.inputs = {
-      maxValue: maxValueEl.querySelector('input'),
-      minValue: minValueEl.querySelector('input'),
-      valueStart: firstValueEl.querySelector('input'),
-      valueEnd: secondValueEl.querySelector('input'),
-      showTooltip: showTooltipEL.querySelector('input'),
-      range: rangeEl.querySelector('input'),
-      step: stepEl.querySelector('input'),
-      showScale: showScaleEl.querySelector('input'),
-      scalePointCount: scalePointEl.querySelector('input'),
-      showProgress: progressEl.querySelector('input'),
-      isVertical: verticalEl.querySelector('input')
+      maxValue: maxValueEl.querySelector('input') as HTMLInputElement,
+      minValue: minValueEl.querySelector('input') as HTMLInputElement,
+      valueStart: firstValueEl.querySelector('input') as HTMLInputElement,
+      valueEnd: secondValueEl.querySelector('input') as HTMLInputElement,
+      showTooltip: showTooltipEL.querySelector('input') as HTMLInputElement,
+      range: rangeEl.querySelector('input') as HTMLInputElement,
+      step: stepEl.querySelector('input') as HTMLInputElement,
+      showScale: showScaleEl.querySelector('input') as HTMLInputElement,
+      scalePointCount: scalePointEl.querySelector('input') as HTMLInputElement,
+      showProgress: progressEl.querySelector('input') as HTMLInputElement,
+      isVertical: verticalEl.querySelector('input') as HTMLInputElement
     }
 
     this.addListeners()
@@ -166,18 +166,18 @@ class Panel {
       range
     } = this.slider.getOptions()
 
-    this.inputs.maxValue.value = maxValue.toString()
-    this.inputs.minValue.value = minValue.toString()
-    this.inputs.valueStart.value = valueStart.toString()
-    this.inputs.valueEnd.value = valueEnd.toString()
-    this.inputs.valueEnd.disabled = !range.toString()
-    this.inputs.showTooltip.checked = showTooltip
-    this.inputs.range.checked = range
-    this.inputs.step.value = step.toString()
-    this.inputs.showScale.checked = showScale
-    this.inputs.scalePointCount.value = scalePointCount.toString()
-    this.inputs.showProgress.checked = showProgress
-    this.inputs.isVertical.checked = isVertical
+    this.inputs.maxValue.value = maxValue!.toString()
+    this.inputs.minValue.value = minValue!.toString()
+    this.inputs.valueStart.value = valueStart!.toString()
+    this.inputs.valueEnd.value = valueEnd!.toString()
+    this.inputs.valueEnd.disabled = !range as boolean
+    this.inputs.showTooltip.checked = showTooltip as boolean
+    this.inputs.range.checked = range as boolean
+    this.inputs.step.value = step!.toString()
+    this.inputs.showScale.checked = showScale as boolean
+    this.inputs.scalePointCount.value = scalePointCount!.toString()
+    this.inputs.showProgress.checked = showProgress as boolean
+    this.inputs.isVertical.checked = isVertical as boolean
   }
 
   private getMaxValue(): Partial<ModelOptions> {
@@ -241,32 +241,42 @@ class Panel {
   private addListeners(): void {
     // MaxValue
     this.inputs.maxValue.addEventListener('change', () => {
-      const isUndefined = this.getMaxValue().maxValue
+      const maxValue = this.getMaxValue().maxValue
+      const minValue = this.getMinValue().minValue
+      const step = this.getStep().step
+      const isUndefined =
+        maxValue === undefined || minValue === undefined || step === undefined
       const previousValue = this.slider.getOptions().maxValue
-      const MaxValueLessThanMin =
-        this.getMaxValue().maxValue <= this.getMinValue().minValue
-      const rangeLessThanStep =
-        Math.abs(this.getMaxValue().maxValue - this.getMinValue().minValue) <
-        this.getStep().step
 
-      let newValue = MaxValueLessThanMin
+      const MaxValueLessThanMin: boolean = !isUndefined ? maxValue <= minValue : true
+      const rangeLessThanStep: boolean = !isUndefined
+        ? Math.abs(maxValue - minValue) < step
+        : true
+
+      let newValue: Partial<ModelOptions> = MaxValueLessThanMin
         ? { maxValue: previousValue }
         : this.getMaxValue()
       newValue = rangeLessThanStep ? { maxValue: previousValue } : this.getMaxValue()
 
-      if (isUndefined !== undefined) {
-        this.slider.setOptions(newValue)
+      this.slider.setOptions(newValue)
+    })
+    this.inputs.maxValue.addEventListener('blur', () => {
+      if (this.inputs.maxValue.value === '') {
+        this.inputs.maxValue.value = this.slider.getOptions().maxValue!.toString()
       }
     })
 
     // MinValue
     this.inputs.minValue.addEventListener('change', () => {
-      const isUndefined = this.getMinValue().minValue
+      const isUndefined = this.getMinValue().minValue === undefined
+      const previousValue = this.slider.getOptions().minValue
 
-      const newValue = this.getMinValue()
-
-      if (isUndefined !== undefined) {
-        this.slider.setOptions(newValue)
+      const newValue = !isUndefined ? this.getMinValue() : { minValue: previousValue }
+      this.slider.setOptions(newValue)
+    })
+    this.inputs.minValue.addEventListener('blur', () => {
+      if (this.inputs.minValue.value === '') {
+        this.inputs.minValue.value = this.slider.getOptions().minValue?.toString() ?? ''
       }
     })
 
@@ -274,11 +284,14 @@ class Panel {
     this.inputs.valueStart.addEventListener('change', () => {
       const range = this.inputs.range.checked
       const maxValue = this.getMaxValue().maxValue
-      const isUndefined = this.getValueStart().valueStart
+      const valueStart = this.getValueStart().valueStart
+      const valueEnd = this.getValueEnd().valueEnd
+      const isUndefined =
+        maxValue === undefined || valueStart === undefined || valueEnd === undefined
       const previousValue = this.slider.getOptions().valueStart
-      const newValueBiggerThanMax = this.getValueStart().valueStart > maxValue
-      const newValueBiggerThanSecond =
-        this.getValueStart().valueStart >= this.getValueEnd().valueEnd
+
+      const newValueBiggerThanMax = !isUndefined ? valueStart > maxValue : true
+      const newValueBiggerThanSecond = !isUndefined ? valueStart >= valueEnd : true
 
       let newValue = this.getValueStart()
 
@@ -289,49 +302,76 @@ class Panel {
           ? { valueStart: previousValue }
           : this.getValueStart()
 
-      if (isUndefined !== undefined) {
-        this.slider.setOptions(newValue)
+      this.slider.setOptions(newValue)
+    })
+    this.inputs.valueStart.addEventListener('blur', () => {
+      if (this.inputs.valueStart.value === '') {
+        this.inputs.valueStart.value =
+          this.slider.getOptions().valueStart?.toString() ?? ''
       }
     })
 
     // ValueEnd
     this.inputs.valueEnd.addEventListener('change', () => {
+      const valueEnd = this.getValueEnd().valueEnd
+      const valueStart = this.getValueStart().valueStart
       const previousValue = this.slider.getOptions().valueEnd
-      const isUndefined = this.getValueEnd().valueEnd
-      const newValueLessThanFirst =
-        this.getValueEnd().valueEnd <= this.getValueStart().valueStart
+      const isUndefined = valueEnd === undefined || valueStart === undefined
+
+      const newValueLessThanFirst = !isUndefined ? valueEnd <= valueStart : true
 
       let newValue = this.getValueEnd()
       newValue = newValueLessThanFirst ? { valueEnd: previousValue } : this.getValueEnd()
 
-      if (isUndefined !== undefined) {
-        this.slider.setOptions(newValue)
+      this.slider.setOptions(newValue)
+    })
+    this.inputs.valueEnd.addEventListener('blur', () => {
+      if (this.inputs.valueEnd.value === '') {
+        this.inputs.valueEnd.value = this.slider.getOptions().valueEnd?.toString() ?? ''
       }
     })
 
     // Step
     this.inputs.step.addEventListener('change', () => {
-      const isUndefined = this.getStep().step
       const previousValue = this.slider.getOptions().step
+      const step = this.getStep().step
+      const maxValue = this.getMaxValue().maxValue
+      const minValue = this.getMinValue().minValue
+      const isUndefined =
+        maxValue === undefined || minValue === undefined || step === undefined
 
       let newStep = this.getStep()
-      const isStepBiggerRange =
-        Math.abs(this.getMaxValue().maxValue - this.getMinValue().minValue) <=
-        newStep.step
+
+      const isStepBiggerRange = !isUndefined
+        ? Math.abs(maxValue - minValue) <= step
+        : true
+
       newStep = isStepBiggerRange ? { step: previousValue } : this.getStep()
 
-      if (isUndefined !== undefined) {
-        this.slider.setOptions(newStep)
+      this.slider.setOptions(newStep)
+    })
+    this.inputs.step.addEventListener('blur', () => {
+      if (this.inputs.step.value === '') {
+        this.inputs.step.value = this.slider.getOptions().step?.toString() ?? ''
       }
     })
 
     // ScaleCount
     this.inputs.scalePointCount.addEventListener('change', () => {
-      const isUndefined = this.getScaleCount().scalePointCount
-      const newScaleCount = this.getScaleCount()
+      const scaleCount = this.getScaleCount().scalePointCount
+      const previousValue = this.slider.getOptions().scalePointCount
+      const isUndefined = scaleCount === undefined
 
-      if (isUndefined !== undefined) {
-        this.slider.setOptions(newScaleCount)
+      const newScaleCount = !isUndefined
+        ? this.getScaleCount()
+        : { scalePointCount: previousValue }
+
+      this.slider.setOptions(newScaleCount)
+    })
+    this.inputs.scalePointCount.addEventListener('blur', () => {
+      if (this.inputs.scalePointCount.value === '') {
+        this.inputs.scalePointCount.value =
+          this.slider.getOptions().scalePointCount?.toString() ?? ''
       }
     })
 
@@ -351,12 +391,12 @@ class Panel {
       this.slider.setOptions(this.getTooltip())
     })
 
-    //showScale
+    // showScale
     this.inputs.showScale.addEventListener('change', () => {
       this.slider.setOptions(this.getScale())
     })
 
-    //Vertical
+    // Vertical
     this.inputs.isVertical.addEventListener('change', () => {
       this.slider.setOptions(this.getVertical())
     })

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import Panel from './panel/Panel'
 import { create } from './slider'
 import { Slider, sliderOptions } from './type'
@@ -22,7 +23,8 @@ const options: sliderOptions = {
 }
 
 describe('Slider', () => {
-  let slider: Slider, sliderDefault: Slider
+  let slider: Slider
+  let sliderDefault: Slider
 
   beforeEach(() => {
     slider = create(selector, options)

@@ -3,14 +3,32 @@
   "env": { "es6": true, "browser": true, "node": true },
   "rules": {
     "linebreak-style": "off",
-    "semi": "off",
-    "no-console": "off"
+    "semi": "off"
   },
   "extends": ["eslint:recommended", "airbnb-base/legacy"],
-  "settings": {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
-    },
-    "import/resolver": "typescript"
-  }
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [
+        "eslint:recommended",
+        "airbnb-base/legacy",
+        "plugin:jest/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
+      ],
+      "plugins": ["@typescript-eslint"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": "tsconfig.json",
+        "tsconfigRootDir": "."
+      },
+      "rules": {
+        "linebreak-style": "off",
+        "semi": "off",
+        "lines-between-class-members": "off",
+        "@typescript-eslint/no-non-null-assertion": "off"
+      }
+    }
+  ]
 }

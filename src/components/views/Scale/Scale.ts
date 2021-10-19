@@ -2,15 +2,15 @@ import Observer from '../../observer/Observer'
 import render from '../utils/render'
 
 class Scale extends Observer {
-  element: HTMLElement
-  subElement: HTMLElement
+  element!: HTMLElement
+  subElement!: HTMLElement
 
   constructor(
     private minValue: number,
     private maxValue: number,
     private scalePointCount: number,
     private step: number,
-    private isVertical: Boolean
+    private isVertical: boolean
   ) {
     super()
     this.init()
@@ -40,7 +40,7 @@ class Scale extends Observer {
     const subElementStyle: string = isVertical ? 'top' : 'left'
 
     let j = 0
-    for (let i = 0; i < actualCount; i++) {
+    for (let i = 0; i < actualCount; i += 1) {
       if (scalePointCountLess && i === actualCount - 1) {
         j = i
         i += 1
@@ -58,7 +58,8 @@ class Scale extends Observer {
 
   deleteScalePoint(): void {
     const points = this.element.querySelectorAll('.range-slider__scale_point')
-    for (let point of points) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const point of points) {
       point.remove()
     }
   }
@@ -79,7 +80,7 @@ class Scale extends Observer {
 
     const arrayOfStepsValue = []
     const arrayOfStepsStyleValue = []
-    for (let i = 0; i <= countOfSteps; i++) {
+    for (let i = 0; i <= countOfSteps; i += 1) {
       let stepsValue = +(minValue + actualScaleSize * i).toFixed(0)
       stepsValue = stepsValue > maxValue ? maxValue : stepsValue
       arrayOfStepsValue.push(stepsValue)

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { ModelOptions, ViewOptions } from '../type'
 import View from './View'
 
@@ -49,7 +50,10 @@ const viewOptions4: ViewOptions = {
 }
 
 describe('View', () => {
-  let viewDefault: View, viewAllTrue: View, viewAllFalse: View, view4: View
+  let viewDefault: View
+  let viewAllTrue: View
+  let viewAllFalse: View
+  let view4: View
   beforeEach(() => {
     viewDefault = new View(selector, modelOptions1)
     viewAllTrue = new View(selector, modelOptions2, viewOptions2)
@@ -212,7 +216,7 @@ describe('View', () => {
     const fn = jest.fn()
     viewAllTrue.subscribe('viewChanged', fn)
     const scale = viewAllTrue.getComponents().scale
-    scale.element.dispatchEvent(new Event('click'))
+    scale!.element.dispatchEvent(new Event('click'))
     expect(fn).toBeCalled()
   })
 
@@ -221,7 +225,7 @@ describe('View', () => {
     const fn = jest.fn()
     view4.subscribe('viewChanged', fn)
     const scale = view4.getComponents().scale
-    scale.element.dispatchEvent(new Event('click'))
+    scale!.element.dispatchEvent(new Event('click'))
     expect(fn).toBeCalled()
   })
 })

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import Scale from './Scale'
 
 const options = {
@@ -17,7 +18,8 @@ const optionsVertical = {
 }
 
 describe('Scale', () => {
-  let scale: Scale, scaleVertical: Scale
+  let scale: Scale
+  let scaleVertical: Scale
   beforeEach(() => {
     scale = new Scale(
       options.minValue,
@@ -45,7 +47,7 @@ describe('Scale', () => {
 
   test('correct delete scale point', () => {
     scale.deleteScalePoint()
-    expect(scale.element.querySelector('.range-slider__scale_point')).toBeNull
+    expect(scale.element.querySelector('.range-slider__scale_point')).toBe(null)
   })
 
   test('check set scale options is correct', () => {

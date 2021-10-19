@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import '../components/slider'
 import { create } from '../components/slider'
 import '../components/JQplugin'

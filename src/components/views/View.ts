@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { ModelOptions, ViewComponents, ViewOptions } from '../type'
 import { DEFAULT_VIEW_OPTIONS } from '../default'
 
@@ -9,8 +10,8 @@ import Track from './Track/Track'
 import render from './utils/render'
 
 class View extends Observer {
-  private components: ViewComponents
-  root: HTMLElement
+  private components!: ViewComponents
+  root!: HTMLElement
   el: Element
   constructor(
     selector: Element,
@@ -27,11 +28,13 @@ class View extends Observer {
     this.viewOptions = { ...DEFAULT_VIEW_OPTIONS, ...this.viewOptions }
   }
 
+  // eslint-disable-next-line consistent-return
   checkScalePointCount(): void | Partial<ViewOptions> {
     const { scalePointCount } = this.viewOptions
-    if (scalePointCount < 2) {
+    if (scalePointCount! < 2) {
       return this.setOptions({ scalePointCount: 2 })
-    } else if (scalePointCount > 11) {
+    }
+    if (scalePointCount! > 11) {
       return this.setOptions({ scalePointCount: 11 })
     }
   }
@@ -50,21 +53,19 @@ class View extends Observer {
     const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions
     const { scalePointCount, showTooltip, isVertical, showProgress, showScale } =
       this.viewOptions
-    const { track, firstHandle, scale } = this.components
+    const { track, firstHandle } = this.components
 
     firstHandle.setValue(valueStart)
     firstHandle.setStyle(this.searchStyleValue(minValue, maxValue, valueStart))
 
     if (showProgress) {
       if (this.components.progress === undefined) {
-        this.components.progress = new Progress(isVertical)
+        this.components.progress = new Progress(isVertical!)
       }
       track.element.append(this.components.progress.element)
-      this.components.progress.setOrientation(isVertical)
-    } else {
-      if (this.components.progress !== undefined) {
-        this.components.progress.element.remove()
-      }
+      this.components.progress.setOrientation(isVertical!)
+    } else if (this.components.progress !== undefined) {
+      this.components.progress.element.remove()
     }
 
     if (showScale) {
@@ -72,15 +73,15 @@ class View extends Observer {
         this.components.scale = new Scale(
           minValue,
           maxValue,
-          scalePointCount,
+          scalePointCount!,
           step,
-          isVertical
+          isVertical!
         )
       }
-      this.components.scale.setOrientation(isVertical)
-      this.components.scale.setScaleOptions(maxValue, minValue, step, scalePointCount)
+      this.components.scale.setOrientation(isVertical!)
+      this.components.scale.setScaleOptions(maxValue, minValue, step, scalePointCount!)
     } else {
-      this.components.scale.deleteScalePoint()
+      this.components.scale!.deleteScalePoint()
     }
 
     if (range) {
@@ -101,7 +102,7 @@ class View extends Observer {
         this.searchStyleValue(minValue, maxValue, valueEnd)
       )
       if (showProgress) {
-        this.components.progress.setStyle(
+        this.components.progress!.setStyle(
           this.searchStyleValue(minValue, maxValue, valueStart),
           this.searchStyleValue(minValue, maxValue, valueEnd)
         )
@@ -111,7 +112,7 @@ class View extends Observer {
         this.components.secondHandle.element.remove()
       }
       if (showProgress) {
-        this.components.progress.setStyle(
+        this.components.progress!.setStyle(
           0,
           this.searchStyleValue(minValue, maxValue, valueStart)
         )
@@ -121,12 +122,12 @@ class View extends Observer {
     if (showTooltip) {
       firstHandle.showTooltipMethod()
       if (range) {
-        this.components.secondHandle.showTooltipMethod()
+        this.components.secondHandle!.showTooltipMethod()
       }
     } else {
       firstHandle.hideTooltip()
       if (range) {
-        this.components.secondHandle.hideTooltip()
+        this.components.secondHandle!.hideTooltip()
       }
     }
 
@@ -144,17 +145,17 @@ class View extends Observer {
         track.getMaxValue(),
         valueEnd
       )
-      this.components.secondHandle.setOrientation(isVertical)
-      this.components.secondHandle.clearStyle()
-      this.components.secondHandle.setStyle(styleValueSecond)
+      this.components.secondHandle!.setOrientation(isVertical!)
+      this.components.secondHandle!.clearStyle()
+      this.components.secondHandle!.setStyle(styleValueSecond)
     }
 
-    track.setOrientation(isVertical)
-    firstHandle.setOrientation(isVertical)
+    track.setOrientation(isVertical!)
+    firstHandle.setOrientation(isVertical!)
     firstHandle.clearStyle()
     firstHandle.setStyle(styleValueFirst)
     if (showProgress) {
-      this.components.progress.setOrientation(isVertical)
+      this.components.progress!.setOrientation(isVertical!)
     }
 
     if (isVertical) {
@@ -186,7 +187,7 @@ class View extends Observer {
       track: new Track(
         this.modelOptions.minValue,
         this.modelOptions.maxValue,
-        this.viewOptions.isVertical,
+        this.viewOptions.isVertical!,
         this.modelOptions.step
       ),
       firstHandle: new Handle(
@@ -207,16 +208,16 @@ class View extends Observer {
     }
 
     if (this.viewOptions.showProgress) {
-      this.components.progress = new Progress(this.viewOptions.isVertical)
+      this.components.progress = new Progress(this.viewOptions.isVertical!)
     }
 
     if (this.viewOptions.showScale) {
       this.components.scale = new Scale(
         this.modelOptions.minValue,
         this.modelOptions.maxValue,
-        this.viewOptions.scalePointCount,
+        this.viewOptions.scalePointCount!,
         this.modelOptions.step,
-        this.viewOptions.isVertical
+        this.viewOptions.isVertical!
       )
     }
     this.init()
@@ -226,15 +227,15 @@ class View extends Observer {
     const { track, firstHandle, secondHandle, scale, progress } = this.components
 
     if (this.viewOptions.showProgress) {
-      track.element.append(progress.element)
+      track.element.append(progress!.element)
     }
     this.root.append(track.element)
     this.root.append(firstHandle.element)
     if (this.modelOptions.range) {
-      this.root.append(secondHandle.element)
+      this.root.append(secondHandle!.element)
     }
     if (this.viewOptions.showScale) {
-      this.root.append(scale.element)
+      this.root.append(scale!.element)
     }
 
     const firstHandleStyleValue = this.searchStyleValue(
@@ -249,12 +250,12 @@ class View extends Observer {
     )
     firstHandle.setStyle(firstHandleStyleValue)
     if (this.modelOptions.range) {
-      secondHandle.setStyle(secondHandleStyleValue)
+      secondHandle!.setStyle(secondHandleStyleValue)
       if (this.viewOptions.showProgress) {
-        progress.setStyle(firstHandleStyleValue, secondHandleStyleValue)
+        progress!.setStyle(firstHandleStyleValue, secondHandleStyleValue)
       }
     } else if (this.viewOptions.showProgress) {
-      progress.setStyle(0, firstHandleStyleValue)
+      progress!.setStyle(0, firstHandleStyleValue)
     }
 
     this.el.append(this.root)
@@ -262,17 +263,15 @@ class View extends Observer {
     this.clickOnTrack()
     this.bindListenersToHandle(firstHandle)
     if (this.modelOptions.range) {
-      this.bindListenersToHandle(secondHandle)
+      this.bindListenersToHandle(secondHandle!)
     }
     if (this.viewOptions.showScale) {
-      this.clickOnScale(scale)
+      this.clickOnScale(scale!)
     }
   }
 
   private clickOnTrack(): void {
-    const { track } = this.components
-
-    track.subscribe(
+    this.components.track.subscribe(
       'clickOnTrack',
       ({ event, value, click }: { event: MouseEvent; value: number; click: number }) => {
         const { track, firstHandle, secondHandle, progress } = this.components
@@ -284,15 +283,15 @@ class View extends Observer {
         )
 
         if (this.modelOptions.range) {
-          closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+          closetHandle = this.findClosestHandle(firstHandle, secondHandle!, value)
 
           if (
             click > styleValue / 100 &&
             firstHandle.getStyleValue() < styleValue &&
             Math.abs(firstHandle.getStyleValue() / 100 - click) >
-              Math.abs(secondHandle.getStyleValue() / 100 - click)
+              Math.abs(secondHandle!.getStyleValue() / 100 - click)
           ) {
-            closetHandle = secondHandle
+            closetHandle = secondHandle!
           }
         }
 
@@ -301,13 +300,13 @@ class View extends Observer {
 
         if (this.modelOptions.range && this.viewOptions.showProgress) {
           if (closetHandle === firstHandle) {
-            progress.setStart(styleValue)
+            progress!.setStart(styleValue)
           } else if (closetHandle === secondHandle) {
-            progress.setEnd(styleValue)
+            progress!.setEnd(styleValue)
           }
         } else if (this.viewOptions.showProgress) {
-          progress.setStart(0)
-          progress.setEnd(styleValue)
+          progress!.setStart(0)
+          progress!.setEnd(styleValue)
         }
         if (closetHandle === firstHandle) {
           this.emit('viewChanged', { valueStart: closetHandle.getValue() })
@@ -329,15 +328,14 @@ class View extends Observer {
     const secondValue: number = secondHandle.getValue()
     if (Math.abs(firstValue - clickValue) <= Math.abs(secondValue - clickValue)) {
       return firstHandle
-    } else {
-      return secondHandle
     }
+    return secondHandle
   }
 
   private handleMouseDown(event: MouseEvent, handle: Handle): void {
     event.preventDefault()
 
-    const handleMouseMove = (event: MouseEvent) => this.handleMouseMove(event, handle)
+    const handleMouseMove = (e: MouseEvent) => this.handleMouseMove(e, handle)
 
     document.addEventListener('mousemove', handleMouseMove)
 
@@ -367,7 +365,7 @@ class View extends Observer {
     const valueInPercent: number = valueInPx / widthOrHeight
 
     const delta: number = track.getMaxValue() - track.getMinValue()
-    const isValueCorrectOfStep: boolean = !(Math.round(delta * valueInPercent) % step)
+    const isValueCorrectOfStep = !(Math.round(delta * valueInPercent) % step)
 
     let newValue: number = isValueCorrectOfStep
       ? Math.round(track.getMinValue() + delta * valueInPercent)
@@ -387,23 +385,23 @@ class View extends Observer {
     )
 
     if (this.modelOptions.range) {
-      if (handle === firstHandle && newValue < secondHandle.getValue()) {
+      if (handle === firstHandle && newValue < secondHandle!.getValue()) {
         handle.setValue(newValue)
         handle.setStyle(styleValue)
         if (this.viewOptions.showProgress) {
-          progress.setStart(styleValue)
+          progress!.setStart(styleValue)
         }
       } else if (handle === secondHandle && newValue > firstHandle.getValue()) {
         handle.setValue(newValue)
         handle.setStyle(styleValue)
 
         if (this.viewOptions.showProgress) {
-          progress.setEnd(styleValue)
+          progress!.setEnd(styleValue)
         }
       }
     } else if (this.viewOptions.showProgress) {
-      progress.setStart(0)
-      progress.setEnd(styleValue)
+      progress!.setStart(0)
+      progress!.setEnd(styleValue)
     }
     if (!this.modelOptions.range) {
       handle.setValue(newValue)
@@ -436,11 +434,11 @@ class View extends Observer {
     const { firstHandle, secondHandle, progress, track } = this.components
 
     const target: HTMLElement = event.target as HTMLElement
-    const value: number = +target.textContent
+    const value: number = +target.textContent!
 
     let closetHandle: Handle = firstHandle
     if (this.modelOptions.range) {
-      closetHandle = this.findClosestHandle(firstHandle, secondHandle, value)
+      closetHandle = this.findClosestHandle(firstHandle, secondHandle!, value)
     }
     closetHandle.setValue(value)
 
@@ -453,13 +451,13 @@ class View extends Observer {
     closetHandle.setStyle(styleValue)
     if (this.modelOptions.range && this.viewOptions.showProgress) {
       if (closetHandle === firstHandle) {
-        progress.setStart(styleValue)
+        progress!.setStart(styleValue)
       } else if (closetHandle === secondHandle) {
-        progress.setEnd(styleValue)
+        progress!.setEnd(styleValue)
       }
     } else if (this.viewOptions.showProgress) {
-      progress.setStart(0)
-      progress.setEnd(styleValue)
+      progress!.setStart(0)
+      progress!.setEnd(styleValue)
     }
 
     if (closetHandle === firstHandle) {

@@ -3,7 +3,7 @@ import calculateNewValue from '../utils/calculateNewValue'
 import render from '../utils/render'
 
 class Track extends Observer {
-  element: HTMLElement
+  element!: HTMLElement
 
   constructor(
     private minValue: number,

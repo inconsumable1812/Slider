@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import Model from '../model/Model'
 import { ModelOptions, ViewOptions } from '../type'
 import View from '../views/View'
@@ -26,7 +27,9 @@ const DEFAULT_VIEW_OPTIONS: ViewOptions = {
 }
 
 describe('Presenter', () => {
-  let presenter: Presenter, view: View, model: Model
+  let presenter: Presenter
+  let view: View
+  let model: Model
 
   beforeEach(() => {
     model = new Model(DEFAULT_MODEL_OPTIONS)

@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-expressions */
 import render from '../utils/render'
 
 class Progress {
-  element: HTMLElement
+  element!: HTMLElement
 
   constructor(private isVertical: boolean) {
     this.toHtml()
@@ -13,7 +14,7 @@ class Progress {
     `)
   }
 
-  setStart(start: Number): void {
+  setStart(start: number): void {
     this.isVertical
       ? (this.element.style.top = start + '%')
       : (this.element.style.left = start + '%')

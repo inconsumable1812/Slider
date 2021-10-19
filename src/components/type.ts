@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-shadow */
 import Panel from './panel/Panel'
 import Handle from './views/handle/Handle'
 import Progress from './views/progress/Progress'
@@ -81,6 +83,20 @@ type panelInputs = {
   isVertical: HTMLInputElement
 }
 
+type ListenersFunction = (...args: any) => void
+
+enum ListenersName {
+  check = 'check',
+  check1 = 'check1',
+  viewChanged = 'viewChanged',
+  modelValueChange = 'modelValueChange',
+  clickOnTrack = 'clickOnTrack'
+}
+
+type Listeners = {
+  [key in ListenersName]?: ListenersFunction[]
+}
+
 export {
   ModelOptions,
   ViewOptions,
@@ -88,5 +104,8 @@ export {
   sliderOptions,
   Slider,
   panelElements,
-  panelInputs
+  panelInputs,
+  Listeners,
+  ListenersFunction,
+  ListenersName
 }
