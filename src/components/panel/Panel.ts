@@ -1,3 +1,4 @@
+/* eslint-disable fsd/no-function-declaration-in-event-listener */
 import { ModelOptions, panelElements, panelInputs, Slider, ViewOptions } from '../type'
 import render from '../views/utils/render'
 

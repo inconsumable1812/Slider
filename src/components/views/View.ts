@@ -1,3 +1,5 @@
+/* eslint-disable fsd/no-function-declaration-in-event-listener */
+/* eslint-disable fsd/split-conditionals */
 /* eslint-disable class-methods-use-this */
 import { ModelOptions, ViewComponents, ViewOptions } from '../type'
 import { DEFAULT_VIEW_OPTIONS } from '../default'

@@ -1,3 +1,4 @@
+/* eslint-disable fsd/hof-name-prefix */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Listeners, ListenersFunction, ListenersName } from 'components/type'
 

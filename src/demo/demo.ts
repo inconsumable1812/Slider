@@ -33,5 +33,5 @@ sliderSecond.JQSlider('setOptions', { minValue: 5 })
 const sliderThird = $('#app_3').JQSlider(sliderThirdConfig)
 const sliderThirdPanel = sliderThird.JQSlider('addControlPanel')
 
-const sliderFourth = $('#app_3').JQSlider(sliderFourthConfig)
+const sliderFourth = $('#app_4').JQSlider(sliderFourthConfig)
 const sliderFourthPanel = sliderFourth.JQSlider('addControlPanel')
