@@ -1,4 +1,3 @@
-/* eslint-disable fsd/no-function-declaration-in-event-listener */
 import { ModelOptions, panelElements, panelInputs, Slider, ViewOptions } from '../type'
 import render from '../views/utils/render'
 
@@ -29,19 +28,18 @@ class Panel {
       this.inputs.valueStart.value = this.slider.getFirstValue().toString()
       this.inputs.valueEnd.value = this.slider.getSecondValue().toString()
     }
-    this.track.addEventListener('mousedown', () => {
+    const mouseDown = () => {
       this.inputs.valueStart.value = this.slider.getFirstValue().toString()
       this.inputs.valueEnd.value = this.slider.getSecondValue().toString()
       document.addEventListener('mousemove', setValue)
-    })
-    this.track.addEventListener('mouseup', () => {
-      document.removeEventListener('mousemove', setValue)
-    })
+    }
 
-    this.track.addEventListener('click', () => {
-      this.inputs.valueStart.value = this.slider.getFirstValue().toString()
-      this.inputs.valueEnd.value = this.slider.getSecondValue().toString()
-    })
+    const mouseUp = () => {
+      document.removeEventListener('mousemove', setValue)
+    }
+
+    this.track.addEventListener('mousedown', mouseDown)
+    this.track.addEventListener('mouseup', mouseUp)
   }
 
   private render(): void {
@@ -241,7 +239,7 @@ class Panel {
 
   private addListeners(): void {
     // MaxValue
-    this.inputs.maxValue.addEventListener('change', () => {
+    const maxValueCallback = () => {
       const maxValue = this.getMaxValue().maxValue
       const minValue = this.getMinValue().minValue
       const step = this.getStep().step
@@ -260,29 +258,35 @@ class Panel {
       newValue = rangeLessThanStep ? { maxValue: previousValue } : this.getMaxValue()
 
       this.slider.setOptions(newValue)
-    })
-    this.inputs.maxValue.addEventListener('blur', () => {
+    }
+    this.inputs.maxValue.addEventListener('change', maxValueCallback)
+
+    const maxValueCallbackWhenFocusGone = () => {
       if (this.inputs.maxValue.value === '') {
         this.inputs.maxValue.value = this.slider.getOptions().maxValue!.toString()
       }
-    })
+    }
+    this.inputs.maxValue.addEventListener('blur', maxValueCallbackWhenFocusGone)
 
     // MinValue
-    this.inputs.minValue.addEventListener('change', () => {
+    const minValueCallback = () => {
       const isUndefined = this.getMinValue().minValue === undefined
       const previousValue = this.slider.getOptions().minValue
 
       const newValue = !isUndefined ? this.getMinValue() : { minValue: previousValue }
       this.slider.setOptions(newValue)
-    })
-    this.inputs.minValue.addEventListener('blur', () => {
+    }
+    this.inputs.minValue.addEventListener('change', minValueCallback)
+
+    const minValueCallbackWhenFocusGone = () => {
       if (this.inputs.minValue.value === '') {
         this.inputs.minValue.value = this.slider.getOptions().minValue!.toString()
       }
-    })
+    }
+    this.inputs.minValue.addEventListener('blur', minValueCallbackWhenFocusGone)
 
     // ValueStart
-    this.inputs.valueStart.addEventListener('change', () => {
+    const valueStartCallback = () => {
       const range = this.inputs.range.checked
       const maxValue = this.getMaxValue().maxValue
       const valueStart = this.getValueStart().valueStart
@@ -304,15 +308,18 @@ class Panel {
           : this.getValueStart()
 
       this.slider.setOptions(newValue)
-    })
-    this.inputs.valueStart.addEventListener('blur', () => {
+    }
+    this.inputs.valueStart.addEventListener('change', valueStartCallback)
+
+    const valueStartCallbackWhenFocusGone = () => {
       if (this.inputs.valueStart.value === '') {
         this.inputs.valueStart.value = this.slider.getOptions().valueStart!.toString()
       }
-    })
+    }
+    this.inputs.valueStart.addEventListener('blur', valueStartCallbackWhenFocusGone)
 
     // ValueEnd
-    this.inputs.valueEnd.addEventListener('change', () => {
+    const valueEndCallback = () => {
       const valueEnd = this.getValueEnd().valueEnd
       const valueStart = this.getValueStart().valueStart
       const previousValue = this.slider.getOptions().valueEnd
@@ -324,15 +331,18 @@ class Panel {
       newValue = newValueLessThanFirst ? { valueEnd: previousValue } : this.getValueEnd()
 
       this.slider.setOptions(newValue)
-    })
-    this.inputs.valueEnd.addEventListener('blur', () => {
+    }
+    this.inputs.valueEnd.addEventListener('change', valueEndCallback)
+
+    const valueEndCallbackWhenFocusGone = () => {
       if (this.inputs.valueEnd.value === '') {
         this.inputs.valueEnd.value = this.slider.getOptions().valueEnd!.toString()
       }
-    })
+    }
+    this.inputs.valueEnd.addEventListener('blur', valueEndCallbackWhenFocusGone)
 
     // Step
-    this.inputs.step.addEventListener('change', () => {
+    const stepCallback = () => {
       const previousValue = this.slider.getOptions().step
       const step = this.getStep().step
       const maxValue = this.getMaxValue().maxValue
@@ -349,15 +359,18 @@ class Panel {
       newStep = isStepBiggerRange ? { step: previousValue } : this.getStep()
 
       this.slider.setOptions(newStep)
-    })
-    this.inputs.step.addEventListener('blur', () => {
+    }
+    this.inputs.step.addEventListener('change', stepCallback)
+
+    const stepCallbackWhenFocusGone = () => {
       if (this.inputs.step.value === '') {
         this.inputs.step.value = this.slider.getOptions().step!.toString()
       }
-    })
+    }
+    this.inputs.step.addEventListener('blur', stepCallbackWhenFocusGone)
 
     // ScaleCount
-    this.inputs.scalePointCount.addEventListener('change', () => {
+    const scaleCountCallback = () => {
       const scaleCount = this.getScaleCount().scalePointCount
       const previousValue = this.slider.getOptions().scalePointCount
       const isUndefined = scaleCount === undefined
@@ -367,40 +380,48 @@ class Panel {
         : { scalePointCount: previousValue }
 
       this.slider.setOptions(newScaleCount)
-    })
-    this.inputs.scalePointCount.addEventListener('blur', () => {
+    }
+    this.inputs.scalePointCount.addEventListener('change', scaleCountCallback)
+
+    const scaleCountCallbackWhenFocusGone = () => {
       if (this.inputs.scalePointCount.value === '') {
         this.inputs.scalePointCount.value = this.slider
           .getOptions()
           .scalePointCount!.toString()
       }
-    })
+    }
+    this.inputs.scalePointCount.addEventListener('blur', scaleCountCallbackWhenFocusGone)
 
     // Range
-    this.inputs.range.addEventListener('change', () => {
+    const rangeCallback = () => {
       this.slider.setOptions(this.getRange())
       this.inputs.valueEnd.disabled = !this.getRange().range
-    })
+    }
+    this.inputs.range.addEventListener('change', rangeCallback)
 
     // Progress
-    this.inputs.showProgress.addEventListener('change', () => {
+    const progressCallback = () => {
       this.slider.setOptions(this.getProgress())
-    })
+    }
+    this.inputs.showProgress.addEventListener('change', progressCallback)
 
     // Tooltip
-    this.inputs.showTooltip.addEventListener('change', () => {
+    const tooltipCallback = () => {
       this.slider.setOptions(this.getTooltip())
-    })
+    }
+    this.inputs.showTooltip.addEventListener('change', tooltipCallback)
 
     // showScale
-    this.inputs.showScale.addEventListener('change', () => {
+    const showScaleCallback = () => {
       this.slider.setOptions(this.getScale())
-    })
+    }
+    this.inputs.showScale.addEventListener('change', showScaleCallback)
 
     // Vertical
-    this.inputs.isVertical.addEventListener('change', () => {
+    const verticalCallback = () => {
       this.slider.setOptions(this.getVertical())
-    })
+    }
+    this.inputs.isVertical.addEventListener('change', verticalCallback)
   }
 }
 

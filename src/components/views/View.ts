@@ -1,4 +1,3 @@
-/* eslint-disable fsd/no-function-declaration-in-event-listener */
 /* eslint-disable fsd/split-conditionals */
 /* eslint-disable class-methods-use-this */
 import { ModelOptions, ViewComponents, ViewOptions } from '../type'
@@ -419,9 +418,9 @@ class View extends Observer {
   }
 
   private bindListenersToHandle(handle: Handle): void {
-    handle.element.addEventListener('mousedown', (event: MouseEvent): void =>
+    const handleMouseDown = (event: MouseEvent): void =>
       this.handleMouseDown(event, handle)
-    )
+    handle.element.addEventListener('mousedown', handleMouseDown)
   }
 
   private searchStyleValue(minValue: number, maxValue: number, progress: number): number {
@@ -429,7 +428,8 @@ class View extends Observer {
   }
 
   private clickOnScale(scale: Scale): void {
-    scale.element.addEventListener('click', (event) => this.clickOnScaleFunction(event))
+    const clickOnScaleFunction = (event: MouseEvent) => this.clickOnScaleFunction(event)
+    scale.element.addEventListener('click', clickOnScaleFunction)
   }
 
   private clickOnScaleFunction(event: MouseEvent): void {
