@@ -26,6 +26,7 @@
     border: $handle-border solid white;
     top: math.div(-$handle-size, $track-height) - $handle-border;
     transform: translate(-10%);
+    z-index: 2;
     &_num_1 {
       left: 10%;
     }

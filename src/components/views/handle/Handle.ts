@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-expressions */
-import render from '../utils/render'
+import render from '../utils/render';
 
 class Handle {
-  private elements!: { handle: HTMLElement; tooltip: HTMLElement }
-  element!: HTMLElement
+  private elements!: { handle: HTMLElement; tooltip: HTMLElement };
+  element!: HTMLElement;
 
   constructor(
     private handleNumber: number = 1,
@@ -11,68 +11,84 @@ class Handle {
     private showTooltip: boolean = true,
     private isVertical: boolean = false
   ) {
-    this.toHtml()
+    this.toHtml();
   }
 
   private toHtml(): void {
     this.element = render(`
     <div class="range-slider__handle range-slider__handle_num_${this.handleNumber}">
       <div class="range-slider__tooltip js-range-slider__tooltip">${this.value}</div>
-    </div>`)
+    </div>`);
     this.elements = {
       handle: this.element,
       tooltip: this.element.querySelector(`.js-range-slider__tooltip`) as HTMLElement
-    }
+    };
     if (!this.showTooltip) {
-      this.hideTooltip()
+      this.hideTooltip();
     }
   }
 
   showTooltipMethod(): void {
-    this.elements.tooltip.classList.remove('range-slider__tooltip_hide')
+    this.elements.tooltip.classList.remove('range-slider__tooltip_hide');
   }
 
   hideTooltip(): void {
-    this.elements.tooltip.classList.add('range-slider__tooltip_hide')
+    this.elements.tooltip.classList.add('range-slider__tooltip_hide');
   }
 
   getElement(): HTMLElement {
-    return this.elements.handle
+    return this.elements.handle;
   }
 
   getTooltip(): HTMLElement {
-    return this.elements.tooltip
+    return this.elements.tooltip;
   }
 
   getValue(): number {
-    return +this.value
+    return +this.value;
   }
 
   getStyleValue(): number {
     return this.isVertical
       ? +this.elements.handle.style.top.slice(0, -1)
-      : +this.elements.handle.style.left.slice(0, -1)
+      : +this.elements.handle.style.left.slice(0, -1);
   }
 
   setValue(value: number): void {
-    this.value = value
-    this.elements.tooltip.textContent = this.value.toString()
+    if (this.getValue() !== value) {
+      this.value = value;
+      this.elements.tooltip.textContent = this.value.toString();
+      if (this.handleNumber === 1) {
+        this.setZIndex(this.getStyleValue());
+      }
+    }
   }
+
+  setZIndex(styleValue: number): void {
+    if (styleValue >= 98) {
+      this.elements.handle.style.zIndex = '50';
+    } else if (this.elements.handle.style.zIndex === '50') {
+      this.elements.handle.style.zIndex = '1';
+    }
+  }
+
   setStyle(value: number): void {
-    this.isVertical
-      ? (this.elements.handle.style.top = value + '%')
-      : (this.elements.handle.style.left = value + '%')
+    if (this.getStyleValue() !== value) {
+      this.isVertical
+        ? (this.elements.handle.style.top = value + '%')
+        : (this.elements.handle.style.left = value + '%');
+    }
   }
 
   clearStyle(): void {
     this.isVertical
       ? (this.elements.handle.style.left = -4.5 + 'px')
-      : (this.elements.handle.style.top = -4.5 + 'px')
+      : (this.elements.handle.style.top = -4.5 + 'px');
   }
 
   setOrientation(isVertical: boolean): void {
-    this.isVertical = isVertical
+    this.isVertical = isVertical;
   }
 }
 
-export default Handle
+export default Handle;
