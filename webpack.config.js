@@ -1,15 +1,15 @@
-const path = require('path')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const ESLintPlugin = require('eslint-webpack-plugin')
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 // const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 
-const isProd = process.env.NODE_ENV === 'production'
-const isDev = !isProd
+const isProd = process.env.NODE_ENV === 'production';
+const isDev = !isProd;
 
-const filename = (ext) => (isDev ? `[name].${ext}` : `[name][hash].${ext}`)
+const filename = (ext) => (isDev ? `[name].${ext}` : `[name][hash].${ext}`);
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -89,4 +89,4 @@ module.exports = {
       }
     ]
   }
-}
+};

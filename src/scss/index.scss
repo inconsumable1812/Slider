@@ -1,9 +1,6 @@
-@use 'sass:math';
-
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
-@import './vars.scss';
 @import './mixins.scss';
+@import './slider.scss';
 
 * {
   margin: 0;
@@ -13,7 +10,7 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', Arial, sans-serif;
 }
 
 .container {
@@ -27,152 +24,6 @@ body {
     max-width: none;
     padding: 40px 40px;
     grid-template-columns: 1fr;
-  }
-}
-
-.range-slider {
-  position: relative;
-  max-width: 400px;
-  max-height: $track-height;
-  cursor: pointer;
-
-  &__track {
-    width: 100%;
-    border: $track-border solid rgb(31, 32, 65, 0.25);
-    height: $track-height;
-    background: $track-color;
-    border-radius: $track-height;
-  }
-
-  &__handle {
-    position: absolute;
-    height: $handle-size;
-    width: $handle-size;
-    border-radius: math.div($handle-size, 2);
-    background: $background-progress;
-    border: $handle-border solid white;
-    top: math.div(-$handle-size, $track-height) - $handle-border;
-    transform: translate(-10%);
-    &_num_1 {
-      left: 10%;
-    }
-    &_num_2 {
-      left: 90%;
-    }
-  }
-
-  &__tooltip {
-    position: absolute;
-    top: -30px;
-    left: -50%;
-    &_hide {
-      display: none;
-    }
-  }
-
-  &__progress {
-    position: absolute;
-    height: inherit;
-    right: 20%;
-    top: 0;
-    left: 40px + $handle-size;
-    background: $background-progress;
-    pointer-events: none;
-    border-radius: inherit;
-  }
-
-  &__scale {
-    position: relative;
-    margin-top: 8px;
-    &_point {
-      position: absolute;
-      transform: translate(-25%);
-      &-end {
-        background: white;
-        z-index: 100;
-      }
-    }
-  }
-
-  &_vertical {
-    max-width: $track-height;
-    max-height: none;
-    height: 400px;
-    @include _1200 {
-      margin: 0 auto;
-    }
-    .range-slider {
-      &__track {
-        width: $track-height;
-        border: $track-border solid rgb(31, 32, 65, 0.25);
-        height: 100%;
-        background: $track-color;
-        border-radius: $track-height;
-      }
-
-      &__progress {
-        width: inherit;
-        position: absolute;
-        height: initial;
-        left: 0;
-        top: 40px + $handle-size;
-        bottom: 20%;
-        background: $background-progress;
-        pointer-events: none;
-        border-radius: inherit;
-      }
-
-      &__handle {
-        position: absolute;
-        height: $handle-size;
-        width: $handle-size;
-        border-radius: math.div($handle-size, 2);
-        background: $background-progress;
-        border: $handle-border solid white;
-        left: math.div(-$handle-size, $track-height) - $handle-border;
-        transform: translate(0, -30%);
-        &_num_1 {
-          top: 10%;
-        }
-        &_num_2 {
-          top: 90%;
-        }
-      }
-
-      &__tooltip {
-        position: absolute;
-        top: -40%;
-        left: 200%;
-        &_hide {
-          display: none;
-        }
-      }
-
-      &__scale {
-        position: absolute;
-        top: 0;
-        margin-top: 8px;
-        height: 100%;
-        &_point {
-          right: 10px;
-          position: absolute;
-          transform: translate(0, -85%);
-          &:nth-child(1) {
-            top: 0%;
-          }
-          &:nth-child(2) {
-            top: 40%;
-          }
-          &:nth-child(3) {
-            top: 100%;
-          }
-          &-end {
-            background: white;
-            z-index: 100;
-          }
-        }
-      }
-    }
   }
 }
 
