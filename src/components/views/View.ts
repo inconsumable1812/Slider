@@ -20,7 +20,7 @@ class View extends Observer {
   constructor(
     selector: Element,
     private modelOptions: ModelOptions,
-    private viewOptions: Partial<ViewOptions> = DEFAULT_VIEW_OPTIONS
+    private viewOptions: ViewOptions = DEFAULT_VIEW_OPTIONS
   ) {
     super();
     this.el = selector;
@@ -46,6 +46,7 @@ class View extends Observer {
   setOptions(viewOptions: Partial<ViewOptions>): void {
     this.viewOptions = { ...this.viewOptions, ...viewOptions };
     this.checkScalePointCount();
+    this.updateView();
     this.emit('viewChanged', this.viewOptions);
   }
 
@@ -55,112 +56,83 @@ class View extends Observer {
 
   updateView(): void {
     const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions;
-    const { scalePointCount, showTooltip, isVertical, showProgress, showScale } =
-      this.viewOptions;
-    const { track, firstHandle } = this.components;
+    const { scalePointCount, showTooltip, isVertical, showProgress, showScale } = this.viewOptions;
+
+    const { track, firstHandle, progress, secondHandle, scale } = this.components;
 
     firstHandle.setValue(valueStart);
     firstHandle.setStyle(searchStyleValue(minValue, maxValue, valueStart));
 
     if (showProgress) {
-      if (this.components.progress === undefined) {
-        this.components.progress = new Progress(isVertical!);
-      }
-      track.element.append(this.components.progress.element);
-      this.components.progress.setOrientation(isVertical!);
-    } else if (this.components.progress !== undefined) {
-      this.components.progress.element.remove();
+      track.element.append(progress.element);
+      progress.setOrientation(isVertical);
+    } else {
+      progress.element.remove();
     }
 
     if (showScale) {
-      if (this.components.scale === undefined) {
-        this.components.scale = new Scale(
-          minValue,
-          maxValue,
-          scalePointCount!,
-          step,
-          isVertical!
-        );
-      }
-      this.components.scale.setOrientation(isVertical!);
-      this.components.scale.setScaleOptions(maxValue, minValue, step, scalePointCount!);
+      scale.setOrientation(isVertical);
+      scale.setScaleOptions(maxValue, minValue, step, scalePointCount);
     } else {
-      this.components.scale!.deleteScalePoint();
+      scale.deleteScalePoint();
     }
 
     if (range) {
-      if (this.components.secondHandle === undefined) {
-        this.components.secondHandle = new Handle(
-          2,
-          this.modelOptions.valueEnd,
-          this.viewOptions.showTooltip,
-          this.viewOptions.isVertical
-        );
-        this.bindListenersToHandle(this.components.secondHandle);
-      }
+      this.root.append(secondHandle!.element);
 
-      this.root.append(this.components.secondHandle.element);
+      this.bindListenersToHandle(secondHandle!);
 
-      this.components.secondHandle.setValue(valueEnd);
-      this.components.secondHandle.setStyle(
-        searchStyleValue(minValue, maxValue, valueEnd)
-      );
+      secondHandle.setValue(valueEnd);
+      secondHandle.setStyle(searchStyleValue(minValue, maxValue, valueEnd));
       this.mergeTooltip();
+
       if (showProgress) {
-        this.components.progress!.setStyle(
+        progress.setStyle(
           searchStyleValue(minValue, maxValue, valueStart),
           searchStyleValue(minValue, maxValue, valueEnd)
         );
       }
     } else {
-      if (this.components.secondHandle !== undefined) {
-        this.components.secondHandle.element.remove();
+      if (firstHandle.getTooltipContent()!.includes('-')) {
+        firstHandle.setTooltipContent();
       }
+      secondHandle.element.remove();
+      this.removeListenersToHandle(secondHandle);
+
       if (showProgress) {
-        this.components.progress!.setStyle(
-          0,
-          searchStyleValue(minValue, maxValue, valueStart)
-        );
+        progress.setStyle(0, searchStyleValue(minValue, maxValue, valueStart));
       }
     }
 
     if (showTooltip) {
       firstHandle.showTooltipMethod();
       if (range) {
-        this.components.secondHandle!.showTooltipMethod();
+        secondHandle.showTooltipMethod();
       }
     } else {
       firstHandle.hideTooltip();
       if (range) {
-        this.components.secondHandle!.hideTooltip();
+        secondHandle.hideTooltip();
       }
     }
 
     track.setMaxMinValueAndStep(maxValue, minValue, step);
 
-    const styleValueFirst = searchStyleValue(
-      track.getMinValue(),
-      track.getMaxValue(),
-      valueStart
-    );
+    const styleValueFirst = searchStyleValue(track.getMinValue(), track.getMaxValue(), valueStart);
 
     if (range) {
-      const styleValueSecond = searchStyleValue(
-        track.getMinValue(),
-        track.getMaxValue(),
-        valueEnd
-      );
-      this.components.secondHandle!.setOrientation(isVertical!);
-      this.components.secondHandle!.clearStyle();
-      this.components.secondHandle!.setStyle(styleValueSecond);
+      const styleValueSecond = searchStyleValue(track.getMinValue(), track.getMaxValue(), valueEnd);
+      secondHandle.setOrientation(isVertical);
+      secondHandle.clearStyle();
+      secondHandle.setStyle(styleValueSecond);
     }
 
-    track.setOrientation(isVertical!);
-    firstHandle.setOrientation(isVertical!);
+    track.setOrientation(isVertical);
+    firstHandle.setOrientation(isVertical);
     firstHandle.clearStyle();
     firstHandle.setStyle(styleValueFirst);
     if (showProgress) {
-      this.components.progress!.setOrientation(isVertical!);
+      progress!.setOrientation(isVertical);
     }
 
     if (isVertical) {
@@ -183,83 +155,56 @@ class View extends Observer {
   }
 
   render(): void {
-    const isVertical = this.viewOptions.isVertical ? 'range-slider_vertical' : '';
+    const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions;
+    const { isVertical, showTooltip, showProgress, showScale, scalePointCount } = this.viewOptions;
+
+    const isVerticalRender = isVertical ? 'range-slider_vertical' : '';
     this.root = render(`
-    <div class="range-slider ${isVertical}">
+    <div class="range-slider ${isVerticalRender}">
     `);
 
+    const trackInstance = new Track(minValue, maxValue, isVertical!, step);
+
     this.components = {
-      track: new Track(
-        this.modelOptions.minValue,
-        this.modelOptions.maxValue,
-        this.viewOptions.isVertical!,
-        this.modelOptions.step
-      ),
-      firstHandle: new Handle(
-        1,
-        this.modelOptions.valueStart,
-        this.viewOptions.showTooltip,
-        this.viewOptions.isVertical
-      )
+      track: trackInstance,
+      firstHandle: new Handle(1, valueStart, showTooltip, isVertical, trackInstance, step),
+      secondHandle: new Handle(2, valueEnd, showTooltip, isVertical, trackInstance, step),
+      progress: new Progress(isVertical!),
+      scale: new Scale(minValue, maxValue, scalePointCount!, step, isVertical!)
     };
 
-    if (this.modelOptions.range) {
-      this.components.secondHandle = new Handle(
-        2,
-        this.modelOptions.valueEnd,
-        this.viewOptions.showTooltip,
-        this.viewOptions.isVertical
-      );
-    }
-
-    if (this.viewOptions.showProgress) {
-      this.components.progress = new Progress(this.viewOptions.isVertical!);
-    }
-
-    if (this.viewOptions.showScale) {
-      this.components.scale = new Scale(
-        this.modelOptions.minValue,
-        this.modelOptions.maxValue,
-        this.viewOptions.scalePointCount!,
-        this.modelOptions.step,
-        this.viewOptions.isVertical!
-      );
-    }
-    this.init();
-  }
-
-  private init(): void {
     const { track, firstHandle, secondHandle, scale, progress } = this.components;
 
-    if (this.viewOptions.showProgress) {
+    if (showProgress) {
       track.element.append(progress!.element);
     }
     this.root.append(track.element);
     this.root.append(firstHandle.element);
-    if (this.modelOptions.range) {
+    if (range) {
       this.root.append(secondHandle!.element);
     }
-    if (this.viewOptions.showScale) {
+    if (showScale) {
       this.root.append(scale!.element);
     }
 
     const firstHandleStyleValue = searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
-      this.modelOptions.valueStart
+      valueStart
     );
     const secondHandleStyleValue = searchStyleValue(
       track.getMinValue(),
       track.getMaxValue(),
-      this.modelOptions.valueEnd
+      valueEnd
     );
+
     firstHandle.setStyle(firstHandleStyleValue);
-    if (this.modelOptions.range) {
+    if (range) {
       secondHandle!.setStyle(secondHandleStyleValue);
-      if (this.viewOptions.showProgress) {
+      if (showProgress) {
         progress!.setStyle(firstHandleStyleValue, secondHandleStyleValue);
       }
-    } else if (this.viewOptions.showProgress) {
+    } else if (showProgress) {
       progress!.setStyle(0, firstHandleStyleValue);
     }
 
@@ -268,21 +213,25 @@ class View extends Observer {
     this.bindEventListeners();
   }
 
-  private bindEventListeners() {
+  private bindEventListeners(): void {
     const { firstHandle, secondHandle, scale } = this.components;
+    const { range } = this.modelOptions;
+    const { showScale } = this.viewOptions;
 
     this.clickOnTrack();
     this.bindListenersToHandle(firstHandle);
-    if (this.modelOptions.range) {
-      this.bindListenersToHandle(secondHandle!);
+    if (range) {
+      this.bindListenersToHandle(secondHandle);
     }
-    if (this.viewOptions.showScale) {
-      this.clickOnScale(scale!);
+
+    if (showScale) {
+      this.clickOnScale(scale);
     }
   }
 
   private mergeTooltip(): void {
     const { firstHandle, secondHandle } = this.components;
+
     const deltaStyle = secondHandle!.getStyleValue() - firstHandle.getStyleValue();
     const firstHandleTooltip = firstHandle.getValue();
     const secondHandleTooltip = secondHandle?.getValue();
@@ -305,19 +254,13 @@ class View extends Observer {
         const { range } = this.modelOptions;
 
         let closetHandle = firstHandle;
-        const styleValue = searchStyleValue(
-          track.getMinValue(),
-          track.getMaxValue(),
-          value
-        );
+        const styleValue = searchStyleValue(track.getMinValue(), track.getMaxValue(), value);
 
         if (range) {
           closetHandle = findClosestHandle(firstHandle, secondHandle!, value);
           this.mergeTooltip();
 
-          if (
-            isClickFromSecondHandlePosition(click, styleValue, firstHandle, secondHandle!)
-          ) {
+          if (isClickFromSecondHandlePosition(click, styleValue, firstHandle, secondHandle!)) {
             closetHandle = secondHandle!;
           }
         }
@@ -389,14 +332,10 @@ class View extends Observer {
     } else if (valueInPercent >= 1) {
       newValue = track.getMaxValue();
 
-      this.emit('viewChanged', { valueEnd: newValue });
+      // this.emit('viewChanged', { valueEnd: newValue });
     }
 
-    const styleValue: number = searchStyleValue(
-      track.getMinValue(),
-      track.getMaxValue(),
-      newValue
-    );
+    const styleValue: number = searchStyleValue(track.getMinValue(), track.getMaxValue(), newValue);
 
     // eslint-disable-next-line no-shadow
     function checkHandleAndNewValue(handle: Handle, newValue: number): boolean {
@@ -444,9 +383,13 @@ class View extends Observer {
   }
 
   private bindListenersToHandle(handle: Handle): void {
-    const handleMouseDown = (event: MouseEvent): void =>
-      this.handleMouseDown(event, handle);
+    const handleMouseDown = (event: MouseEvent): void => this.handleMouseDown(event, handle);
     handle.element.addEventListener('mousedown', handleMouseDown);
+  }
+
+  removeListenersToHandle(handle: Handle): void {
+    const handleMouseDown = (event: MouseEvent): void => this.handleMouseDown(event, handle);
+    handle.element.removeEventListener('mousedown', handleMouseDown);
   }
 
   private clickOnScale(scale: Scale): void {
@@ -469,11 +412,7 @@ class View extends Observer {
     }
     closetHandle.setValue(value);
 
-    const styleValue: number = searchStyleValue(
-      track.getMinValue(),
-      track.getMaxValue(),
-      value
-    );
+    const styleValue: number = searchStyleValue(track.getMinValue(), track.getMaxValue(), value);
 
     closetHandle.setStyle(styleValue);
     if (range && showProgress) {

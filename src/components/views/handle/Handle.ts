@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import render from '../utils/render';
+import Track from '../Track/Track';
 
 class Handle {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };
@@ -9,7 +10,9 @@ class Handle {
     private handleNumber: number = 1,
     private value: number = 10,
     private showTooltip: boolean = true,
-    private isVertical: boolean = false
+    private isVertical: boolean = false,
+    private track: Track,
+    private step: number
   ) {
     this.toHtml();
   }
@@ -84,8 +87,6 @@ class Handle {
 
   setTooltipContent(value?: string): void {
     if (value) {
-      // console.log(this.getTooltipContent());
-
       if (this.getTooltipContent() !== value) {
         this.clearTooltipContent();
         this.elements.tooltip.textContent = value;
