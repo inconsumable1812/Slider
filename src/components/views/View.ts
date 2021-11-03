@@ -46,8 +46,8 @@ class View extends Observer {
   setOptions(viewOptions: Partial<ViewOptions>): void {
     this.viewOptions = { ...this.viewOptions, ...viewOptions };
     this.checkScalePointCount();
-    this.updateView();
-    this.emit('viewChanged', this.viewOptions);
+    // this.updateView();
+    // this.emit('viewChanged', this.viewOptions);
   }
 
   changeModelOptions(modelOptions: Partial<ModelOptions>): void {
@@ -80,7 +80,7 @@ class View extends Observer {
     if (range) {
       this.root.append(secondHandle!.element);
 
-      this.bindListenersToHandle(secondHandle!);
+      // this.bindListenersToHandle(secondHandle!);
 
       secondHandle.setValue(valueEnd);
       secondHandle.setStyle(searchStyleValue(minValue, maxValue, valueEnd));
@@ -93,11 +93,11 @@ class View extends Observer {
         );
       }
     } else {
-      if (firstHandle.getTooltipContent()!.includes('-')) {
+      if (firstHandle.getTooltipContent()!.includes('...')) {
         firstHandle.setTooltipContent();
       }
       secondHandle.element.remove();
-      this.removeListenersToHandle(secondHandle);
+      // this.removeListenersToHandle(secondHandle);
 
       if (showProgress) {
         progress.setStyle(0, searchStyleValue(minValue, maxValue, valueStart));
@@ -215,14 +215,11 @@ class View extends Observer {
 
   private bindEventListeners(): void {
     const { firstHandle, secondHandle, scale } = this.components;
-    const { range } = this.modelOptions;
     const { showScale } = this.viewOptions;
 
     this.clickOnTrack();
     this.bindListenersToHandle(firstHandle);
-    if (range) {
-      this.bindListenersToHandle(secondHandle);
-    }
+    this.bindListenersToHandle(secondHandle);
 
     if (showScale) {
       this.clickOnScale(scale);
@@ -231,15 +228,13 @@ class View extends Observer {
 
   private mergeTooltip(): void {
     const { firstHandle, secondHandle } = this.components;
-
     const deltaStyle = secondHandle!.getStyleValue() - firstHandle.getStyleValue();
     const firstHandleTooltip = firstHandle.getValue();
     const secondHandleTooltip = secondHandle?.getValue();
-
     if (deltaStyle <= 5) {
-      firstHandle.setTooltipContent(`${firstHandleTooltip}-${secondHandleTooltip}`);
+      firstHandle.setTooltipContent(`${firstHandleTooltip}...${secondHandleTooltip}`);
       secondHandle?.clearTooltipContent();
-    } else {
+    } else if (firstHandle.getTooltipContent()?.includes('...')) {
       firstHandle.setTooltipContent();
       secondHandle?.setTooltipContent();
     }
@@ -384,17 +379,12 @@ class View extends Observer {
     handle.element.addEventListener('mousedown', handleMouseDown);
   }
 
-  removeListenersToHandle(handle: Handle): void {
-    const handleMouseDown = (event: MouseEvent): void => this.handleMouseDown(event, handle);
-    handle.element.removeEventListener('mousedown', handleMouseDown);
-  }
-
   private clickOnScale(scale: Scale): void {
-    const clickOnScaleFunction = (event: MouseEvent) => this.clickOnScaleFunction(event);
-    scale.element.addEventListener('click', clickOnScaleFunction);
+    const clickOnScaleCallback = (event: MouseEvent) => this.clickOnScaleCallback(event);
+    scale.element.addEventListener('click', clickOnScaleCallback);
   }
 
-  private clickOnScaleFunction(event: MouseEvent): void {
+  private clickOnScaleCallback(event: MouseEvent): void {
     const { firstHandle, secondHandle, progress, track } = this.components;
     const { range } = this.modelOptions;
     const { showProgress } = this.viewOptions;

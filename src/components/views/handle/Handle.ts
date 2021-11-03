@@ -62,8 +62,8 @@ class Handle extends Observer {
   setValue(value: number): void {
     if (this.getValue() !== value) {
       this.value = value;
-      if (!this.getTooltipContent()?.includes('-')) {
-        this.elements.tooltip.textContent = this.value.toString();
+      if (!this.getTooltipContent()?.includes('...')) {
+        this.setTooltipContent();
       }
       if (this.handleNumber === 1) {
         this.setZIndex(this.getStyleValue());

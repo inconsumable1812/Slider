@@ -60,8 +60,11 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
         DEFAULT_VIEW_OPTIONS
       ) as Partial<ViewOptions>;
 
-      model.setOptions(updateModelOptions);
-      view.setOptions(updateViewOptions);
+      if (updateModelOptions) {
+        model.setOptions(updateModelOptions);
+      } else if (updateViewOptions) {
+        view.setOptions(updateViewOptions);
+      }
       if (panel) {
         panel.setOptionsFromSlider();
       }

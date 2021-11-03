@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 import { DEFAULT_MODEL_OPTIONS } from '../default';
 import { ModelOptions } from '../type';
-
 import Observer from '../observer/Observer';
 
 class Model extends Observer {
@@ -41,7 +40,7 @@ class Model extends Observer {
   setOptions(modelOptions: Partial<ModelOptions>): void {
     this.options = { ...this.options, ...modelOptions };
     this.checkOptions();
-    this.emit('modelValueChange', this.options);
+    this.emit('modelValueChange');
   }
 
   private checkStep(): void {

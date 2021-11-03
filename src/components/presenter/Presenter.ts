@@ -1,5 +1,4 @@
 import { ModelOptions } from '../type';
-
 import Model from '../model/Model';
 import View from '../views/View';
 
@@ -7,6 +6,7 @@ class Presenter {
   constructor(private model: Model, private view: View) {
     this.render();
   }
+
   private render(): void {
     this.view.render();
     this.connect();
@@ -19,8 +19,10 @@ class Presenter {
   setModelOptions(modelOptions: Partial<ModelOptions>): void {
     this.model.setOptions(modelOptions);
   }
-  updateView(modelOptions: Partial<ModelOptions>): void {
-    this.view.changeModelOptions(modelOptions);
+
+  updateView(): void {
+    this.view.changeModelOptions(this.model.getOptions());
+    this.view.updateView();
   }
 
   private connect(): void {
