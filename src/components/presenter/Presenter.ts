@@ -21,7 +21,6 @@ class Presenter {
   }
   updateView(modelOptions: Partial<ModelOptions>): void {
     this.view.changeModelOptions(modelOptions);
-    // this.view.updateView();
   }
 
   private connect(): void {

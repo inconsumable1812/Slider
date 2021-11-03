@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import render from '../utils/render';
 import Track from '../Track/Track';
+import Observer from '../../observer/Observer';
 
-class Handle {
+class Handle extends Observer {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };
   element!: HTMLElement;
 
@@ -14,6 +15,7 @@ class Handle {
     private track: Track,
     private step: number
   ) {
+    super();
     this.toHtml();
   }
 

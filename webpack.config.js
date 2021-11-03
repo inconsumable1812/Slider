@@ -9,7 +9,7 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const isProd = process.env.NODE_ENV === 'production';
 const isDev = !isProd;
 
-const filename = (ext) => (isDev ? `[name].${ext}` : `[name][hash].${ext}`);
+const filename = (ext) => (isDev ? `[name].${ext}` : `[name]/[name][hash].${ext}`);
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -31,11 +31,6 @@ module.exports = {
       '@': path.resolve(__dirname, 'src')
     }
   },
-
-  // optimization: {
-  //   minimize: true,
-  //   minimizer: [new TerserPlugin()]
-  // },
   optimization: {
     runtimeChunk: 'single'
   },

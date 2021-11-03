@@ -1,6 +1,7 @@
 import { create } from './slider';
 import { sliderOptions } from './type';
 import $ from 'jquery';
+import '../scss/slider.scss';
 
 declare global {
   interface JQuery {
