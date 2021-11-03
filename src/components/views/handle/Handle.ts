@@ -31,6 +31,41 @@ class Handle extends Observer {
     if (!this.showTooltip) {
       this.hideTooltip();
     }
+
+    // const clickEvent = (event: MouseEvent) => {
+    //   const {track, isVertical, step } = this
+    //   const prevValue: number = handle.getValue();
+
+    //   const valueInPx: number = isVertical
+    //     ? event.clientY - track.element.getBoundingClientRect().top
+    //     : event.clientX - track.element.getBoundingClientRect().left;
+
+    //   const widthOrHeight: number = isVertical
+    //     ? track.element.getBoundingClientRect().height
+    //     : track.element.getBoundingClientRect().width;
+
+    //   const valueInPercent: number = valueInPx / widthOrHeight;
+
+    //   const delta: number = track.getMaxValue() - track.getMinValue();
+    //   const isValueCorrectOfStep = !(Math.round(delta * valueInPercent) % step);
+
+    //   let newValue: number = isValueCorrectOfStep
+    //     ? Math.round(track.getMinValue() + delta * valueInPercent)
+    //     : prevValue;
+    //   if (valueInPercent <= 0) {
+    //     newValue = track.getMinValue();
+    //   } else if (valueInPercent >= 1) {
+    //     newValue = track.getMaxValue();
+    //   }
+
+    //   const styleValue: number = searchStyleValue(
+    //     track.getMinValue(),
+    //     track.getMaxValue(),
+    //     newValue
+    //   );
+
+    //   this.emit('clickOnTrack', { event, value: newValue, click: progress });
+    // };
   }
 
   showTooltipMethod(): void {

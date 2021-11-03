@@ -46,8 +46,7 @@ class View extends Observer {
   setOptions(viewOptions: Partial<ViewOptions>): void {
     this.viewOptions = { ...this.viewOptions, ...viewOptions };
     this.checkScalePointCount();
-    // this.updateView();
-    // this.emit('viewChanged', this.viewOptions);
+    this.emit('viewChanged', this.viewOptions);
   }
 
   changeModelOptions(modelOptions: Partial<ModelOptions>): void {
@@ -80,12 +79,9 @@ class View extends Observer {
     if (range) {
       this.root.append(secondHandle!.element);
 
-      // this.bindListenersToHandle(secondHandle!);
-
       secondHandle.setValue(valueEnd);
       secondHandle.setStyle(searchStyleValue(minValue, maxValue, valueEnd));
       this.mergeTooltip();
-
       if (showProgress) {
         progress.setStyle(
           searchStyleValue(minValue, maxValue, valueStart),
@@ -97,8 +93,6 @@ class View extends Observer {
         firstHandle.setTooltipContent();
       }
       secondHandle.element.remove();
-      // this.removeListenersToHandle(secondHandle);
-
       if (showProgress) {
         progress.setStyle(0, searchStyleValue(minValue, maxValue, valueStart));
       }

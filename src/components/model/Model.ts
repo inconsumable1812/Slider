@@ -118,8 +118,9 @@ class Model extends Observer {
   }
 
   private checkValueStartCorrectStep(): void | Partial<ModelOptions> {
-    const { minValue, step, valueStart } = this.options;
-    if (Math.abs(valueStart! - minValue!) % step!) {
+    const { minValue, step, valueStart, maxValue } = this.options;
+
+    if (Math.abs(valueStart! - minValue!) % step! && valueStart !== maxValue) {
       return this.setOptions({ valueStart: minValue });
     }
   }

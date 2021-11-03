@@ -62,9 +62,9 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
 
       if (updateModelOptions) {
         model.setOptions(updateModelOptions);
-      } else if (updateViewOptions) {
-        view.setOptions(updateViewOptions);
       }
+
+      view.setOptions(updateViewOptions);
       if (panel) {
         panel.setOptionsFromSlider();
       }

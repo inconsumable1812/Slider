@@ -58,23 +58,18 @@ class Scale extends Observer {
 
   deleteScalePoint(): void {
     const points = this.element.querySelectorAll('.range-slider__scale_point');
-    // eslint-disable-next-line no-restricted-syntax
-    for (const point of points) {
-      point.remove();
-    }
+    points.forEach((point) => point.remove());
   }
 
   private calculateStepValue(): number[][] {
     const { minValue, maxValue, step, scalePointCount } = this;
     const range = Math.abs(maxValue - minValue);
     const isLastStepBigThanMaxValue: boolean = (range % step) as unknown as boolean;
-    const isCountBigThanScalePoint = Math.floor(Math.abs(range / step)) > scalePointCount;
+    const isCountBigThanScalePoint = Math.floor(range / step) > scalePointCount;
     const actualScaleSize = isCountBigThanScalePoint
-      ? (Math.floor(Math.abs(range / step)) / (scalePointCount - 1)) * step
+      ? Math.round(Math.round(range / step) / (scalePointCount - 1)) * step
       : step;
-    let countOfSteps = isCountBigThanScalePoint
-      ? scalePointCount - 1
-      : Math.floor(Math.abs(range / step));
+    let countOfSteps = isCountBigThanScalePoint ? scalePointCount - 1 : Math.floor(range / step);
 
     countOfSteps = isLastStepBigThanMaxValue ? countOfSteps + 1 : countOfSteps;
 
@@ -83,6 +78,7 @@ class Scale extends Observer {
     for (let i = 0; i <= countOfSteps; i += 1) {
       let stepsValue = +(minValue + actualScaleSize * i).toFixed(0);
       stepsValue = stepsValue > maxValue ? maxValue : stepsValue;
+      stepsValue = i === countOfSteps ? maxValue : stepsValue;
       arrayOfStepsValue.push(stepsValue);
 
       let stepStyleValue = Math.abs(actualScaleSize / range) * i * 100;
