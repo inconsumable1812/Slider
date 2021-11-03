@@ -213,8 +213,7 @@ class Panel {
   private getScaleCount(): Partial<ViewOptions> {
     const { scalePointCount } = this.inputs;
     return {
-      scalePointCount:
-        scalePointCount.value === '' ? undefined : Number(scalePointCount.value)
+      scalePointCount: scalePointCount.value === '' ? undefined : Number(scalePointCount.value)
     };
   }
 
@@ -249,14 +248,11 @@ class Panel {
       const maxValue = this.getMaxValue().maxValue;
       const minValue = this.getMinValue().minValue;
       const step = this.getStep().step;
-      const isUndefined =
-        maxValue === undefined || minValue === undefined || step === undefined;
+      const isUndefined = maxValue === undefined || minValue === undefined || step === undefined;
       const previousValue = this.slider.getOptions().maxValue;
 
       const MaxValueLessThanMin: boolean = !isUndefined ? maxValue <= minValue : true;
-      const rangeLessThanStep: boolean = !isUndefined
-        ? Math.abs(maxValue - minValue) < step
-        : true;
+      const rangeLessThanStep: boolean = !isUndefined ? Math.abs(maxValue - minValue) < step : true;
 
       let newValue: Partial<ModelOptions> = MaxValueLessThanMin
         ? { maxValue: previousValue }
@@ -309,9 +305,7 @@ class Panel {
       newValue = newValueBiggerThanMax ? { valueStart: maxValue } : this.getValueStart();
 
       newValue =
-        newValueBiggerThanSecond && range
-          ? { valueStart: previousValue }
-          : this.getValueStart();
+        newValueBiggerThanSecond && range ? { valueStart: previousValue } : this.getValueStart();
 
       this.slider.setOptions(newValue);
     };
@@ -353,14 +347,11 @@ class Panel {
       const step = this.getStep().step;
       const maxValue = this.getMaxValue().maxValue;
       const minValue = this.getMinValue().minValue;
-      const isUndefined =
-        maxValue === undefined || minValue === undefined || step === undefined;
+      const isUndefined = maxValue === undefined || minValue === undefined || step === undefined;
 
       let newStep = this.getStep();
 
-      const isStepBiggerRange = !isUndefined
-        ? Math.abs(maxValue - minValue) <= step
-        : true;
+      const isStepBiggerRange = !isUndefined ? Math.abs(maxValue - minValue) <= step : true;
 
       newStep = isStepBiggerRange ? { step: previousValue } : this.getStep();
 
@@ -391,9 +382,7 @@ class Panel {
 
     const scaleCountCallbackWhenFocusGone = () => {
       if (this.inputs.scalePointCount.value === '') {
-        this.inputs.scalePointCount.value = this.slider
-          .getOptions()
-          .scalePointCount!.toString();
+        this.inputs.scalePointCount.value = this.slider.getOptions().scalePointCount!.toString();
       }
     };
     this.inputs.scalePointCount.addEventListener('blur', scaleCountCallbackWhenFocusGone);

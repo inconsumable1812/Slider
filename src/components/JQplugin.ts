@@ -1,17 +1,17 @@
-import { create } from './slider'
-import { sliderOptions } from './type'
-import $ from 'jquery'
+import { create } from './slider';
+import { sliderOptions } from './type';
+import $ from 'jquery';
 
 declare global {
   interface JQuery {
-    JQSlider(methodOrOptions?: string | sliderOptions, newOptions?: sliderOptions): JQuery
+    JQSlider(methodOrOptions?: string | sliderOptions, newOptions?: sliderOptions): JQuery;
   }
 }
 
 $.fn.extend({
   JQSlider(options: sliderOptions) {
-    return create((<JQuery>this)[0], options)
+    return create((<JQuery>this)[0], options);
   }
-})
+});
 
-export default $.fn.JQSlider
+export default $.fn.JQSlider;

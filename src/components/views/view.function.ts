@@ -1,10 +1,6 @@
 import Handle from './handle/Handle';
 
-function findClosestHandle(
-  firstHandle: Handle,
-  secondHandle: Handle,
-  clickValue: number
-): Handle {
+function findClosestHandle(firstHandle: Handle, secondHandle: Handle, clickValue: number): Handle {
   const firstValue: number = firstHandle.getValue();
   const secondValue: number = secondHandle.getValue();
   if (Math.abs(firstValue - clickValue) <= Math.abs(secondValue - clickValue)) {

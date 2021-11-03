@@ -1,4 +1,4 @@
-import { ModelOptions, ViewOptions } from './type'
+import { ModelOptions, ViewOptions } from './type';
 
 const DEFAULT_MODEL_OPTIONS: ModelOptions = {
   minValue: 0,
@@ -7,7 +7,7 @@ const DEFAULT_MODEL_OPTIONS: ModelOptions = {
   valueStart: 40,
   valueEnd: 50,
   range: false
-}
+};
 
 const DEFAULT_VIEW_OPTIONS: ViewOptions = {
   scalePointCount: 11,
@@ -15,6 +15,6 @@ const DEFAULT_VIEW_OPTIONS: ViewOptions = {
   isVertical: false,
   showProgress: false,
   showScale: true
-}
+};
 
-export { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS }
+export { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS };
