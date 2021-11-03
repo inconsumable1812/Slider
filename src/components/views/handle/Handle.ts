@@ -57,7 +57,9 @@ class Handle {
   setValue(value: number): void {
     if (this.getValue() !== value) {
       this.value = value;
-      this.elements.tooltip.textContent = this.value.toString();
+      if (!this.getTooltipContent()?.includes('-')) {
+        this.elements.tooltip.textContent = this.value.toString();
+      }
       if (this.handleNumber === 1) {
         this.setZIndex(this.getStyleValue());
       }
@@ -65,10 +67,31 @@ class Handle {
   }
 
   setZIndex(styleValue: number): void {
-    if (styleValue >= 98) {
+    if (styleValue >= 97) {
       this.elements.handle.style.zIndex = '50';
     } else if (this.elements.handle.style.zIndex === '50') {
       this.elements.handle.style.zIndex = '1';
+    }
+  }
+
+  getTooltipContent(): string | null {
+    return this.elements.tooltip.textContent;
+  }
+
+  clearTooltipContent(): void {
+    this.elements.tooltip.textContent = '';
+  }
+
+  setTooltipContent(value?: string): void {
+    if (value) {
+      // console.log(this.getTooltipContent());
+
+      if (this.getTooltipContent() !== value) {
+        this.clearTooltipContent();
+        this.elements.tooltip.textContent = value;
+      }
+    } else {
+      this.elements.tooltip.textContent = this.getValue().toString();
     }
   }
 

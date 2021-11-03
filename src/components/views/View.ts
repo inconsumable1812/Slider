@@ -105,6 +105,7 @@ class View extends Observer {
       this.components.secondHandle.setStyle(
         searchStyleValue(minValue, maxValue, valueEnd)
       );
+      this.mergeTooltip();
       if (showProgress) {
         this.components.progress!.setStyle(
           searchStyleValue(minValue, maxValue, valueStart),
@@ -278,8 +279,20 @@ class View extends Observer {
     if (this.viewOptions.showScale) {
       this.clickOnScale(scale!);
     }
-    if (this.modelOptions.range) {
-      console.log(firstHandle.getStyleValue());
+  }
+
+  private mergeTooltip(): void {
+    const { firstHandle, secondHandle } = this.components;
+    const deltaStyle = secondHandle!.getStyleValue() - firstHandle.getStyleValue();
+    const firstHandleTooltip = firstHandle.getValue();
+    const secondHandleTooltip = secondHandle?.getValue();
+
+    if (deltaStyle <= 5) {
+      firstHandle.setTooltipContent(`${firstHandleTooltip}-${secondHandleTooltip}`);
+      secondHandle?.clearTooltipContent();
+    } else {
+      firstHandle.setTooltipContent();
+      secondHandle?.setTooltipContent();
     }
   }
 
@@ -288,6 +301,9 @@ class View extends Observer {
       'clickOnTrack',
       ({ event, value, click }: { event: MouseEvent; value: number; click: number }) => {
         const { track, firstHandle, secondHandle, progress } = this.components;
+        const { showProgress } = this.viewOptions;
+        const { range } = this.modelOptions;
+
         let closetHandle = firstHandle;
         const styleValue = searchStyleValue(
           track.getMinValue(),
@@ -295,8 +311,9 @@ class View extends Observer {
           value
         );
 
-        if (this.modelOptions.range) {
+        if (range) {
           closetHandle = findClosestHandle(firstHandle, secondHandle!, value);
+          this.mergeTooltip();
 
           if (
             isClickFromSecondHandlePosition(click, styleValue, firstHandle, secondHandle!)
@@ -308,13 +325,13 @@ class View extends Observer {
         closetHandle.setValue(value);
         closetHandle.setStyle(styleValue);
 
-        if (this.modelOptions.range && this.viewOptions.showProgress) {
+        if (range && showProgress) {
           if (closetHandle === firstHandle) {
             progress!.setStart(styleValue);
           } else if (closetHandle === secondHandle) {
             progress!.setEnd(styleValue);
           }
-        } else if (this.viewOptions.showProgress) {
+        } else if (showProgress) {
           progress!.setStart(0);
           progress!.setEnd(styleValue);
         }
@@ -346,8 +363,8 @@ class View extends Observer {
 
   private handleMouseMove(event: MouseEvent, handle: Handle): void {
     const { track, progress, firstHandle, secondHandle } = this.components;
-    const step: number = this.modelOptions.step;
-    const { isVertical } = this.viewOptions;
+    const { step, range } = this.modelOptions;
+    const { isVertical, showProgress } = this.viewOptions;
 
     const prevValue: number = handle.getValue();
 
@@ -381,26 +398,39 @@ class View extends Observer {
       newValue
     );
 
-    if (this.modelOptions.range) {
-      if (handle === firstHandle && newValue < secondHandle!.getValue()) {
+    // eslint-disable-next-line no-shadow
+    function checkHandleAndNewValue(handle: Handle, newValue: number): boolean {
+      if (handle === secondHandle) {
+        return newValue > firstHandle.getValue();
+      }
+      if (handle === firstHandle) {
+        return newValue < secondHandle!.getValue();
+      }
+      return false;
+    }
+
+    if (range) {
+      this.mergeTooltip();
+
+      if (checkHandleAndNewValue(handle, newValue)) {
         handle.setValue(newValue);
         handle.setStyle(styleValue);
-        if (this.viewOptions.showProgress) {
+        if (showProgress) {
           progress!.setStart(styleValue);
         }
-      } else if (handle === secondHandle && newValue > firstHandle.getValue()) {
+      } else if (checkHandleAndNewValue(handle, newValue)) {
         handle.setValue(newValue);
         handle.setStyle(styleValue);
 
-        if (this.viewOptions.showProgress) {
+        if (showProgress) {
           progress!.setEnd(styleValue);
         }
       }
-    } else if (this.viewOptions.showProgress) {
+    } else if (showProgress) {
       progress!.setStart(0);
       progress!.setEnd(styleValue);
     }
-    if (!this.modelOptions.range) {
+    if (!range) {
       handle.setValue(newValue);
       handle.setStyle(styleValue);
     }
@@ -426,12 +456,15 @@ class View extends Observer {
 
   private clickOnScaleFunction(event: MouseEvent): void {
     const { firstHandle, secondHandle, progress, track } = this.components;
+    const { range } = this.modelOptions;
+    const { showProgress } = this.viewOptions;
 
     const target: HTMLElement = event.target as HTMLElement;
     const value: number = +target.textContent!;
 
     let closetHandle: Handle = firstHandle;
-    if (this.modelOptions.range) {
+    if (range) {
+      this.mergeTooltip();
       closetHandle = findClosestHandle(firstHandle, secondHandle!, value);
     }
     closetHandle.setValue(value);
@@ -443,13 +476,13 @@ class View extends Observer {
     );
 
     closetHandle.setStyle(styleValue);
-    if (this.modelOptions.range && this.viewOptions.showProgress) {
+    if (range && showProgress) {
       if (closetHandle === firstHandle) {
         progress!.setStart(styleValue);
       } else if (closetHandle === secondHandle) {
         progress!.setEnd(styleValue);
       }
-    } else if (this.viewOptions.showProgress) {
+    } else if (showProgress) {
       progress!.setStart(0);
       progress!.setEnd(styleValue);
     }
