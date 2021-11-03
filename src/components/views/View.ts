@@ -331,8 +331,6 @@ class View extends Observer {
       newValue = track.getMinValue();
     } else if (valueInPercent >= 1) {
       newValue = track.getMaxValue();
-
-      // this.emit('viewChanged', { valueEnd: newValue });
     }
 
     const styleValue: number = searchStyleValue(track.getMinValue(), track.getMaxValue(), newValue);
@@ -349,8 +347,6 @@ class View extends Observer {
     }
 
     if (range) {
-      this.mergeTooltip();
-
       if (checkHandleAndNewValue(handle, newValue)) {
         handle.setValue(newValue);
         handle.setStyle(styleValue);
@@ -365,6 +361,7 @@ class View extends Observer {
           progress!.setEnd(styleValue);
         }
       }
+      this.mergeTooltip();
     } else if (showProgress) {
       progress!.setStart(0);
       progress!.setEnd(styleValue);

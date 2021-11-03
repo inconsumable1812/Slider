@@ -17,12 +17,9 @@ class Presenter {
   }
 
   setModelOptions(modelOptions: Partial<ModelOptions>): void {
-    // console.log(modelOptions);
     this.model.setOptions(modelOptions);
-    // this.view.updateView();
   }
   updateView(modelOptions: Partial<ModelOptions>): void {
-    // console.log('modelOptions', modelOptions);
     this.view.changeModelOptions(modelOptions);
     // this.view.updateView();
   }

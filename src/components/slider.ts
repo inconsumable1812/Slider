@@ -26,15 +26,12 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     options,
     DEFAULT_MODEL_OPTIONS
   ) as Partial<ModelOptions>;
-  const updateViewOptions = prepareOptions(
-    options,
-    DEFAULT_VIEW_OPTIONS
-  ) as Partial<ViewOptions>;
+  const updateViewOptions = prepareOptions(options, DEFAULT_VIEW_OPTIONS) as Partial<ViewOptions>;
 
   const model = new Model(updateModelOptions);
   const modelOptionsInit = model.getOptions();
 
-  const view = new View(selector, modelOptionsInit, updateViewOptions);
+  const view = new View(selector, modelOptionsInit, updateViewOptions as ViewOptions);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const presenter = new Presenter(model, view);
 
