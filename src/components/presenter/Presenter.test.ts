@@ -47,7 +47,8 @@ describe('Presenter', () => {
   });
 
   test('check correct update view', () => {
-    presenter.updateView({ valueStart: 40 });
+    model.setOptions({ valueStart: 40 });
+    presenter.updateView();
     expect(view.getComponents().firstHandle.getValue()).toBe(40);
     expect(view.getComponents().firstHandle.getStyleValue()).toBe(40);
   });

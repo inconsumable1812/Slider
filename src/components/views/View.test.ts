@@ -228,4 +228,16 @@ describe('View', () => {
     scale!.element.dispatchEvent(new Event('click'));
     expect(fn).toBeCalled();
   });
+
+  test('check merge tooltip', () => {
+    viewAllTrue.render();
+    viewAllTrue.changeModelOptions({ valueStart: 97 });
+    viewAllTrue.updateView();
+    const firstTooltip: string = viewAllTrue.getComponents().firstHandle.getTooltipContent()!;
+    expect(firstTooltip).toBe('97...99');
+    viewAllTrue.changeModelOptions({ valueStart: 5 });
+    viewAllTrue.updateView();
+    const newFirstTooltip: string = viewAllTrue.getComponents().firstHandle.getTooltipContent()!;
+    expect(newFirstTooltip).toBe('5');
+  });
 });

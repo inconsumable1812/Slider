@@ -1,23 +1,48 @@
 import Handle from './Handle';
+import { ModelOptions, ViewOptions } from '../../type';
+import Track from '../Track/Track';
 
-const optionsVertical = {
-  handleNumber: 2,
-  value: 15,
+const modelOptions: Partial<ModelOptions> = {
+  minValue: 0,
+  maxValue: 100,
+  valueStart: 15,
+  step: 1
+};
+
+const viewOptions: Partial<ViewOptions> = {
   showTooltip: false,
   isVertical: true
 };
+
+const { minValue, maxValue, valueStart, step } = modelOptions;
+const { showTooltip, isVertical } = viewOptions;
+const isVerticalFalse = false;
+const firstHandleNumber = 1;
+const secondHandleNumber = 2;
+
+const firstTrack = new Track(minValue!, maxValue!, isVerticalFalse, step!);
+const secondTrack = new Track(minValue!, maxValue!, isVertical!, step!);
 
 describe('Handle', () => {
   let handel: Handle;
   let handelVertical: Handle;
   beforeEach(() => {
-    handel = new Handle();
+    handel = new Handle(
+      firstHandleNumber,
+      valueStart!,
+      showTooltip!,
+      isVerticalFalse,
+      firstTrack,
+      step!
+    );
 
     handelVertical = new Handle(
-      optionsVertical.handleNumber,
-      optionsVertical.value,
-      optionsVertical.showTooltip,
-      optionsVertical.isVertical
+      secondHandleNumber,
+      valueStart!,
+      showTooltip!,
+      isVertical!,
+      secondTrack,
+      step!
     );
   });
 
@@ -26,7 +51,17 @@ describe('Handle', () => {
   });
 
   test('return correct value when create new instance', () => {
-    expect(handel.getValue()).toBe(10);
+    expect(handel.getValue()).toBe(15);
+  });
+
+  test('check correct clear tooltip', () => {
+    handel.clearTooltipContent();
+    expect(handel.getTooltipContent()).toBe('');
+  });
+
+  test('check correct set z-index', () => {
+    handel.setStyle(98);
+    expect(handel.element.style.zIndex).toBe('50');
   });
 
   describe('is vertical', () => {

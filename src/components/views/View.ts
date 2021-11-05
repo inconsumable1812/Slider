@@ -122,6 +122,7 @@ class View extends Observer {
       secondHandle.setOrientation(isVertical);
       secondHandle.clearStyle();
       secondHandle.setStyle(styleValueSecond);
+      this.mergeTooltip();
     }
 
     track.setOrientation(isVertical);
@@ -213,7 +214,7 @@ class View extends Observer {
   private bindEventListeners(): void {
     this.clickOnTrack();
     this.clickOnHandle();
-    this.clickOnScale1();
+    this.clickOnScale();
   }
 
   private mergeTooltip(): void {
@@ -230,7 +231,7 @@ class View extends Observer {
     }
   }
 
-  private clickOnHandle() {
+  private clickOnHandle(): void {
     const { track, progress, firstHandle, secondHandle } = this.components;
 
     const setNewValueOnHandle = (newValue: number, handle: Handle) => {
@@ -294,7 +295,7 @@ class View extends Observer {
     });
   }
 
-  private clickOnScale1() {
+  private clickOnScale(): void {
     const { track, progress, firstHandle, secondHandle, scale } = this.components;
 
     scale.subscribe('clickOnScale', (value) => {

@@ -8,10 +8,10 @@ class Handle extends Observer {
   element!: HTMLElement;
 
   constructor(
-    private handleNumber: number = 1,
-    private value: number = 10,
-    private showTooltip: boolean = true,
-    private isVertical: boolean = false,
+    private handleNumber: number,
+    private value: number,
+    private showTooltip: boolean,
+    private isVertical: boolean,
     private track: Track,
     private step: number
   ) {
@@ -55,7 +55,7 @@ class Handle extends Observer {
     document.addEventListener('mouseup', handleMouseUp);
   }
 
-  handleMouseMove(event: MouseEvent) {
+  private handleMouseMove(event: MouseEvent): void {
     const { track, isVertical, step } = this;
 
     const valueInPx: number = isVertical
@@ -117,9 +117,6 @@ class Handle extends Observer {
       if (!this.getTooltipContent()?.includes('...')) {
         this.setTooltipContent();
       }
-      if (this.handleNumber === 1) {
-        this.setZIndex(this.getStyleValue());
-      }
     }
   }
 
@@ -155,6 +152,9 @@ class Handle extends Observer {
       this.isVertical
         ? (this.elements.handle.style.top = value + '%')
         : (this.elements.handle.style.left = value + '%');
+      if (this.handleNumber === 1) {
+        this.setZIndex(this.getStyleValue());
+      }
     }
   }
 
