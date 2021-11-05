@@ -19,6 +19,14 @@ class Scale extends Observer {
   private init(): void {
     this.toHtml();
     this.renderScalePoint();
+
+    const clickOnScaleCallback = (e: Event): void => {
+      e.preventDefault();
+      const target = e.target as HTMLElement;
+      this.emit('clickOnScale', { value: +target.textContent! });
+    };
+
+    this.element.addEventListener('click', clickOnScaleCallback);
   }
 
   private toHtml(): void {

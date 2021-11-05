@@ -2,6 +2,7 @@
 import render from '../utils/render';
 import Track from '../Track/Track';
 import Observer from '../../observer/Observer';
+import { searchStyleValue } from '../view.function';
 
 class Handle extends Observer {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };
@@ -32,44 +33,64 @@ class Handle extends Observer {
       this.hideTooltip();
     }
 
-    // const clickEvent = (event: MouseEvent) => {
-    //   const {track, isVertical, step } = this
-    //   const prevValue: number = handle.getValue();
+    this.bindListenersToHandle(this.element);
+  }
 
-    //   const valueInPx: number = isVertical
-    //     ? event.clientY - track.element.getBoundingClientRect().top
-    //     : event.clientX - track.element.getBoundingClientRect().left;
+  private bindListenersToHandle(handle: HTMLElement): void {
+    const handleMouseDown = (event: MouseEvent): void => this.handleMouseDown(event);
+    handle.addEventListener('mousedown', handleMouseDown);
+  }
 
-    //   const widthOrHeight: number = isVertical
-    //     ? track.element.getBoundingClientRect().height
-    //     : track.element.getBoundingClientRect().width;
+  handleMouseDown(event: MouseEvent): void {
+    event.preventDefault();
 
-    //   const valueInPercent: number = valueInPx / widthOrHeight;
+    const handleMouseMove = (e: MouseEvent) => this.handleMouseMove(e);
 
-    //   const delta: number = track.getMaxValue() - track.getMinValue();
-    //   const isValueCorrectOfStep = !(Math.round(delta * valueInPercent) % step);
+    document.addEventListener('mousemove', handleMouseMove);
 
-    //   let newValue: number = isValueCorrectOfStep
-    //     ? Math.round(track.getMinValue() + delta * valueInPercent)
-    //     : prevValue;
-    //   if (valueInPercent <= 0) {
-    //     newValue = track.getMinValue();
-    //   } else if (valueInPercent >= 1) {
-    //     newValue = track.getMaxValue();
-    //   }
+    const handleMouseUp = (): void => {
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
 
-    //   const styleValue: number = searchStyleValue(
-    //     track.getMinValue(),
-    //     track.getMaxValue(),
-    //     newValue
-    //   );
+    document.addEventListener('mouseup', handleMouseUp);
+  }
 
-    //   this.emit('clickOnTrack', { event, value: newValue, click: progress });
-    // };
+  handleMouseMove(event: MouseEvent) {
+    const { track, isVertical, step } = this;
+
+    const valueInPx: number = isVertical
+      ? event.clientY - track.element.getBoundingClientRect().top
+      : event.clientX - track.element.getBoundingClientRect().left;
+
+    const widthOrHeight: number = isVertical
+      ? track.element.getBoundingClientRect().height
+      : track.element.getBoundingClientRect().width;
+
+    const valueInPercent: number = valueInPx / widthOrHeight;
+
+    const delta: number = track.getMaxValue() - track.getMinValue();
+    const isValueCorrectInStepSize =
+      Math.round(delta * valueInPercent) - (Math.round(delta * valueInPercent) % step);
+
+    let newValue: number = Math.round(track.getMinValue() + isValueCorrectInStepSize);
+    if (valueInPercent <= 0) {
+      newValue = track.getMinValue();
+    } else if (valueInPercent >= 1) {
+      newValue = track.getMaxValue();
+    }
+
+    // const styleValue: number = searchStyleValue(track.getMinValue(), track.getMaxValue(), newValue);
+
+    this.emit('clickOnHandle', newValue);
   }
 
   showTooltipMethod(): void {
     this.elements.tooltip.classList.remove('range-slider__tooltip_hide');
+  }
+
+  updateStep(newValue: number): void {
+    this.step = newValue;
   }
 
   hideTooltip(): void {

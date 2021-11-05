@@ -82,6 +82,7 @@ class View extends Observer {
       secondHandle.setValue(valueEnd);
       secondHandle.setStyle(searchStyleValue(minValue, maxValue, valueEnd));
       this.mergeTooltip();
+
       if (showProgress) {
         progress.setStyle(
           searchStyleValue(minValue, maxValue, valueStart),
@@ -111,9 +112,12 @@ class View extends Observer {
     }
 
     track.setMaxMinValueAndStep(maxValue, minValue, step);
+    firstHandle.updateStep(step);
+    secondHandle.updateStep(step);
 
     const styleValueFirst = searchStyleValue(track.getMinValue(), track.getMaxValue(), valueStart);
 
+    // when change orientation
     if (range) {
       const styleValueSecond = searchStyleValue(track.getMinValue(), track.getMaxValue(), valueEnd);
       secondHandle.setOrientation(isVertical);
@@ -208,16 +212,9 @@ class View extends Observer {
   }
 
   private bindEventListeners(): void {
-    const { firstHandle, secondHandle, scale } = this.components;
-    const { showScale } = this.viewOptions;
-
     this.clickOnTrack();
-    this.bindListenersToHandle(firstHandle);
-    this.bindListenersToHandle(secondHandle);
-
-    if (showScale) {
-      this.clickOnScale(scale);
-    }
+    this.clickOnHandle();
+    this.clickOnScale1();
   }
 
   private mergeTooltip(): void {
@@ -232,6 +229,73 @@ class View extends Observer {
       firstHandle.setTooltipContent();
       secondHandle?.setTooltipContent();
     }
+  }
+
+  private clickOnHandle() {
+    const { track, progress, firstHandle, secondHandle } = this.components;
+    const { range } = this.modelOptions;
+    const { showProgress } = this.viewOptions;
+
+    const setNewValueOnHandle = (newValue: number, handle: Handle) => {
+      const styleValue: number = searchStyleValue(
+        track.getMinValue(),
+        track.getMaxValue(),
+        newValue
+      );
+      // eslint-disable-next-line no-shadow
+      function checkHandleAndNewValue(handle: Handle, newValue: number): boolean {
+        if (handle === secondHandle) {
+          return newValue > firstHandle.getValue();
+        }
+        if (handle === firstHandle) {
+          return newValue < secondHandle!.getValue();
+        }
+        return false;
+      }
+
+      if (range) {
+        if (checkHandleAndNewValue(handle, newValue)) {
+          handle.setValue(newValue);
+          handle.setStyle(styleValue);
+          if (showProgress) {
+            progress!.setStart(styleValue);
+          }
+        } else if (checkHandleAndNewValue(handle, newValue)) {
+          handle.setValue(newValue);
+          handle.setStyle(styleValue);
+
+          if (showProgress) {
+            progress!.setEnd(styleValue);
+          }
+        }
+        this.mergeTooltip();
+      } else if (showProgress) {
+        progress!.setStart(0);
+        progress!.setEnd(styleValue);
+      }
+      if (!range) {
+        handle.setValue(newValue);
+        handle.setStyle(styleValue);
+      }
+
+      if (handle === firstHandle) {
+        this.emit('viewChanged', { valueStart: handle.getValue() });
+      } else if (handle === secondHandle) {
+        this.emit('viewChanged', { valueEnd: handle.getValue() });
+      }
+    };
+
+    firstHandle.subscribe('clickOnHandle', (newValue) => {
+      setNewValueOnHandle(newValue, firstHandle);
+    });
+
+    secondHandle.subscribe('clickOnHandle', (newValue) => {
+      setNewValueOnHandle(newValue, secondHandle);
+    });
+  }
+
+  private clickOnScale1() {
+    this.components.scale.subscribe('clickOnScale', (data) => console.log(data));
   }
 
   private clickOnTrack(): void {
@@ -273,104 +337,9 @@ class View extends Observer {
           this.emit('viewChanged', { valueEnd: closetHandle.getValue() });
         }
 
-        this.handleMouseDown(event, closetHandle);
+        closetHandle.handleMouseDown(event);
       }
     );
-  }
-
-  private handleMouseDown(event: MouseEvent, handle: Handle): void {
-    event.preventDefault();
-
-    const handleMouseMove = (e: MouseEvent) => this.handleMouseMove(e, handle);
-
-    document.addEventListener('mousemove', handleMouseMove);
-
-    const handleMouseUp = (): void => {
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mousemove', handleMouseMove);
-    };
-
-    document.addEventListener('mouseup', handleMouseUp);
-  }
-
-  private handleMouseMove(event: MouseEvent, handle: Handle): void {
-    const { track, progress, firstHandle, secondHandle } = this.components;
-    const { step, range } = this.modelOptions;
-    const { isVertical, showProgress } = this.viewOptions;
-
-    const prevValue: number = handle.getValue();
-
-    const valueInPx: number = isVertical
-      ? event.clientY - track.element.getBoundingClientRect().top
-      : event.clientX - track.element.getBoundingClientRect().left;
-
-    const widthOrHeight: number = isVertical
-      ? track.element.getBoundingClientRect().height
-      : track.element.getBoundingClientRect().width;
-
-    const valueInPercent: number = valueInPx / widthOrHeight;
-
-    const delta: number = track.getMaxValue() - track.getMinValue();
-    const isValueCorrectOfStep = !(Math.round(delta * valueInPercent) % step);
-
-    let newValue: number = isValueCorrectOfStep
-      ? Math.round(track.getMinValue() + delta * valueInPercent)
-      : prevValue;
-    if (valueInPercent <= 0) {
-      newValue = track.getMinValue();
-    } else if (valueInPercent >= 1) {
-      newValue = track.getMaxValue();
-    }
-
-    const styleValue: number = searchStyleValue(track.getMinValue(), track.getMaxValue(), newValue);
-
-    // eslint-disable-next-line no-shadow
-    function checkHandleAndNewValue(handle: Handle, newValue: number): boolean {
-      if (handle === secondHandle) {
-        return newValue > firstHandle.getValue();
-      }
-      if (handle === firstHandle) {
-        return newValue < secondHandle!.getValue();
-      }
-      return false;
-    }
-
-    if (range) {
-      if (checkHandleAndNewValue(handle, newValue)) {
-        handle.setValue(newValue);
-        handle.setStyle(styleValue);
-        if (showProgress) {
-          progress!.setStart(styleValue);
-        }
-      } else if (checkHandleAndNewValue(handle, newValue)) {
-        handle.setValue(newValue);
-        handle.setStyle(styleValue);
-
-        if (showProgress) {
-          progress!.setEnd(styleValue);
-        }
-      }
-      this.mergeTooltip();
-    } else if (showProgress) {
-      progress!.setStart(0);
-      progress!.setEnd(styleValue);
-    }
-    if (!range) {
-      handle.setValue(newValue);
-      handle.setStyle(styleValue);
-    }
-    if (isValueCorrectOfStep) {
-      if (handle === firstHandle) {
-        this.emit('viewChanged', { valueStart: handle.getValue() });
-      } else if (handle === secondHandle) {
-        this.emit('viewChanged', { valueEnd: handle.getValue() });
-      }
-    }
-  }
-
-  private bindListenersToHandle(handle: Handle): void {
-    const handleMouseDown = (event: MouseEvent): void => this.handleMouseDown(event, handle);
-    handle.element.addEventListener('mousedown', handleMouseDown);
   }
 
   private clickOnScale(scale: Scale): void {

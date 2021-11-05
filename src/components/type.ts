@@ -90,7 +90,9 @@ enum ListenersName {
   check1 = 'check1',
   viewChanged = 'viewChanged',
   modelValueChange = 'modelValueChange',
-  clickOnTrack = 'clickOnTrack'
+  clickOnTrack = 'clickOnTrack',
+  clickOnScale = 'clickOnScale',
+  clickOnHandle = 'clickOnHandle'
 }
 
 type Listeners = {
