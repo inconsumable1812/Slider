@@ -2,7 +2,6 @@
 import render from '../utils/render';
 import Track from '../Track/Track';
 import Observer from '../../observer/Observer';
-import { searchStyleValue } from '../view.function';
 
 class Handle extends Observer {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };
@@ -79,9 +78,6 @@ class Handle extends Observer {
     } else if (valueInPercent >= 1) {
       newValue = track.getMaxValue();
     }
-
-    // const styleValue: number = searchStyleValue(track.getMinValue(), track.getMaxValue(), newValue);
-
     this.emit('clickOnHandle', newValue);
   }
 

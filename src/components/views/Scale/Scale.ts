@@ -23,7 +23,7 @@ class Scale extends Observer {
     const clickOnScaleCallback = (e: Event): void => {
       e.preventDefault();
       const target = e.target as HTMLElement;
-      this.emit('clickOnScale', { value: +target.textContent! });
+      this.emit('clickOnScale', +target.textContent!);
     };
 
     this.element.addEventListener('click', clickOnScaleCallback);

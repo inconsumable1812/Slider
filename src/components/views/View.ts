@@ -56,7 +56,6 @@ class View extends Observer {
   updateView(): void {
     const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions;
     const { scalePointCount, showTooltip, isVertical, showProgress, showScale } = this.viewOptions;
-
     const { track, firstHandle, progress, secondHandle, scale } = this.components;
 
     firstHandle.setValue(valueStart);
@@ -233,10 +232,11 @@ class View extends Observer {
 
   private clickOnHandle() {
     const { track, progress, firstHandle, secondHandle } = this.components;
-    const { range } = this.modelOptions;
-    const { showProgress } = this.viewOptions;
 
     const setNewValueOnHandle = (newValue: number, handle: Handle) => {
+      const { range } = this.modelOptions;
+      const { showProgress } = this.viewOptions;
+
       const styleValue: number = searchStyleValue(
         track.getMinValue(),
         track.getMaxValue(),
@@ -258,20 +258,20 @@ class View extends Observer {
           handle.setValue(newValue);
           handle.setStyle(styleValue);
           if (showProgress) {
-            progress!.setStart(styleValue);
+            progress.setStart(styleValue);
           }
         } else if (checkHandleAndNewValue(handle, newValue)) {
           handle.setValue(newValue);
           handle.setStyle(styleValue);
 
           if (showProgress) {
-            progress!.setEnd(styleValue);
+            progress.setEnd(styleValue);
           }
         }
         this.mergeTooltip();
       } else if (showProgress) {
-        progress!.setStart(0);
-        progress!.setEnd(styleValue);
+        progress.setStart(0);
+        progress.setEnd(styleValue);
       }
       if (!range) {
         handle.setValue(newValue);
@@ -295,14 +295,47 @@ class View extends Observer {
   }
 
   private clickOnScale1() {
-    this.components.scale.subscribe('clickOnScale', (data) => console.log(data));
+    const { track, progress, firstHandle, secondHandle, scale } = this.components;
+
+    scale.subscribe('clickOnScale', (value) => {
+      const { range } = this.modelOptions;
+      const { showProgress } = this.viewOptions;
+      let closetHandle: Handle = firstHandle;
+      if (range) {
+        this.mergeTooltip();
+        closetHandle = findClosestHandle(firstHandle, secondHandle!, value);
+      }
+
+      closetHandle.setValue(value);
+
+      const styleValue: number = searchStyleValue(track.getMinValue(), track.getMaxValue(), value);
+
+      closetHandle.setStyle(styleValue);
+      if (range && showProgress) {
+        if (closetHandle === firstHandle) {
+          progress!.setStart(styleValue);
+        } else if (closetHandle === secondHandle) {
+          progress!.setEnd(styleValue);
+        }
+      } else if (showProgress) {
+        progress!.setStart(0);
+        progress!.setEnd(styleValue);
+      }
+
+      if (closetHandle === firstHandle) {
+        this.emit('viewChanged', { valueStart: closetHandle.getValue() });
+      } else if (closetHandle === secondHandle) {
+        this.emit('viewChanged', { valueEnd: closetHandle.getValue() });
+      }
+    });
   }
 
   private clickOnTrack(): void {
-    this.components.track.subscribe(
+    const { track, firstHandle, secondHandle, progress } = this.components;
+
+    track.subscribe(
       'clickOnTrack',
       ({ event, value, click }: { event: MouseEvent; value: number; click: number }) => {
-        const { track, firstHandle, secondHandle, progress } = this.components;
         const { showProgress } = this.viewOptions;
         const { range } = this.modelOptions;
 
@@ -340,47 +373,6 @@ class View extends Observer {
         closetHandle.handleMouseDown(event);
       }
     );
-  }
-
-  private clickOnScale(scale: Scale): void {
-    const clickOnScaleCallback = (event: MouseEvent) => this.clickOnScaleCallback(event);
-    scale.element.addEventListener('click', clickOnScaleCallback);
-  }
-
-  private clickOnScaleCallback(event: MouseEvent): void {
-    const { firstHandle, secondHandle, progress, track } = this.components;
-    const { range } = this.modelOptions;
-    const { showProgress } = this.viewOptions;
-
-    const target: HTMLElement = event.target as HTMLElement;
-    const value: number = +target.textContent!;
-
-    let closetHandle: Handle = firstHandle;
-    if (range) {
-      this.mergeTooltip();
-      closetHandle = findClosestHandle(firstHandle, secondHandle!, value);
-    }
-    closetHandle.setValue(value);
-
-    const styleValue: number = searchStyleValue(track.getMinValue(), track.getMaxValue(), value);
-
-    closetHandle.setStyle(styleValue);
-    if (range && showProgress) {
-      if (closetHandle === firstHandle) {
-        progress!.setStart(styleValue);
-      } else if (closetHandle === secondHandle) {
-        progress!.setEnd(styleValue);
-      }
-    } else if (showProgress) {
-      progress!.setStart(0);
-      progress!.setEnd(styleValue);
-    }
-
-    if (closetHandle === firstHandle) {
-      this.emit('viewChanged', { valueStart: closetHandle.getValue() });
-    } else if (closetHandle === secondHandle) {
-      this.emit('viewChanged', { valueEnd: closetHandle.getValue() });
-    }
   }
 }
 
