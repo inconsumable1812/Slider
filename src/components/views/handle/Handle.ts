@@ -37,7 +37,7 @@ class Handle extends Observer {
 
   private bindListenersToHandle(handle: HTMLElement): void {
     const handleMouseDown = (event: MouseEvent): void => this.handleMouseDown(event);
-    handle.addEventListener('mousedown', handleMouseDown);
+    handle.addEventListener('pointerdown', handleMouseDown);
   }
 
   handleMouseDown(event: MouseEvent): void {
@@ -45,18 +45,20 @@ class Handle extends Observer {
 
     const handleMouseMove = (e: MouseEvent) => this.handleMouseMove(e);
 
-    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('pointermove', handleMouseMove);
 
     const handleMouseUp = (): void => {
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('pointerup', handleMouseUp);
+      document.removeEventListener('pointermove', handleMouseMove);
     };
 
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('pointerup', handleMouseUp);
   }
 
   private handleMouseMove(event: MouseEvent): void {
     const { track, isVertical, step } = this;
+
+    console.log('move');
 
     const valueInPx: number = isVertical
       ? event.clientY - track.element.getBoundingClientRect().top
