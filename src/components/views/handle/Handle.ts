@@ -58,8 +58,6 @@ class Handle extends Observer {
   private handleMouseMove(event: MouseEvent): void {
     const { track, isVertical, step } = this;
 
-    console.log('move');
-
     const valueInPx: number = isVertical
       ? event.clientY - track.element.getBoundingClientRect().top
       : event.clientX - track.element.getBoundingClientRect().left;
