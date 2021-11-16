@@ -18,7 +18,12 @@ describe('Track', () => {
   let track: Track;
   let trackVertical: Track;
   beforeEach(() => {
-    track = new Track(options.minValue, options.maxValue, options.isVertical, options.step);
+    track = new Track(
+      options.minValue,
+      options.maxValue,
+      options.isVertical,
+      options.step
+    );
 
     trackVertical = new Track(
       optionsVertical.minValue,
@@ -36,19 +41,19 @@ describe('Track', () => {
     expect(trackVertical.element).toBeInstanceOf(HTMLElement);
   });
 
-  test('call function when mousedown on track', () => {
+  test('call function when pointerdown on track', () => {
     const fn = jest.fn();
     expect(fn).not.toHaveBeenCalled();
     track.subscribe('clickOnTrack', fn);
-    track.element.dispatchEvent(new Event('mousedown'));
+    track.element.dispatchEvent(new Event('pointerdown'));
     expect(fn).toHaveBeenCalled();
   });
 
-  test('call function when mousedown on track, slider is vertical', () => {
+  test('call function when pointerdown on track, slider is vertical', () => {
     const fn = jest.fn();
     expect(fn).not.toHaveBeenCalled();
     trackVertical.subscribe('clickOnTrack', fn);
-    trackVertical.element.dispatchEvent(new Event('mousedown'));
+    trackVertical.element.dispatchEvent(new Event('pointerdown'));
     expect(fn).toHaveBeenCalled();
   });
 
@@ -66,7 +71,11 @@ describe('Track', () => {
       maxValue: 133,
       step: 3
     };
-    track.setMaxMinValueAndStep(newOptions.maxValue, newOptions.minValue, newOptions.step);
+    track.setMaxMinValueAndStep(
+      newOptions.maxValue,
+      newOptions.minValue,
+      newOptions.step
+    );
     expect(track.getMaxValue()).toBe(133);
     expect(track.getMinValue()).toBe(55);
     expect(track.getStep()).toBe(3);

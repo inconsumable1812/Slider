@@ -165,7 +165,7 @@ describe('View', () => {
     const fn = jest.fn();
     viewDefault.subscribe('viewChanged', fn);
     const track = viewDefault.getComponents().track;
-    track.element.dispatchEvent(new Event('mousedown'));
+    track.element.dispatchEvent(new Event('pointerdown'));
     expect(fn).toBeCalled();
   });
 
@@ -174,7 +174,7 @@ describe('View', () => {
     const fn = jest.fn();
     viewAllTrue.subscribe('viewChanged', fn);
     const track = viewAllTrue.getComponents().track;
-    track.element.dispatchEvent(new Event('mousedown'));
+    track.element.dispatchEvent(new Event('pointerdown'));
     expect(fn).toBeCalled();
   });
 
@@ -183,9 +183,9 @@ describe('View', () => {
     const fn = jest.fn();
     viewDefault.subscribe('viewChanged', fn);
     const firstHandle = viewDefault.getComponents().firstHandle;
-    firstHandle.element.dispatchEvent(new Event('mousedown'));
-    document.dispatchEvent(new Event('mousemove'));
-    document.dispatchEvent(new Event('mouseup'));
+    firstHandle.element.dispatchEvent(new Event('pointerdown'));
+    document.dispatchEvent(new Event('pointermove'));
+    document.dispatchEvent(new Event('pointerup'));
     expect(fn).toBeCalled();
   });
 
@@ -194,9 +194,9 @@ describe('View', () => {
     const fn = jest.fn();
     viewAllTrue.subscribe('viewChanged', fn);
     const firstHandle = viewAllTrue.getComponents().firstHandle;
-    firstHandle.element.dispatchEvent(new Event('mousedown'));
-    document.dispatchEvent(new Event('mousemove'));
-    document.dispatchEvent(new Event('mouseup'));
+    firstHandle.element.dispatchEvent(new Event('pointerdown'));
+    document.dispatchEvent(new Event('pointermove'));
+    document.dispatchEvent(new Event('pointerup'));
     expect(fn).toBeCalled();
   });
 
@@ -205,9 +205,9 @@ describe('View', () => {
     const fn = jest.fn();
     view4.subscribe('viewChanged', fn);
     const firstHandle = view4.getComponents().firstHandle;
-    firstHandle.element.dispatchEvent(new Event('mousedown'));
-    document.dispatchEvent(new Event('mousemove'));
-    document.dispatchEvent(new Event('mouseup'));
+    firstHandle.element.dispatchEvent(new Event('pointerdown'));
+    document.dispatchEvent(new Event('pointermove'));
+    document.dispatchEvent(new Event('pointerup'));
     expect(fn).toBeCalled();
   });
 
@@ -233,11 +233,15 @@ describe('View', () => {
     viewAllTrue.render();
     viewAllTrue.changeModelOptions({ valueStart: 97 });
     viewAllTrue.updateView();
-    const firstTooltip: string = viewAllTrue.getComponents().firstHandle.getTooltipContent()!;
+    const firstTooltip: string = viewAllTrue
+      .getComponents()
+      .firstHandle.getTooltipContent()!;
     expect(firstTooltip).toBe('97...99');
     viewAllTrue.changeModelOptions({ valueStart: 5 });
     viewAllTrue.updateView();
-    const newFirstTooltip: string = viewAllTrue.getComponents().firstHandle.getTooltipContent()!;
+    const newFirstTooltip: string = viewAllTrue
+      .getComponents()
+      .firstHandle.getTooltipContent()!;
     expect(newFirstTooltip).toBe('5');
   });
 });

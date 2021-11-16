@@ -26,9 +26,9 @@ describe('Panel', () => {
   let panel: Panel;
   let slider: Slider;
   const changeEvent = new InputEvent('change');
-  const mousedown = new Event('mousedown');
-  const mouseup = new Event('mouseup');
-  const mousemove = new Event('mousemove');
+  const pointerdown = new Event('pointerdown');
+  const pointerup = new Event('pointerup');
+  const pointermove = new Event('pointermove');
   const click = new Event('click');
   const focus = new Event('focus');
   const blur = new Event('blur');
@@ -133,9 +133,9 @@ describe('Panel', () => {
 
   test('check correct change value when click on track', () => {
     const track = slider.getViewRoot();
-    track.dispatchEvent(mousedown);
-    track.dispatchEvent(mousemove);
-    track.dispatchEvent(mouseup);
+    track.dispatchEvent(pointerdown);
+    track.dispatchEvent(pointermove);
+    track.dispatchEvent(pointerup);
     track.dispatchEvent(click);
     expect(slider.getOptions().valueStart).toBe(40);
   });
