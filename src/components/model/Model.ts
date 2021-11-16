@@ -2,6 +2,12 @@
 import { DEFAULT_MODEL_OPTIONS } from '../default';
 import { ModelOptions } from '../type';
 import Observer from '../observer/Observer';
+import {
+  isIncorrectStepInValueEnd,
+  isIncorrectStepInValueStart,
+  isValueStartBiggerMaxValue,
+  isValueStartBiggerValueEnd
+} from './Model.function';
 
 class Model extends Observer {
   constructor(private options: Partial<ModelOptions> = DEFAULT_MODEL_OPTIONS) {
@@ -110,9 +116,9 @@ class Model extends Observer {
       if (valueStart! > valueEnd!) {
         return this.setOptions({ valueStart: minValue });
       }
-    } else if (valueStart! >= valueEnd! && valueStart !== maxValue) {
+    } else if (isValueStartBiggerValueEnd(valueStart!, valueEnd!, maxValue!)) {
       return this.setOptions({ valueEnd: maxValue });
-    } else if (valueStart === maxValue && valueEnd !== maxValue) {
+    } else if (isValueStartBiggerMaxValue(valueStart!, valueEnd!, maxValue!)) {
       return this.setOptions({ valueEnd: maxValue });
     }
   }
@@ -120,14 +126,14 @@ class Model extends Observer {
   private checkValueStartCorrectStep(): void | Partial<ModelOptions> {
     const { minValue, step, valueStart, maxValue } = this.options;
 
-    if (Math.abs(valueStart! - minValue!) % step! && valueStart !== maxValue) {
+    if (isIncorrectStepInValueStart(minValue!, step!, valueStart!, maxValue!)) {
       return this.setOptions({ valueStart: minValue });
     }
   }
 
   private checkValueEndCorrectStep(): void | Partial<ModelOptions> {
     const { maxValue, minValue, step, valueEnd } = this.options;
-    if (Math.abs(valueEnd! - minValue!) % step! && valueEnd !== maxValue) {
+    if (isIncorrectStepInValueEnd(maxValue!, minValue!, step!, valueEnd!)) {
       return this.setOptions({ valueEnd: maxValue });
     }
   }

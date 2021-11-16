@@ -1,6 +1,18 @@
 import Observer from '../../observer/Observer';
 import render from '../utils/render';
 
+function isScalePointCorrectAndIIsNotLastNumber(
+  scalePointCountLess: boolean,
+  i: number,
+  actualCount: number
+): boolean {
+  return scalePointCountLess && i === actualCount - 1;
+}
+
+function isLastNumber(i: number, j: number, actualCount: number): boolean {
+  return i === actualCount - 1 || j === actualCount - 1;
+}
+
 class Scale extends Observer {
   element!: HTMLElement;
   subElement!: HTMLElement;
@@ -39,7 +51,8 @@ class Scale extends Observer {
     const arrayOfValue: number[][] = this.calculateStepValue();
     const arrayOfStepsValue: number[] = arrayOfValue[0];
     const arrayOfStepsStyleValue: number[] = arrayOfValue[1];
-    const scalePointCountLess: boolean = scalePointCount < arrayOfStepsValue.length;
+    const scalePointCountLess: boolean =
+      scalePointCount < arrayOfStepsValue.length;
     const actualCount: number = scalePointCountLess
       ? arrayOfStepsValue.length - 1
       : arrayOfStepsValue.length;
@@ -48,15 +61,22 @@ class Scale extends Observer {
 
     let j = 0;
     for (let i = 0; i < actualCount; i += 1) {
-      if (scalePointCountLess && i === actualCount - 1) {
+      if (
+        isScalePointCorrectAndIIsNotLastNumber(
+          scalePointCountLess,
+          i,
+          actualCount
+        )
+      ) {
         j = i;
         i += 1;
       }
+
       this.subElement = render(`
       <div class="range-slider__scale_point">${arrayOfStepsValue[i]}</div>
     `);
       this.subElement.style[subElementStyle] = arrayOfStepsStyleValue[i] + '%';
-      if (i === actualCount - 1 || j === actualCount - 1) {
+      if (isLastNumber(i, j, actualCount)) {
         this.subElement.classList.add('range-slider__scale_point-end');
       }
       this.element.append(this.subElement);
@@ -71,12 +91,15 @@ class Scale extends Observer {
   private calculateStepValue(): number[][] {
     const { minValue, maxValue, step, scalePointCount } = this;
     const range = Math.abs(maxValue - minValue);
-    const isLastStepBigThanMaxValue: boolean = (range % step) as unknown as boolean;
+    const isLastStepBigThanMaxValue: boolean = (range %
+      step) as unknown as boolean;
     const isCountBigThanScalePoint = Math.floor(range / step) > scalePointCount;
     const actualScaleSize = isCountBigThanScalePoint
       ? Math.round(Math.round(range / step) / (scalePointCount - 1)) * step
       : step;
-    let countOfSteps = isCountBigThanScalePoint ? scalePointCount - 1 : Math.floor(range / step);
+    let countOfSteps = isCountBigThanScalePoint
+      ? scalePointCount - 1
+      : Math.floor(range / step);
 
     countOfSteps = isLastStepBigThanMaxValue ? countOfSteps + 1 : countOfSteps;
 
@@ -92,6 +115,8 @@ class Scale extends Observer {
       stepStyleValue = stepStyleValue > 100 ? 100 : +stepStyleValue.toFixed(0);
       arrayOfStepsStyleValue.push(stepStyleValue);
     }
+    arrayOfStepsStyleValue[countOfSteps] = 100;
+
     const arrayOfValue = [arrayOfStepsValue, arrayOfStepsStyleValue];
 
     return arrayOfValue;
@@ -109,7 +134,12 @@ class Scale extends Observer {
     this.isVertical = isVertical;
   }
 
-  setScaleOptions(maxValue: number, minValue: number, step: number, scalePointCount: number): void {
+  setScaleOptions(
+    maxValue: number,
+    minValue: number,
+    step: number,
+    scalePointCount: number
+  ): void {
     this.maxValue = maxValue;
     this.minValue = minValue;
     this.step = step;
