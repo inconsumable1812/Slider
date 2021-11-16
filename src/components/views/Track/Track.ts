@@ -27,7 +27,9 @@ class Track extends Observer {
 
       const borderWidthPx = getComputedStyle(target).borderWidth;
       const borderWidth = Math.round(+borderWidthPx.slice(0, -2));
-      const offset = isVertical ? event.offsetY + borderWidth : event.offsetX + borderWidth;
+      const offset = isVertical
+        ? event.offsetY + borderWidth
+        : event.offsetX + borderWidth;
 
       const progress = offset / widthOrHeight;
 
@@ -36,7 +38,7 @@ class Track extends Observer {
       this.emit('clickOnTrack', { event, value: newValue, click: progress });
     };
 
-    this.element.addEventListener('mousedown', clickEvent);
+    this.element.addEventListener('pointerdown', clickEvent);
   }
 
   getMinValue(): number {
@@ -55,7 +57,11 @@ class Track extends Observer {
     return this.isVertical;
   }
 
-  setMaxMinValueAndStep(maxValue: number, minValue: number, step: number): void {
+  setMaxMinValueAndStep(
+    maxValue: number,
+    minValue: number,
+    step: number
+  ): void {
     this.maxValue = maxValue;
     this.minValue = minValue;
     this.step = step;
