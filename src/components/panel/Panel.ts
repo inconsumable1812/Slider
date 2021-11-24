@@ -278,7 +278,7 @@ class Panel {
         ? { maxValue: previousValue }
         : this.getMaxValue();
       newValue = rangeLessThanStep
-        ? { maxValue: previousValue }
+        ? { maxValue: maxValue }
         : this.getMaxValue();
 
       this.slider.setOptions(newValue);

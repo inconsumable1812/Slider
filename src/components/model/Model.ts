@@ -47,6 +47,7 @@ class Model extends Observer {
     this.checkValueStartLessValueEnd();
     this.checkValueStartCorrectStep();
     this.checkValueEndCorrectStep();
+    // this.checkMaxValueLessStepSize();
   }
 
   private checkStep(): void {
@@ -74,7 +75,7 @@ class Model extends Observer {
     const range = Math.abs(maxValue! - minValue!);
     const rangeLess: boolean = range < step!;
     if (rangeLess) {
-      return this.setOptions({ minValue: maxValue! - step! });
+      return this.setOptions({ step: range });
     }
   }
 
