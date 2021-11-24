@@ -17,7 +17,7 @@
 
 `npm start`
 
-Сборка проекта
+Сборка проекта в режиме production 
 
 `npm run build`
 
