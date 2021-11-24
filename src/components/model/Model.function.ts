@@ -38,9 +38,44 @@ function isIncorrectStepInValueEnd(
   );
 }
 
+function findClosestCorrectValue(
+  step: number,
+  value: number,
+  maxValue: number
+) {
+  const delta = value % step;
+  const deltaOfMaxValue = maxValue % step;
+  const lastValueBeforeMax = maxValue - deltaOfMaxValue;
+  let newValue = value;
+
+  if (delta < step / 2) {
+    if (newValue > lastValueBeforeMax) {
+      if (Math.abs(newValue - lastValueBeforeMax) >= deltaOfMaxValue / 2) {
+        while (newValue !== maxValue) {
+          newValue += 1;
+        }
+      } else {
+        while (newValue % step) {
+          newValue -= 1;
+        }
+      }
+    } else {
+      while (newValue % step) {
+        newValue -= 1;
+      }
+    }
+    return newValue;
+  }
+  while (newValue % step) {
+    newValue += 1;
+  }
+  return newValue;
+}
+
 export {
   isValueStartBiggerValueEnd,
   isValueStartBiggerMaxValue,
   isIncorrectStepInValueStart,
-  isIncorrectStepInValueEnd
+  isIncorrectStepInValueEnd,
+  findClosestCorrectValue
 };

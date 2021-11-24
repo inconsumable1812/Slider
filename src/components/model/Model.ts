@@ -6,7 +6,8 @@ import {
   isIncorrectStepInValueEnd,
   isIncorrectStepInValueStart,
   isValueStartBiggerMaxValue,
-  isValueStartBiggerValueEnd
+  isValueStartBiggerValueEnd,
+  findClosestCorrectValue
 } from './Model.function';
 
 class Model extends Observer {
@@ -127,14 +128,16 @@ class Model extends Observer {
     const { minValue, step, valueStart, maxValue } = this.options;
 
     if (isIncorrectStepInValueStart(minValue!, step!, valueStart!, maxValue!)) {
-      return this.setOptions({ valueStart: minValue });
+      const newValue = findClosestCorrectValue(step!, valueStart!, maxValue!);
+      return this.setOptions({ valueStart: newValue });
     }
   }
 
   private checkValueEndCorrectStep(): void | Partial<ModelOptions> {
     const { maxValue, minValue, step, valueEnd } = this.options;
     if (isIncorrectStepInValueEnd(maxValue!, minValue!, step!, valueEnd!)) {
-      return this.setOptions({ valueEnd: maxValue });
+      const newValue = findClosestCorrectValue(step!, valueEnd!, maxValue!);
+      return this.setOptions({ valueEnd: newValue });
     }
   }
 }
