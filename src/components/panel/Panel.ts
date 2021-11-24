@@ -90,22 +90,22 @@ class Panel {
     this.elements = {
       maxValueEl: render(`
         <div class="panel__input-max panel__option">Max value
-        <input type="number" value=5>
+        <input type="number">
         </div>
         `),
       minValueEl: render(`
         <div class="panel__input-min panel__option">Min value
-        <input type="number" value=5>
+        <input type="number">
         </div>
       `),
       firstValueEl: render(`
         <div class="panel__value-first panel__option">First value
-        <input type="number" value=5>
+        <input type="number">
         </div>
       `),
       secondValueEl: render(`
         <div class="panel__value-second panel__option">Second value
-        <input type="number" value=5>
+        <input type="number">
         </div>
       `),
       showTooltipEL: render(`
@@ -120,7 +120,7 @@ class Panel {
       `),
       stepEl: render(`
       <div class="panel__step panel__option">Step
-      <input type="number" value=1>
+      <input type="number" >
       </div>
       `),
       showScaleEl: render(`
@@ -130,7 +130,7 @@ class Panel {
       `),
       scalePointEl: render(`
         <div class="panel__scale-point panel__option">Scale point
-        <input type="number" value=1>
+        <input type="number" >
         </div>
       `),
       progressEl: render(`
@@ -415,6 +415,9 @@ class Panel {
       newStep = isStepBiggerRange ? { step: previousValue } : this.getStep();
 
       this.slider.setOptions(newStep);
+
+      this.inputs.valueStart.setAttribute('step', `${newStep.step}`);
+      this.inputs.valueEnd.setAttribute('step', `${newStep.step}`);
     };
     this.inputs.step.addEventListener('change', stepCallback);
 

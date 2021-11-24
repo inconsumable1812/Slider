@@ -47,7 +47,6 @@ class Model extends Observer {
     this.checkValueStartLessValueEnd();
     this.checkValueStartCorrectStep();
     this.checkValueEndCorrectStep();
-    // this.checkMaxValueLessStepSize();
   }
 
   private checkStep(): void {
