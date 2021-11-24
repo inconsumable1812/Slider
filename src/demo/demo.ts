@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import $ from 'jquery';
+
+import { sliderOptions } from '../components/type';
 import '../components/slider';
 import '../components/JQplugin';
-import { sliderOptions } from 'components/type';
 
 const slider = $('#app').JQSlider();
 slider.JQSlider('addControlPanel');

@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { DEFAULT_MODEL_OPTIONS } from '../default';
-import { ModelOptions } from '../type';
+import { ModelOptions, ListenersName } from '../type';
 import Observer from '../observer/Observer';
 import {
   isIncorrectStepInValueEnd,
@@ -16,10 +16,6 @@ class Model extends Observer {
     this.checkOptions();
   }
 
-  private init(): void {
-    this.options = { ...DEFAULT_MODEL_OPTIONS, ...this.options };
-  }
-
   getOptions(): ModelOptions {
     return this.options as ModelOptions;
   }
@@ -32,6 +28,16 @@ class Model extends Observer {
     return this.options.valueEnd!;
   }
 
+  setOptions(modelOptions: Partial<ModelOptions>): void {
+    this.options = { ...this.options, ...modelOptions };
+    this.checkOptions();
+    this.emit(ListenersName.modelValueChange);
+  }
+
+  private init(): void {
+    this.options = { ...DEFAULT_MODEL_OPTIONS, ...this.options };
+  }
+
   private checkOptions(): void {
     this.checkStep();
     this.checkMinValueLessMax();
@@ -41,12 +47,6 @@ class Model extends Observer {
     this.checkValueStartLessValueEnd();
     this.checkValueStartCorrectStep();
     this.checkValueEndCorrectStep();
-  }
-
-  setOptions(modelOptions: Partial<ModelOptions>): void {
-    this.options = { ...this.options, ...modelOptions };
-    this.checkOptions();
-    this.emit('modelValueChange');
   }
 
   private checkStep(): void {

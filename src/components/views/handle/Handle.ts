@@ -1,7 +1,8 @@
-/* eslint-disable no-unused-expressions */
+import { TOOLTIP_HIDE_CLASS } from '../../../constants';
+import Observer from '../../observer/Observer';
+import { ListenersName } from '../../type';
 import render from '../utils/render';
 import Track from '../Track/Track';
-import Observer from '../../observer/Observer';
 
 class Handle extends Observer {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };
@@ -19,27 +20,6 @@ class Handle extends Observer {
     this.toHtml();
   }
 
-  private toHtml(): void {
-    this.element = render(`
-    <div class="range-slider__handle range-slider__handle_num_${this.handleNumber}">
-      <div class="range-slider__tooltip js-range-slider__tooltip">${this.value}</div>
-    </div>`);
-    this.elements = {
-      handle: this.element,
-      tooltip: this.element.querySelector(`.js-range-slider__tooltip`) as HTMLElement
-    };
-    if (!this.showTooltip) {
-      this.hideTooltip();
-    }
-
-    this.bindListenersToHandle(this.element);
-  }
-
-  private bindListenersToHandle(handle: HTMLElement): void {
-    const handleMouseDown = (event: MouseEvent): void => this.handleMouseDown(event);
-    handle.addEventListener('pointerdown', handleMouseDown);
-  }
-
   handleMouseDown(event: MouseEvent): void {
     event.preventDefault();
 
@@ -55,34 +35,8 @@ class Handle extends Observer {
     document.addEventListener('pointerup', handleMouseUp);
   }
 
-  private handleMouseMove(event: MouseEvent): void {
-    const { track, isVertical, step } = this;
-
-    const valueInPx: number = isVertical
-      ? event.clientY - track.element.getBoundingClientRect().top
-      : event.clientX - track.element.getBoundingClientRect().left;
-
-    const widthOrHeight: number = isVertical
-      ? track.element.getBoundingClientRect().height
-      : track.element.getBoundingClientRect().width;
-
-    const valueInPercent: number = valueInPx / widthOrHeight;
-
-    const delta: number = track.getMaxValue() - track.getMinValue();
-    const isValueCorrectInStepSize =
-      Math.round(delta * valueInPercent) - (Math.round(delta * valueInPercent) % step);
-
-    let newValue: number = Math.round(track.getMinValue() + isValueCorrectInStepSize);
-    if (valueInPercent <= 0) {
-      newValue = track.getMinValue();
-    } else if (valueInPercent >= 1) {
-      newValue = track.getMaxValue();
-    }
-    this.emit('clickOnHandle', newValue);
-  }
-
   showTooltipMethod(): void {
-    this.elements.tooltip.classList.remove('range-slider__tooltip_hide');
+    this.elements.tooltip.classList.remove(TOOLTIP_HIDE_CLASS);
   }
 
   updateStep(newValue: number): void {
@@ -90,7 +44,7 @@ class Handle extends Observer {
   }
 
   hideTooltip(): void {
-    this.elements.tooltip.classList.add('range-slider__tooltip_hide');
+    this.elements.tooltip.classList.add(TOOLTIP_HIDE_CLASS);
   }
 
   getElement(): HTMLElement {
@@ -149,6 +103,7 @@ class Handle extends Observer {
 
   setStyle(value: number): void {
     if (this.getStyleValue() !== value) {
+      // eslint-disable-next-line no-unused-expressions
       this.isVertical
         ? (this.elements.handle.style.top = value + '%')
         : (this.elements.handle.style.left = value + '%');
@@ -159,6 +114,7 @@ class Handle extends Observer {
   }
 
   clearStyle(): void {
+    // eslint-disable-next-line no-unused-expressions
     this.isVertical
       ? (this.elements.handle.style.left = -4.5 + 'px')
       : (this.elements.handle.style.top = -4.5 + 'px');
@@ -166,6 +122,59 @@ class Handle extends Observer {
 
   setOrientation(isVertical: boolean): void {
     this.isVertical = isVertical;
+  }
+
+  private toHtml(): void {
+    this.element = render(`
+    <div class="range-slider__handle range-slider__handle_num_${this.handleNumber}">
+      <div class="range-slider__tooltip js-range-slider__tooltip">${this.value}</div>
+    </div>`);
+    this.elements = {
+      handle: this.element,
+      tooltip: this.element.querySelector(
+        `.js-range-slider__tooltip`
+      ) as HTMLElement
+    };
+    if (!this.showTooltip) {
+      this.hideTooltip();
+    }
+
+    this.bindListenersToHandle(this.element);
+  }
+
+  private bindListenersToHandle(handle: HTMLElement): void {
+    const handleMouseDown = (event: MouseEvent): void =>
+      this.handleMouseDown(event);
+    handle.addEventListener('pointerdown', handleMouseDown);
+  }
+
+  private handleMouseMove(event: MouseEvent): void {
+    const { track, isVertical, step } = this;
+
+    const valueInPx: number = isVertical
+      ? event.clientY - track.element.getBoundingClientRect().top
+      : event.clientX - track.element.getBoundingClientRect().left;
+
+    const widthOrHeight: number = isVertical
+      ? track.element.getBoundingClientRect().height
+      : track.element.getBoundingClientRect().width;
+
+    const valueInPercent: number = valueInPx / widthOrHeight;
+
+    const delta: number = track.getMaxValue() - track.getMinValue();
+    const isValueCorrectInStepSize =
+      Math.round(delta * valueInPercent) -
+      (Math.round(delta * valueInPercent) % step);
+
+    let newValue: number = Math.round(
+      track.getMinValue() + isValueCorrectInStepSize
+    );
+    if (valueInPercent <= 0) {
+      newValue = track.getMinValue();
+    } else if (valueInPercent >= 1) {
+      newValue = track.getMaxValue();
+    }
+    this.emit(ListenersName.clickOnHandle, newValue);
   }
 }
 

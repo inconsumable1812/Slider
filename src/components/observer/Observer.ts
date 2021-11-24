@@ -20,7 +20,10 @@ class Observer {
   // on, listen
   // Подписываемся на уведомления
   // добавляем нового слушателя
-  subscribe(event: keyof typeof ListenersName, fn: ListenersFunction): ListenersFunction {
+  subscribe(
+    event: keyof typeof ListenersName,
+    fn: ListenersFunction
+  ): ListenersFunction {
     this.listeners[event] = this.listeners[event] || [];
     this.listeners[event]!.push(fn);
     return () => {

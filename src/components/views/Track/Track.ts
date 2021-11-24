@@ -1,4 +1,5 @@
 import Observer from '../../observer/Observer';
+import { ListenersName } from '../../type';
 import calculateNewValue from '../utils/calculateNewValue';
 import render from '../utils/render';
 
@@ -13,32 +14,6 @@ class Track extends Observer {
   ) {
     super();
     this.toHtml();
-  }
-  private toHtml(): void {
-    this.element = render(`<div class="range-slider__track"></div>`);
-
-    const clickEvent = (event: MouseEvent) => {
-      event.preventDefault();
-      const target = event.target as HTMLElement;
-      const { minValue, maxValue, isVertical, step } = this;
-      const widthOrHeight = isVertical
-        ? target.getBoundingClientRect().height
-        : target.getBoundingClientRect().width;
-
-      const borderWidthPx = getComputedStyle(target).borderWidth;
-      const borderWidth = Math.round(+borderWidthPx.slice(0, -2));
-      const offset = isVertical
-        ? event.offsetY + borderWidth
-        : event.offsetX + borderWidth;
-
-      const progress = offset / widthOrHeight;
-
-      const newValue = calculateNewValue(minValue, maxValue, progress, step);
-
-      this.emit('clickOnTrack', { event, value: newValue, click: progress });
-    };
-
-    this.element.addEventListener('pointerdown', clickEvent);
   }
 
   getMinValue(): number {
@@ -69,6 +44,37 @@ class Track extends Observer {
 
   setOrientation(isVertical: boolean): void {
     this.isVertical = isVertical;
+  }
+
+  private toHtml(): void {
+    this.element = render(`<div class="range-slider__track"></div>`);
+
+    const clickEvent = (event: MouseEvent) => {
+      event.preventDefault();
+      const target = event.target as HTMLElement;
+      const { minValue, maxValue, isVertical, step } = this;
+      const widthOrHeight = isVertical
+        ? target.getBoundingClientRect().height
+        : target.getBoundingClientRect().width;
+
+      const borderWidthPx = getComputedStyle(target).borderWidth;
+      const borderWidth = Math.round(+borderWidthPx.slice(0, -2));
+      const offset = isVertical
+        ? event.offsetY + borderWidth
+        : event.offsetX + borderWidth;
+
+      const progress = offset / widthOrHeight;
+
+      const newValue = calculateNewValue(minValue, maxValue, progress, step);
+
+      this.emit(ListenersName.clickOnTrack, {
+        event,
+        value: newValue,
+        click: progress
+      });
+    };
+
+    this.element.addEventListener('pointerdown', clickEvent);
   }
 }
 

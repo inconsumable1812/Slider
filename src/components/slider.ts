@@ -1,7 +1,6 @@
 /* eslint-disable no-shadow */
 import { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS } from './default';
 import { ModelOptions, sliderOptions, ViewOptions } from './type';
-
 import Model from './model/Model';
 import Panel from './panel/Panel';
 import Presenter from './presenter/Presenter';
@@ -26,12 +25,19 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     options,
     DEFAULT_MODEL_OPTIONS
   ) as Partial<ModelOptions>;
-  const updateViewOptions = prepareOptions(options, DEFAULT_VIEW_OPTIONS) as Partial<ViewOptions>;
+  const updateViewOptions = prepareOptions(
+    options,
+    DEFAULT_VIEW_OPTIONS
+  ) as Partial<ViewOptions>;
 
   const model = new Model(updateModelOptions);
   const modelOptionsInit = model.getOptions();
 
-  const view = new View(selector, modelOptionsInit, updateViewOptions as ViewOptions);
+  const view = new View(
+    selector,
+    modelOptionsInit,
+    updateViewOptions as ViewOptions
+  );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const presenter = new Presenter(model, view);
 

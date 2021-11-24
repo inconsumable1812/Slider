@@ -1,4 +1,4 @@
-import { ModelOptions } from '../type';
+import { ModelOptions, ListenersName } from '../type';
 import Model from '../model/Model';
 import View from '../views/View';
 
@@ -26,8 +26,14 @@ class Presenter {
   }
 
   private connect(): void {
-    this.view.subscribe('viewChanged', this.setModelOptions.bind(this));
-    this.model.subscribe('modelValueChange', this.updateView.bind(this));
+    this.view.subscribe(
+      ListenersName.viewChanged,
+      this.setModelOptions.bind(this)
+    );
+    this.model.subscribe(
+      ListenersName.modelValueChange,
+      this.updateView.bind(this)
+    );
   }
 }
 

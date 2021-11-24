@@ -21,12 +21,41 @@ class Panel {
     this.setValueWhenClickOnSlider();
   }
 
-  private getTrack(): void {
-    this.track = this.slider.getViewRoot();
-  }
-
   public getInputs(): panelInputs {
     return this.inputs;
+  }
+
+  public setOptionsFromSlider(): void {
+    const {
+      scalePointCount,
+      showTooltip,
+      isVertical,
+      showProgress,
+      showScale,
+      minValue,
+      maxValue,
+      step,
+      valueStart,
+      valueEnd,
+      range
+    } = this.slider.getOptions();
+
+    this.inputs.maxValue.value = maxValue!.toString();
+    this.inputs.minValue.value = minValue!.toString();
+    this.inputs.valueStart.value = valueStart!.toString();
+    this.inputs.valueEnd.value = valueEnd!.toString();
+    this.inputs.valueEnd.disabled = !range as boolean;
+    this.inputs.showTooltip.checked = showTooltip as boolean;
+    this.inputs.range.checked = range as boolean;
+    this.inputs.step.value = step!.toString();
+    this.inputs.showScale.checked = showScale as boolean;
+    this.inputs.scalePointCount.value = scalePointCount!.toString();
+    this.inputs.showProgress.checked = showProgress as boolean;
+    this.inputs.isVertical.checked = isVertical as boolean;
+  }
+
+  private getTrack(): void {
+    this.track = this.slider.getViewRoot();
   }
 
   private setValueWhenClickOnSlider(): void {
@@ -160,35 +189,6 @@ class Panel {
 
     this.addListeners();
     this.setOptionsFromSlider();
-  }
-
-  public setOptionsFromSlider(): void {
-    const {
-      scalePointCount,
-      showTooltip,
-      isVertical,
-      showProgress,
-      showScale,
-      minValue,
-      maxValue,
-      step,
-      valueStart,
-      valueEnd,
-      range
-    } = this.slider.getOptions();
-
-    this.inputs.maxValue.value = maxValue!.toString();
-    this.inputs.minValue.value = minValue!.toString();
-    this.inputs.valueStart.value = valueStart!.toString();
-    this.inputs.valueEnd.value = valueEnd!.toString();
-    this.inputs.valueEnd.disabled = !range as boolean;
-    this.inputs.showTooltip.checked = showTooltip as boolean;
-    this.inputs.range.checked = range as boolean;
-    this.inputs.step.value = step!.toString();
-    this.inputs.showScale.checked = showScale as boolean;
-    this.inputs.scalePointCount.value = scalePointCount!.toString();
-    this.inputs.showProgress.checked = showProgress as boolean;
-    this.inputs.isVertical.checked = isVertical as boolean;
   }
 
   private getMaxValue(): Partial<ModelOptions> {

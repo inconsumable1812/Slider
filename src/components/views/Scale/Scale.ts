@@ -1,4 +1,6 @@
+import { JS_SCALE_POINT_CLASS } from '../../../constants';
 import Observer from '../../observer/Observer';
+import { ListenersName } from '../../type';
 import render from '../utils/render';
 
 function isScalePointCorrectAndIIsNotLastNumber(
@@ -28,13 +30,44 @@ class Scale extends Observer {
     this.init();
   }
 
+  deleteScalePoint(): void {
+    const points = this.element.querySelectorAll(`.${JS_SCALE_POINT_CLASS}`);
+    points.forEach((point) => point.remove());
+  }
+
+  getArrayOfValue(): number[] {
+    return this.calculateStepValue()[0];
+  }
+
+  getSubElement(): HTMLElement {
+    return this.subElement;
+  }
+
+  setOrientation(isVertical: boolean): void {
+    this.isVertical = isVertical;
+  }
+
+  setScaleOptions(
+    maxValue: number,
+    minValue: number,
+    step: number,
+    scalePointCount: number
+  ): void {
+    this.maxValue = maxValue;
+    this.minValue = minValue;
+    this.step = step;
+    this.scalePointCount = scalePointCount;
+    this.deleteScalePoint();
+    this.renderScalePoint();
+  }
+
   private init(): void {
     this.toHtml();
     this.renderScalePoint();
 
     const clickOnScaleCallback = (e: Event): void => {
       const target = e.target as HTMLElement;
-      this.emit('clickOnScale', +target.textContent!);
+      this.emit(ListenersName.clickOnScale, +target.textContent!);
     };
 
     this.element.addEventListener('click', clickOnScaleCallback);
@@ -73,7 +106,7 @@ class Scale extends Observer {
       }
 
       this.subElement = render(`
-      <div class="range-slider__scale_point">${arrayOfStepsValue[i]}</div>
+      <div class="range-slider__scale_point ${JS_SCALE_POINT_CLASS}">${arrayOfStepsValue[i]}</div>
     `);
       this.subElement.style[subElementStyle] = arrayOfStepsStyleValue[i] + '%';
       if (isLastNumber(i, j, actualCount)) {
@@ -81,11 +114,6 @@ class Scale extends Observer {
       }
       this.element.append(this.subElement);
     }
-  }
-
-  deleteScalePoint(): void {
-    const points = this.element.querySelectorAll('.range-slider__scale_point');
-    points.forEach((point) => point.remove());
   }
 
   private calculateStepValue(): number[][] {
@@ -120,32 +148,6 @@ class Scale extends Observer {
     const arrayOfValue = [arrayOfStepsValue, arrayOfStepsStyleValue];
 
     return arrayOfValue;
-  }
-
-  getArrayOfValue(): number[] {
-    return this.calculateStepValue()[0];
-  }
-
-  getSubElement(): HTMLElement {
-    return this.subElement;
-  }
-
-  setOrientation(isVertical: boolean): void {
-    this.isVertical = isVertical;
-  }
-
-  setScaleOptions(
-    maxValue: number,
-    minValue: number,
-    step: number,
-    scalePointCount: number
-  ): void {
-    this.maxValue = maxValue;
-    this.minValue = minValue;
-    this.step = step;
-    this.scalePointCount = scalePointCount;
-    this.deleteScalePoint();
-    this.renderScalePoint();
   }
 }
 

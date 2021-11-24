@@ -1,6 +1,15 @@
-import { ModelOptions, ViewComponents, ViewOptions } from '../type';
+import {
+  MIN_SCALE_POINT_COUNT,
+  MAX_SCALE_POINT_COUNT,
+  VERTICAL_CLASS
+} from '../../constants';
+import {
+  ModelOptions,
+  ViewComponents,
+  ViewOptions,
+  ListenersName
+} from '../type';
 import { DEFAULT_VIEW_OPTIONS } from '../default';
-
 import Observer from '../observer/Observer';
 import Handle from './handle/Handle';
 import Progress from './progress/Progress';
@@ -28,25 +37,10 @@ class View extends Observer {
     this.checkScalePointCount();
   }
 
-  private initViewOptions(): void {
-    this.viewOptions = { ...DEFAULT_VIEW_OPTIONS, ...this.viewOptions };
-  }
-
-  // eslint-disable-next-line consistent-return
-  private checkScalePointCount(): void | Partial<ViewOptions> {
-    const { scalePointCount } = this.viewOptions;
-    if (scalePointCount! < 2) {
-      return this.setOptions({ scalePointCount: 2 });
-    }
-    if (scalePointCount! > 11) {
-      return this.setOptions({ scalePointCount: 11 });
-    }
-  }
-
   setOptions(viewOptions: Partial<ViewOptions>): void {
     this.viewOptions = { ...this.viewOptions, ...viewOptions };
     this.checkScalePointCount();
-    this.emit('viewChanged', this.viewOptions);
+    this.emit(ListenersName.viewChanged, this.viewOptions);
   }
 
   changeModelOptions(modelOptions: Partial<ModelOptions>): void {
@@ -54,9 +48,17 @@ class View extends Observer {
   }
 
   updateView(): void {
-    const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions;
-    const { scalePointCount, showTooltip, isVertical, showProgress, showScale } = this.viewOptions;
-    const { track, firstHandle, progress, secondHandle, scale } = this.components;
+    const { minValue, maxValue, step, valueStart, valueEnd, range } =
+      this.modelOptions;
+    const {
+      scalePointCount,
+      showTooltip,
+      isVertical,
+      showProgress,
+      showScale
+    } = this.viewOptions;
+    const { track, firstHandle, progress, secondHandle, scale } =
+      this.components;
 
     firstHandle.setValue(valueStart);
     firstHandle.setStyle(searchStyleValue(minValue, maxValue, valueStart));
@@ -114,11 +116,19 @@ class View extends Observer {
     firstHandle.updateStep(step);
     secondHandle.updateStep(step);
 
-    const styleValueFirst = searchStyleValue(track.getMinValue(), track.getMaxValue(), valueStart);
+    const styleValueFirst = searchStyleValue(
+      track.getMinValue(),
+      track.getMaxValue(),
+      valueStart
+    );
 
     // when change orientation
     if (range) {
-      const styleValueSecond = searchStyleValue(track.getMinValue(), track.getMaxValue(), valueEnd);
+      const styleValueSecond = searchStyleValue(
+        track.getMinValue(),
+        track.getMaxValue(),
+        valueEnd
+      );
       secondHandle.setOrientation(isVertical);
       secondHandle.clearStyle();
       secondHandle.setStyle(styleValueSecond);
@@ -134,9 +144,9 @@ class View extends Observer {
     }
 
     if (isVertical) {
-      this.root.classList.add('range-slider_vertical');
+      this.root.classList.add(VERTICAL_CLASS);
     } else {
-      this.root.classList.remove('range-slider_vertical');
+      this.root.classList.remove(VERTICAL_CLASS);
     }
   }
 
@@ -153,10 +163,17 @@ class View extends Observer {
   }
 
   render(): void {
-    const { minValue, maxValue, step, valueStart, valueEnd, range } = this.modelOptions;
-    const { isVertical, showTooltip, showProgress, showScale, scalePointCount } = this.viewOptions;
+    const { minValue, maxValue, step, valueStart, valueEnd, range } =
+      this.modelOptions;
+    const {
+      isVertical,
+      showTooltip,
+      showProgress,
+      showScale,
+      scalePointCount
+    } = this.viewOptions;
 
-    const isVerticalRender = isVertical ? 'range-slider_vertical' : '';
+    const isVerticalRender = isVertical ? VERTICAL_CLASS : '';
     this.root = render(`
     <div class="range-slider ${isVerticalRender}">
     `);
@@ -165,13 +182,28 @@ class View extends Observer {
 
     this.components = {
       track: trackInstance,
-      firstHandle: new Handle(1, valueStart, showTooltip, isVertical, trackInstance, step),
-      secondHandle: new Handle(2, valueEnd, showTooltip, isVertical, trackInstance, step),
+      firstHandle: new Handle(
+        1,
+        valueStart,
+        showTooltip,
+        isVertical,
+        trackInstance,
+        step
+      ),
+      secondHandle: new Handle(
+        2,
+        valueEnd,
+        showTooltip,
+        isVertical,
+        trackInstance,
+        step
+      ),
       progress: new Progress(isVertical!),
       scale: new Scale(minValue, maxValue, scalePointCount!, step, isVertical!)
     };
 
-    const { track, firstHandle, secondHandle, scale, progress } = this.components;
+    const { track, firstHandle, secondHandle, scale, progress } =
+      this.components;
 
     if (showProgress) {
       track.element.append(progress!.element);
@@ -211,6 +243,21 @@ class View extends Observer {
     this.bindEventListeners();
   }
 
+  private initViewOptions(): void {
+    this.viewOptions = { ...DEFAULT_VIEW_OPTIONS, ...this.viewOptions };
+  }
+
+  // eslint-disable-next-line consistent-return
+  private checkScalePointCount(): void | Partial<ViewOptions> {
+    const { scalePointCount } = this.viewOptions;
+    if (scalePointCount! < MIN_SCALE_POINT_COUNT) {
+      return this.setOptions({ scalePointCount: MIN_SCALE_POINT_COUNT });
+    }
+    if (scalePointCount! > MAX_SCALE_POINT_COUNT) {
+      return this.setOptions({ scalePointCount: MAX_SCALE_POINT_COUNT });
+    }
+  }
+
   private bindEventListeners(): void {
     this.clickOnTrack();
     this.clickOnHandle();
@@ -219,11 +266,14 @@ class View extends Observer {
 
   private mergeTooltip(): void {
     const { firstHandle, secondHandle } = this.components;
-    const deltaStyle = secondHandle!.getStyleValue() - firstHandle.getStyleValue();
+    const deltaStyle =
+      secondHandle!.getStyleValue() - firstHandle.getStyleValue();
     const firstHandleTooltip = firstHandle.getValue();
     const secondHandleTooltip = secondHandle?.getValue();
     if (deltaStyle <= 5) {
-      firstHandle.setTooltipContent(`${firstHandleTooltip}...${secondHandleTooltip}`);
+      firstHandle.setTooltipContent(
+        `${firstHandleTooltip}...${secondHandleTooltip}`
+      );
       secondHandle?.clearTooltipContent();
     } else if (firstHandle.getTooltipContent()?.includes('...')) {
       firstHandle.setTooltipContent();
@@ -243,13 +293,13 @@ class View extends Observer {
         track.getMaxValue(),
         newValue
       );
-      // eslint-disable-next-line no-shadow
-      function checkHandleAndNewValue(handle: Handle, newValue: number): boolean {
-        if (handle === secondHandle) {
-          return newValue > firstHandle.getValue();
+
+      function checkHandleAndNewValue(h: Handle, newV: number): boolean {
+        if (h === secondHandle) {
+          return newV > firstHandle.getValue();
         }
-        if (handle === firstHandle) {
-          return newValue < secondHandle!.getValue();
+        if (h === firstHandle) {
+          return newV < secondHandle!.getValue();
         }
         return false;
       }
@@ -280,25 +330,26 @@ class View extends Observer {
       }
 
       if (handle === firstHandle) {
-        this.emit('viewChanged', { valueStart: handle.getValue() });
+        this.emit(ListenersName.viewChanged, { valueStart: handle.getValue() });
       } else if (handle === secondHandle) {
-        this.emit('viewChanged', { valueEnd: handle.getValue() });
+        this.emit(ListenersName.viewChanged, { valueEnd: handle.getValue() });
       }
     };
 
-    firstHandle.subscribe('clickOnHandle', (newValue) => {
+    firstHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
       setNewValueOnHandle(newValue, firstHandle);
     });
 
-    secondHandle.subscribe('clickOnHandle', (newValue) => {
+    secondHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
       setNewValueOnHandle(newValue, secondHandle);
     });
   }
 
   private clickOnScale(): void {
-    const { track, progress, firstHandle, secondHandle, scale } = this.components;
+    const { track, progress, firstHandle, secondHandle, scale } =
+      this.components;
 
-    scale.subscribe('clickOnScale', (value) => {
+    scale.subscribe(ListenersName.clickOnScale, (value) => {
       const { range } = this.modelOptions;
       const { showProgress } = this.viewOptions;
       let closetHandle: Handle = firstHandle;
@@ -309,7 +360,11 @@ class View extends Observer {
 
       closetHandle.setValue(value);
 
-      const styleValue: number = searchStyleValue(track.getMinValue(), track.getMaxValue(), value);
+      const styleValue: number = searchStyleValue(
+        track.getMinValue(),
+        track.getMaxValue(),
+        value
+      );
 
       closetHandle.setStyle(styleValue);
       if (range && showProgress) {
@@ -324,9 +379,13 @@ class View extends Observer {
       }
 
       if (closetHandle === firstHandle) {
-        this.emit('viewChanged', { valueStart: closetHandle.getValue() });
+        this.emit(ListenersName.viewChanged, {
+          valueStart: closetHandle.getValue()
+        });
       } else if (closetHandle === secondHandle) {
-        this.emit('viewChanged', { valueEnd: closetHandle.getValue() });
+        this.emit(ListenersName.viewChanged, {
+          valueEnd: closetHandle.getValue()
+        });
       }
     });
   }
@@ -335,19 +394,38 @@ class View extends Observer {
     const { track, firstHandle, secondHandle, progress } = this.components;
 
     track.subscribe(
-      'clickOnTrack',
-      ({ event, value, click }: { event: MouseEvent; value: number; click: number }) => {
+      ListenersName.clickOnTrack,
+      ({
+        event,
+        value,
+        click
+      }: {
+        event: MouseEvent;
+        value: number;
+        click: number;
+      }) => {
         const { showProgress } = this.viewOptions;
         const { range } = this.modelOptions;
 
         let closetHandle = firstHandle;
-        const styleValue = searchStyleValue(track.getMinValue(), track.getMaxValue(), value);
+        const styleValue = searchStyleValue(
+          track.getMinValue(),
+          track.getMaxValue(),
+          value
+        );
 
         if (range) {
           closetHandle = findClosestHandle(firstHandle, secondHandle!, value);
           this.mergeTooltip();
 
-          if (isClickFromSecondHandlePosition(click, styleValue, firstHandle, secondHandle!)) {
+          if (
+            isClickFromSecondHandlePosition(
+              click,
+              styleValue,
+              firstHandle,
+              secondHandle!
+            )
+          ) {
             closetHandle = secondHandle!;
           }
         }
@@ -366,9 +444,13 @@ class View extends Observer {
           progress!.setEnd(styleValue);
         }
         if (closetHandle === firstHandle) {
-          this.emit('viewChanged', { valueStart: closetHandle.getValue() });
+          this.emit(ListenersName.viewChanged, {
+            valueStart: closetHandle.getValue()
+          });
         } else if (closetHandle === secondHandle) {
-          this.emit('viewChanged', { valueEnd: closetHandle.getValue() });
+          this.emit(ListenersName.viewChanged, {
+            valueEnd: closetHandle.getValue()
+          });
         }
 
         closetHandle.handleMouseDown(event);
