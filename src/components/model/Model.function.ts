@@ -41,12 +41,15 @@ function isIncorrectStepInValueEnd(
 function findClosestCorrectValue(
   step: number,
   value: number,
-  maxValue: number
+  maxValue: number,
+  minValue: number
 ) {
-  const delta = value % step;
+  const delta = (value - minValue) % step;
   const deltaOfMaxValue = maxValue % step;
   const lastValueBeforeMax = maxValue - deltaOfMaxValue;
+
   let newValue = value;
+  const incorrectValue = (newValue - minValue) % step;
 
   if (delta < step / 2) {
     if (newValue > lastValueBeforeMax) {
@@ -55,18 +58,18 @@ function findClosestCorrectValue(
           newValue += 1;
         }
       } else {
-        while (newValue % step) {
+        while (incorrectValue) {
           newValue -= 1;
         }
       }
     } else {
-      while (newValue % step) {
+      while (incorrectValue) {
         newValue -= 1;
       }
     }
     return newValue;
   }
-  while (newValue % step) {
+  while (incorrectValue) {
     newValue += 1;
   }
   return newValue;

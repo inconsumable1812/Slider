@@ -128,7 +128,12 @@ class Model extends Observer {
     const { minValue, step, valueStart, maxValue } = this.options;
 
     if (isIncorrectStepInValueStart(minValue!, step!, valueStart!, maxValue!)) {
-      const newValue = findClosestCorrectValue(step!, valueStart!, maxValue!);
+      const newValue = findClosestCorrectValue(
+        step!,
+        valueStart!,
+        maxValue!,
+        minValue!
+      );
       return this.setOptions({ valueStart: newValue });
     }
   }
@@ -136,7 +141,12 @@ class Model extends Observer {
   private checkValueEndCorrectStep(): void | Partial<ModelOptions> {
     const { maxValue, minValue, step, valueEnd } = this.options;
     if (isIncorrectStepInValueEnd(maxValue!, minValue!, step!, valueEnd!)) {
-      const newValue = findClosestCorrectValue(step!, valueEnd!, maxValue!);
+      const newValue = findClosestCorrectValue(
+        step!,
+        valueEnd!,
+        maxValue!,
+        minValue!
+      );
       return this.setOptions({ valueEnd: newValue });
     }
   }
