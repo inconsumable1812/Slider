@@ -4,31 +4,41 @@ function calculateNewValue(
   progressInPercents: number,
   step: number
 ): number {
-  const progressValue = Math.round((maxValue - minValue) * progressInPercents + minValue);
-  let isCorrectNewValue = !((progressValue - minValue) % step);
-  let value = progressValue;
+  const progressValue = Math.round(
+    (maxValue - minValue) * progressInPercents + minValue
+  );
+  const delta = (progressValue - minValue) % step;
+  const deltaOfMaxValue = maxValue % step;
+  const lastValueBeforeMax = maxValue - deltaOfMaxValue;
 
-  let i = 1;
-  while (!isCorrectNewValue) {
-    if ((progressValue - minValue) % step <= step / 2) {
-      isCorrectNewValue = !((progressValue - i - minValue) % step);
-      value = progressValue - i;
+  let incorrectValue = (progressValue - minValue) % step;
+  let newValue = progressValue;
 
-      i += 1;
-    } else if ((progressValue - minValue) % step > step / 2) {
-      isCorrectNewValue = !((progressValue + i - minValue) % step);
-      if (value >= maxValue) {
-        value = maxValue;
-        break;
+  if (delta < step / 2) {
+    if (newValue > lastValueBeforeMax) {
+      if (Math.abs(newValue - lastValueBeforeMax) >= deltaOfMaxValue / 2) {
+        while (newValue !== maxValue) {
+          newValue += 1;
+        }
+      } else {
+        while (incorrectValue) {
+          newValue -= 1;
+          incorrectValue = (newValue - minValue) % step;
+        }
       }
-      value = progressValue + i;
-      i += 1;
     } else {
-      break;
+      while (incorrectValue) {
+        newValue -= 1;
+        incorrectValue = (newValue - minValue) % step;
+      }
     }
+    return newValue;
   }
-
-  return value;
+  while (incorrectValue) {
+    newValue += 1;
+    incorrectValue = (newValue - minValue) % step;
+  }
+  return newValue;
 }
 
 export default calculateNewValue;

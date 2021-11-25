@@ -49,7 +49,7 @@ function findClosestCorrectValue(
   const lastValueBeforeMax = maxValue - deltaOfMaxValue;
 
   let newValue = value;
-  const incorrectValue = (newValue - minValue) % step;
+  let incorrectValue = (newValue - minValue) % step;
 
   if (delta < step / 2) {
     if (newValue > lastValueBeforeMax) {
@@ -60,17 +60,20 @@ function findClosestCorrectValue(
       } else {
         while (incorrectValue) {
           newValue -= 1;
+          incorrectValue = (newValue - minValue) % step;
         }
       }
     } else {
       while (incorrectValue) {
         newValue -= 1;
+        incorrectValue = (newValue - minValue) % step;
       }
     }
     return newValue;
   }
   while (incorrectValue) {
     newValue += 1;
+    incorrectValue = (newValue - minValue) % step;
   }
   return newValue;
 }
