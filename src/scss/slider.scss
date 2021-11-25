@@ -37,10 +37,17 @@
   }
 
   &__tooltip {
+    min-width: 20px;
+    padding: 2px 5px;
+    height: 22px;
+    background: rgb(0, 140, 82);
+    color: white;
     position: absolute;
-    top: -30px;
-    left: -50%;
-    width: max-content;
+    top: -35px;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%);
+    border-radius: 5px;
     &_hide {
       display: none;
     }
@@ -62,7 +69,7 @@
     margin-top: 8px;
     &_point {
       position: absolute;
-      transform: translate(-25%);
+      transform: translate(-35%);
       &-end {
         background: white;
         z-index: 100;
@@ -116,9 +123,9 @@
       }
 
       &__tooltip {
-        position: absolute;
-        top: -40%;
-        left: 200%;
+        transform: translate(50%, -50%);
+        top: 50%;
+
         &_hide {
           display: none;
         }
