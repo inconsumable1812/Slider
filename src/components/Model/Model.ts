@@ -72,10 +72,11 @@ class Model extends Observer {
 
   private checkRangeLessThanStepSize(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step } = this.options;
+
     const range = Math.abs(maxValue! - minValue!);
     const rangeLess: boolean = range < step!;
     if (rangeLess) {
-      return this.setOptions({ step: step, maxValue: minValue! + step! * 2 });
+      return this.setOptions({ step: range });
     }
   }
 

@@ -406,7 +406,16 @@ class Panel {
       const isUndefined =
         maxValue === undefined || minValue === undefined || step === undefined;
 
+      const isStepBiggerRange = !isUndefined
+        ? Math.abs(maxValue - minValue) <= step
+        : false;
+
       const newStep = isUndefined ? { step: previousValue } : this.getStep();
+
+      if (isStepBiggerRange) {
+        const newMaxValue = { maxValue: minValue! + step! * 2 };
+        this.slider.setOptions(newMaxValue);
+      }
 
       this.slider.setOptions(newStep);
 
