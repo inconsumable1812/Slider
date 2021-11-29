@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import Panel from './panel/Panel';
+import Panel from './Panel/Panel';
 import { create } from './slider';
 import { Slider, sliderOptions } from './type';
 
@@ -36,7 +36,9 @@ describe('Slider', () => {
 
   test('check correct return valueStart when default options', () => {
     sliderDefault = create(selector);
-    expect(sliderDefault.getFirstValue()).toBe(sliderDefault.getOptions().valueStart);
+    expect(sliderDefault.getFirstValue()).toBe(
+      sliderDefault.getOptions().valueStart
+    );
   });
 
   test('check correct return container', () => {

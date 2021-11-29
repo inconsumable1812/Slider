@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-shadow */
-import Panel from './panel/Panel';
-import Handle from './views/handle/Handle';
-import Progress from './views/progress/Progress';
-import Scale from './views/Scale/Scale';
-import Track from './views/Track/Track';
+import Panel from './Panel/Panel';
+import Handle from './View/Handle/Handle';
+import Progress from './View/Progress/Progress';
+import Scale from './View/Scale/Scale';
+import Track from './View/Track/Track';
 
 type ModelOptions = {
   minValue: number;

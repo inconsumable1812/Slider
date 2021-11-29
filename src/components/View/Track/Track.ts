@@ -1,4 +1,4 @@
-import Observer from '../../observer/Observer';
+import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
 import calculateNewValue from '../utils/calculateNewValue';
 import render from '../utils/render';

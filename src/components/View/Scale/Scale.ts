@@ -1,5 +1,5 @@
 import { JS_SCALE_POINT_CLASS } from '../../../constants';
-import Observer from '../../observer/Observer';
+import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
 import render from '../utils/render';
 

@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { DEFAULT_MODEL_OPTIONS } from '../default';
 import { ModelOptions, ListenersName } from '../type';
-import Observer from '../observer/Observer';
+import Observer from '../Observer/Observer';
 import {
   isIncorrectStepInValueEnd,
   isIncorrectStepInValueStart,

@@ -10,9 +10,9 @@ import {
   ListenersName
 } from '../type';
 import { DEFAULT_VIEW_OPTIONS } from '../default';
-import Observer from '../observer/Observer';
-import Handle from './handle/Handle';
-import Progress from './progress/Progress';
+import Observer from '../Observer/Observer';
+import Handle from './Handle/Handle';
+import Progress from './Progress/Progress';
 import Scale from './Scale/Scale';
 import Track from './Track/Track';
 import render from './utils/render';
