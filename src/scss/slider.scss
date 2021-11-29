@@ -67,6 +67,7 @@
   &__scale {
     position: relative;
     margin-top: 8px;
+    user-select: none;
     &_point {
       position: absolute;
       transform: translate(-35%);

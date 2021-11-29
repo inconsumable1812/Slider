@@ -75,7 +75,7 @@ class Model extends Observer {
     const range = Math.abs(maxValue! - minValue!);
     const rangeLess: boolean = range < step!;
     if (rangeLess) {
-      return this.setOptions({ step: range });
+      return this.setOptions({ step: step, maxValue: minValue! + step! * 2 });
     }
   }
 
