@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import Model from '../Model/Model';
 import { ModelOptions, ViewOptions } from '../type';
-import View from '../views/View';
+import View from '../View/View';
 import Presenter from './Presenter';
 
 const jsdom = require('jsdom');

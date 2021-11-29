@@ -1,6 +1,6 @@
 import { ModelOptions, ListenersName } from '../type';
 import Model from '../Model/Model';
-import View from '../views/View';
+import View from '../View/View';
 
 class Presenter {
   constructor(private model: Model, private view: View) {

@@ -5,7 +5,7 @@ import {
   Slider,
   ViewOptions
 } from '../type';
-import render from '../views/utils/render';
+import render from '../View/utils/render';
 
 class Panel {
   root!: HTMLElement;
