@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS } from './default';
 import { ModelOptions, sliderOptions, ViewOptions } from './type';
-import Model from './model/Model';
+import Model from './Model/Model';
 import Panel from './panel/Panel';
 import Presenter from './presenter/Presenter';
 import View from './views/View';

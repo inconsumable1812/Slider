@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import Model from '../model/Model';
+import Model from '../Model/Model';
 import { ModelOptions, ViewOptions } from '../type';
 import View from '../views/View';
 import Presenter from './Presenter';

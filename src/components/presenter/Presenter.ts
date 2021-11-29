@@ -1,5 +1,5 @@
 import { ModelOptions, ListenersName } from '../type';
-import Model from '../model/Model';
+import Model from '../Model/Model';
 import View from '../views/View';
 
 class Presenter {
