@@ -267,18 +267,8 @@ class Panel {
         maxValue === undefined || minValue === undefined || step === undefined;
       const previousValue = this.slider.getOptions().maxValue;
 
-      const MaxValueLessThanMin: boolean = !isUndefined
-        ? maxValue <= minValue
-        : true;
-      const rangeLessThanStep: boolean = !isUndefined
-        ? Math.abs(maxValue - minValue) < step
-        : true;
-
-      let newValue: Partial<ModelOptions> = MaxValueLessThanMin
+      const newValue = isUndefined
         ? { maxValue: previousValue }
-        : this.getMaxValue();
-      newValue = rangeLessThanStep
-        ? { maxValue: maxValue }
         : this.getMaxValue();
 
       this.slider.setOptions(newValue);
@@ -406,16 +396,7 @@ class Panel {
       const isUndefined =
         maxValue === undefined || minValue === undefined || step === undefined;
 
-      const isStepBiggerRange = !isUndefined
-        ? Math.abs(maxValue - minValue) <= step
-        : false;
-
       const newStep = isUndefined ? { step: previousValue } : this.getStep();
-
-      if (isStepBiggerRange) {
-        const newMaxValue = { maxValue: minValue! + step! * 2 };
-        this.slider.setOptions(newMaxValue);
-      }
 
       this.slider.setOptions(newStep);
 
