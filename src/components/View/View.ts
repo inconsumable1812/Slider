@@ -151,11 +151,11 @@ class View extends Observer {
   }
 
   getModel(): ModelOptions {
-    return this.modelOptions;
+    return { ...this.modelOptions };
   }
 
   getOptions(): ViewOptions {
-    return this.viewOptions as ViewOptions;
+    return { ...this.viewOptions } as ViewOptions;
   }
 
   getComponents(): ViewComponents {

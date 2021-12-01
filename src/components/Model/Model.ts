@@ -18,7 +18,7 @@ class Model extends Observer {
   }
 
   getOptions(): ModelOptions {
-    return this.options as ModelOptions;
+    return { ...this.options } as ModelOptions;
   }
 
   getFirstValue(): number {
