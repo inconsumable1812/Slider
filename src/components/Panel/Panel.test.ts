@@ -208,7 +208,7 @@ describe('Panel', () => {
       step.dispatchEvent(changeEvent);
       minValue.value = newMin.toString();
       minValue.dispatchEvent(changeEvent);
-      expect(slider.getOptions().minValue).toBe(1);
+      expect(slider.getOptions().minValue).toBe(3);
     });
 
     test('when new maxValue less minValue', () => {
@@ -228,7 +228,7 @@ describe('Panel', () => {
       step.dispatchEvent(changeEvent);
       maxValue.value = newMax.toString();
       maxValue.dispatchEvent(changeEvent);
-      expect(slider.getOptions().maxValue).toBe(100);
+      expect(slider.getOptions().maxValue).toBe(90);
     });
 
     test('when new valueStart less minValue', () => {
@@ -292,7 +292,7 @@ describe('Panel', () => {
       const step = panel.getInputs().step;
       step.value = newStep.toString();
       step.dispatchEvent(changeEvent);
-      expect(slider.getOptions().step).toBe(1);
+      expect(slider.getOptions().step).toBe(100);
     });
 
     test('when new scale point less than 2', () => {

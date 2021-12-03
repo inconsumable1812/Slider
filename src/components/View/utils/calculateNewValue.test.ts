@@ -26,11 +26,25 @@ describe('calculate new value', () => {
   });
 
   test('check return correct closest value with options2', () => {
-    expect(calculateNewValue(options2.minValue, options2.maxValue, 0.4, options2.step)).toBe(41);
+    expect(
+      calculateNewValue(
+        options2.minValue,
+        options2.maxValue,
+        0.4,
+        options2.step
+      )
+    ).toBe(41);
   });
 
   test('another check return correct closest value with options2', () => {
-    expect(calculateNewValue(options2.minValue, options2.maxValue, 0.55, options2.step)).toBe(72);
+    expect(
+      calculateNewValue(
+        options2.minValue,
+        options2.maxValue,
+        0.55,
+        options2.step
+      )
+    ).toBe(41);
   });
 
   test('check return correct value with options2', () => {
@@ -41,6 +55,6 @@ describe('calculate new value', () => {
         options2.progressInPercents,
         options2.step
       )
-    ).toBe(101);
+    ).toBe(72);
   });
 });
