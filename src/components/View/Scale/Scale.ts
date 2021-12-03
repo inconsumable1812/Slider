@@ -1,4 +1,4 @@
-import { JS_SCALE_POINT_CLASS } from '../../../constants';
+import { JS_SCALE_POINT_CLASS, STEP_NUMBER_OF_ZEROS } from '../../../constants';
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
 import render from '../utils/render';
@@ -134,13 +134,18 @@ class Scale extends Observer {
     const arrayOfStepsValue = [];
     const arrayOfStepsStyleValue = [];
     for (let i = 0; i <= countOfSteps; i += 1) {
-      let stepsValue = +(minValue + actualScaleSize * i).toFixed(0);
+      let stepsValue = +(minValue + actualScaleSize * i).toFixed(
+        STEP_NUMBER_OF_ZEROS
+      );
       stepsValue = stepsValue > maxValue ? maxValue : stepsValue;
       stepsValue = i === countOfSteps ? maxValue : stepsValue;
       arrayOfStepsValue.push(stepsValue);
 
       let stepStyleValue = Math.abs(actualScaleSize / range) * i * 100;
-      stepStyleValue = stepStyleValue > 100 ? 100 : +stepStyleValue.toFixed(0);
+      stepStyleValue =
+        stepStyleValue > 100
+          ? 100
+          : +stepStyleValue.toFixed(STEP_NUMBER_OF_ZEROS);
       arrayOfStepsStyleValue.push(stepStyleValue);
     }
     arrayOfStepsStyleValue[countOfSteps] = 100;

@@ -295,7 +295,13 @@ class Panel {
       const newValue = !isUndefined
         ? this.getMinValue()
         : { minValue: previousValue };
+
       this.slider.setOptions(newValue);
+
+      const min = this.slider.getOptions().minValue;
+
+      this.inputs.valueStart.setAttribute('min', `${min}`);
+      this.inputs.valueEnd.setAttribute('min', `${min}`);
     };
     this.inputs.minValue.addEventListener('change', minValueCallback);
 
@@ -400,8 +406,10 @@ class Panel {
 
       this.slider.setOptions(newStep);
 
-      this.inputs.valueStart.setAttribute('step', `${newStep.step}`);
-      this.inputs.valueEnd.setAttribute('step', `${newStep.step}`);
+      const setStep = this.slider.getOptions().step;
+
+      this.inputs.valueStart.setAttribute('step', `${setStep}`);
+      this.inputs.valueEnd.setAttribute('step', `${setStep}`);
     };
     this.inputs.step.addEventListener('change', stepCallback);
 

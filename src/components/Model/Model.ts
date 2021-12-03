@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+import { MIN_STEP, STEP_NUMBER_OF_ZEROS } from '../../constants';
 import { DEFAULT_MODEL_OPTIONS } from '../default';
 import { ModelOptions, ListenersName } from '../type';
 import Observer from '../Observer/Observer';
@@ -7,7 +8,8 @@ import {
   isIncorrectStepInValueStart,
   isValueStartBiggerMaxValue,
   isValueStartBiggerValueEnd,
-  findClosestCorrectValue
+  findClosestCorrectValue,
+  isShouldRound
 } from './Model.function';
 
 class Model extends Observer {
@@ -52,11 +54,11 @@ class Model extends Observer {
 
   private checkStep(): void {
     const { step } = this.options;
-    if (step! < 1) {
-      return this.setOptions({ step: 1 });
+    if (step! < MIN_STEP) {
+      return this.setOptions({ step: MIN_STEP });
     }
-    if (!Number.isInteger(step)) {
-      return this.setOptions({ step: Math.floor(step!) });
+    if (isShouldRound(step!)) {
+      return this.setOptions({ step: +step!.toFixed(STEP_NUMBER_OF_ZEROS) });
     }
   }
 
@@ -135,7 +137,12 @@ class Model extends Observer {
         maxValue!,
         minValue!
       );
-      return this.setOptions({ valueStart: newValue });
+
+      // console.log(+newValue.toFixed(STEP_NUMBER_OF_ZEROS));
+
+      return this.setOptions({
+        valueStart: +newValue.toFixed(STEP_NUMBER_OF_ZEROS)
+      });
     }
   }
 
@@ -148,7 +155,10 @@ class Model extends Observer {
         maxValue!,
         minValue!
       );
-      return this.setOptions({ valueEnd: newValue });
+
+      return this.setOptions({
+        valueEnd: +newValue.toFixed(STEP_NUMBER_OF_ZEROS)
+      });
     }
   }
 }

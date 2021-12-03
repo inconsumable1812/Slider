@@ -1,4 +1,4 @@
-import { TOOLTIP_HIDE_CLASS } from '../../../constants';
+import { TOOLTIP_HIDE_CLASS, STEP_NUMBER_OF_ZEROS } from '../../../constants';
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
 import render from '../utils/render';
@@ -161,15 +161,18 @@ class Handle extends Observer {
       : track.element.getBoundingClientRect().width;
 
     const valueInPercent: number = valueInPx / widthOrHeight;
+    const valueInPercentRoundTo2: number = +valueInPercent.toFixed(4);
 
     const delta: number = track.getMaxValue() - track.getMinValue();
-    const isValueCorrectInStepSize =
-      Math.round(delta * valueInPercent) -
-      (Math.round(delta * valueInPercent) % step);
 
-    let newValue: number = Math.round(
+    const isValueCorrectInStepSize =
+      +(delta * valueInPercentRoundTo2).toFixed(STEP_NUMBER_OF_ZEROS) -
+      +((delta * valueInPercentRoundTo2) % step).toFixed(STEP_NUMBER_OF_ZEROS);
+
+    let newValue: number = +(
       track.getMinValue() + isValueCorrectInStepSize
-    );
+    ).toFixed(STEP_NUMBER_OF_ZEROS);
+
     if (valueInPercent <= 0) {
       newValue = track.getMinValue();
     } else if (valueInPercent >= 1) {

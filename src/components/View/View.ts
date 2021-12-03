@@ -327,6 +327,7 @@ class View extends Observer {
       if (!range) {
         handle.setValue(newValue);
         handle.setStyle(styleValue);
+        // console.log(newValue);
       }
 
       if (handle === firstHandle) {
@@ -429,6 +430,8 @@ class View extends Observer {
             closetHandle = secondHandle!;
           }
         }
+
+        // console.log(value);
 
         closetHandle.setValue(value);
         closetHandle.setStyle(styleValue);
