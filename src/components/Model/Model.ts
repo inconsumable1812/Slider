@@ -138,8 +138,6 @@ class Model extends Observer {
         minValue!
       );
 
-      // console.log(+newValue.toFixed(STEP_NUMBER_OF_ZEROS));
-
       return this.setOptions({
         valueStart: +newValue.toFixed(STEP_NUMBER_OF_ZEROS)
       });

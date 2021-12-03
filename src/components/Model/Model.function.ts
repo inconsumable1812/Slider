@@ -26,11 +26,6 @@ function isIncorrectStepInValueStart(
   valueStart: number,
   maxValue: number
 ): boolean {
-  // console.log(
-  //   Math.round(Math.abs(valueStart - minValue) * STEP_DECIMAL_PART) %
-  //     (step * STEP_DECIMAL_PART)
-  // );
-
   return (
     ((Math.round(Math.abs(valueStart - minValue) * STEP_DECIMAL_PART) %
       (step * STEP_DECIMAL_PART)) as unknown as boolean) &&
