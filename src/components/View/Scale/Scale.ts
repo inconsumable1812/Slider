@@ -94,8 +94,6 @@ class Scale extends Observer {
 
       this.element.append(this.subElement);
     });
-
-    // this.emit(ListenersName.countOfSteps, arrayOfStepsValue.length);
   }
 
   private calculateStepValue(): number[][] {
