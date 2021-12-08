@@ -5,7 +5,7 @@ import {
 } from '../../../constants';
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
-import render from '../../../utils/render';
+import { render } from '../../../utils/utils';
 import Track from '../Track/Track';
 import { roundToRequiredNumber } from '../../../utils/utils';
 

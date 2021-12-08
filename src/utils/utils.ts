@@ -1,5 +1,11 @@
 import { STEP_DECIMAL_PART } from '../constants';
 
+function render(html: string): HTMLElement {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = html.trim();
+  return wrapper.firstChild as HTMLElement;
+}
+
 function roundToRequiredNumber(
   value: number,
   minValue?: number,
@@ -16,4 +22,4 @@ function roundToRequiredNumber(
   return Math.round(value * STEP_DECIMAL_PART) / STEP_DECIMAL_PART;
 }
 
-export { roundToRequiredNumber };
+export { roundToRequiredNumber, render };

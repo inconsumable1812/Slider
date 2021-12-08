@@ -3,7 +3,7 @@ import {
   MAX_SCALE_POINT_COUNT,
   VERTICAL_CLASS
 } from '../../constants';
-import render from '../../utils/render';
+import { render } from '../../utils/utils';
 import {
   ModelOptions,
   ViewComponents,

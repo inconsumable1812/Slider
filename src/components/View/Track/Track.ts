@@ -1,7 +1,7 @@
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
-import calculateNewValue from '../../../utils/calculateNewValue';
-import render from '../../../utils/render';
+import findClosestCorrectValue from '../../../utils/findClosestCorrectValue';
+import { render } from '../../../utils/utils';
 
 class Track extends Observer {
   element!: HTMLElement;
@@ -64,8 +64,14 @@ class Track extends Observer {
         : event.offsetX + borderWidth;
 
       const progress = offset / widthOrHeight;
+      const clickValue = (maxValue - minValue) * progress + minValue;
 
-      const newValue = calculateNewValue(minValue, maxValue, progress, step);
+      const newValue = findClosestCorrectValue(
+        step,
+        clickValue,
+        maxValue,
+        minValue
+      );
 
       this.emit(ListenersName.clickOnTrack, {
         event,

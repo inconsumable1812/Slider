@@ -1,6 +1,6 @@
 import { roundToRequiredNumber } from '../../../utils/utils';
 import { JS_SCALE_POINT_CLASS } from '../../../constants';
-import render from '../../../utils/render';
+import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
 

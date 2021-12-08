@@ -1,4 +1,4 @@
-import calculateNewValue from './calculateNewValue';
+import findClosestCorrectValue from './findClosestCorrectValue';
 
 const options1 = {
   minValue: 0,
@@ -16,7 +16,7 @@ const options2 = {
 describe('calculate new value', () => {
   test('check return correct value with options1', () => {
     expect(
-      calculateNewValue(
+      findClosestCorrectValue(
         options1.minValue,
         options1.maxValue,
         options1.progressInPercents,
@@ -27,7 +27,7 @@ describe('calculate new value', () => {
 
   test('check return correct closest value with options2', () => {
     expect(
-      calculateNewValue(
+      findClosestCorrectValue(
         options2.minValue,
         options2.maxValue,
         0.4,
@@ -38,7 +38,7 @@ describe('calculate new value', () => {
 
   test('another check return correct closest value with options2', () => {
     expect(
-      calculateNewValue(
+      findClosestCorrectValue(
         options2.minValue,
         options2.maxValue,
         0.55,
@@ -49,7 +49,7 @@ describe('calculate new value', () => {
 
   test('check return correct value with options2', () => {
     expect(
-      calculateNewValue(
+      findClosestCorrectValue(
         options2.minValue,
         options2.maxValue,
         options2.progressInPercents,

@@ -1,9 +1,4 @@
-import {
-  MIN_STEP,
-  STEP_DECIMAL_PART,
-  STEP_NUMBER_OF_ZEROS
-} from '../../constants';
-import { roundToRequiredNumber } from '../../utils/utils';
+import { STEP_DECIMAL_PART } from '../../constants';
 
 function isValueStartBiggerValueEnd(
   valueStart: number,
@@ -45,85 +40,6 @@ function isIncorrectStepInValueEnd(
       (step * STEP_DECIMAL_PART)) as unknown as boolean) &&
     valueEnd !== maxValue
   );
-}
-
-function isShouldRound(step: number): boolean {
-  return step! < 1 && step!.toString().length - 2 !== STEP_NUMBER_OF_ZEROS;
-}
-
-function isNeedGoDown(delta: number, step: number): boolean {
-  return delta < step / 2;
-}
-
-function isValueNearMaxAndNeedGoUp(
-  newValue: number,
-  lastValueBeforeMax: number,
-  deltaOfMaxValue: number
-): boolean {
-  return (
-    newValue > lastValueBeforeMax &&
-    Math.abs(newValue - lastValueBeforeMax) >= deltaOfMaxValue / 2
-  );
-}
-
-function isValueNearMaxAndNeedGoDown(
-  newValue: number,
-  lastValueBeforeMax: number,
-  deltaOfMaxValue: number
-): boolean {
-  return (
-    newValue > lastValueBeforeMax &&
-    Math.abs(newValue - lastValueBeforeMax) < deltaOfMaxValue / 2
-  );
-}
-
-function findClosestCorrectValue(
-  step: number,
-  value: number,
-  maxValue: number,
-  minValue: number
-) {
-  const delta = roundToRequiredNumber(value, minValue, step);
-
-  const deltaOfMaxValue = maxValue % step;
-  const lastValueBeforeMax = maxValue - deltaOfMaxValue;
-
-  let newValue = roundToRequiredNumber(value);
-  let incorrectValue = roundToRequiredNumber(newValue, minValue, step);
-
-  if (
-    isValueNearMaxAndNeedGoUp(newValue, lastValueBeforeMax, deltaOfMaxValue)
-  ) {
-    while (newValue !== maxValue) {
-      newValue = roundToRequiredNumber(newValue) + MIN_STEP;
-    }
-    return newValue;
-  }
-
-  if (
-    isValueNearMaxAndNeedGoDown(newValue, lastValueBeforeMax, deltaOfMaxValue)
-  ) {
-    while (incorrectValue) {
-      newValue = roundToRequiredNumber(newValue) - MIN_STEP;
-      incorrectValue = roundToRequiredNumber(newValue, minValue, step);
-    }
-    return newValue;
-  }
-
-  if (isNeedGoDown(delta, step)) {
-    while (incorrectValue) {
-      newValue = roundToRequiredNumber(newValue) - MIN_STEP;
-      incorrectValue = roundToRequiredNumber(newValue, minValue, step);
-    }
-    return newValue;
-  }
-
-  while (incorrectValue) {
-    newValue = roundToRequiredNumber(newValue) + MIN_STEP;
-    incorrectValue = roundToRequiredNumber(newValue, minValue, step);
-  }
-
-  return newValue;
 }
 
 function isRangeAndValueStartEqualValueEndAndValueEndEqualMaxValue(
@@ -185,8 +101,6 @@ export {
   isValueStartBiggerMaxValue,
   isIncorrectStepInValueStart,
   isIncorrectStepInValueEnd,
-  findClosestCorrectValue,
-  isShouldRound,
   isRangeAndValueStartEqualValueEndAndValueEndEqualMaxValue,
   isRangeAndValueStartEqualValueEndAndValueStartBiggerPrevValue,
   isRangeAndValueStartEqualValueEndAndValueStartEqualMinValue,

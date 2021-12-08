@@ -1,5 +1,7 @@
 /* eslint-disable consistent-return */
-import { MIN_STEP, STEP_NUMBER_OF_ZEROS } from '../../constants';
+import { MIN_STEP } from '../../constants';
+import findClosestCorrectValue from '../../utils/findClosestCorrectValue';
+import { roundToRequiredNumber } from '../../utils/utils';
 import { DEFAULT_MODEL_OPTIONS } from '../default';
 import { ModelOptions, ListenersName } from '../type';
 import Observer from '../Observer/Observer';
@@ -8,8 +10,6 @@ import {
   isIncorrectStepInValueStart,
   isValueStartBiggerMaxValue,
   isValueStartBiggerValueEnd,
-  findClosestCorrectValue,
-  isShouldRound,
   isRangeAndValueStartEqualValueEndAndValueEndEqualMaxValue,
   isRangeAndValueStartEqualValueEndAndValueStartEqualMinValue,
   isRangeAndValueStartEqualValueEndAndValueStartBiggerPrevValue,
@@ -38,10 +38,10 @@ class Model extends Observer {
   }
 
   setOptions(modelOptions: Partial<ModelOptions>): void {
-    const { valueEnd, valueStart } = this.options;
+    const { valueEnd, valueStart, step } = this.options;
 
     this.options = { ...this.options, ...modelOptions };
-    this.checkOptions(valueStart!, valueEnd!);
+    this.checkOptions(valueStart!, valueEnd!, step!);
     this.emit(ListenersName.modelValueChange);
   }
 
@@ -49,8 +49,12 @@ class Model extends Observer {
     this.options = { ...DEFAULT_MODEL_OPTIONS, ...this.options };
   }
 
-  private checkOptions(valueStart?: number, valueEnd?: number): void {
-    this.checkStep();
+  private checkOptions(
+    valueStart?: number,
+    valueEnd?: number,
+    step?: number
+  ): void {
+    this.checkStep(step!);
     this.checkMinValueLessMax();
     this.checkRangeLessThanStepSize();
     this.checkValueStartInRange();
@@ -60,13 +64,14 @@ class Model extends Observer {
     this.checkValueStartLessValueEnd(valueStart!, valueEnd!);
   }
 
-  private checkStep(): void {
+  private checkStep(prevStep: number): void {
     const { step } = this.options;
+
     if (step! < MIN_STEP) {
       return this.setOptions({ step: MIN_STEP });
     }
-    if (isShouldRound(step!)) {
-      return this.setOptions({ step: +step!.toFixed(STEP_NUMBER_OF_ZEROS) });
+    if (step !== prevStep) {
+      return this.setOptions({ step: roundToRequiredNumber(step!) });
     }
   }
 
