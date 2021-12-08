@@ -15,7 +15,11 @@ import {
   isRangeAndValueStartEqualValueEndAndValueStartBiggerPrevValue,
   isRangeAndValueStartEqualValueEndAndValueEndLessPrevValue,
   isRangeAndValueStartBiggerValueEndAndValueStartBiggerPrevValue,
-  isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue
+  isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue,
+  isMinValueEqualMaxValueAndMinValueBiggerPrevValue,
+  isMinValueEqualMaxValueAndMaxValueLessPrevValue,
+  isMinValueBiggerMaxValueAndMinValueBiggerPrevValue,
+  isMinValueBiggerMaxValueAndMaxValueLessPrevValue
 } from './Model.function';
 
 class Model extends Observer {
@@ -38,10 +42,10 @@ class Model extends Observer {
   }
 
   setOptions(modelOptions: Partial<ModelOptions>): void {
-    const { valueEnd, valueStart, step } = this.options;
+    const { valueEnd, valueStart, step, minValue, maxValue } = this.options;
 
     this.options = { ...this.options, ...modelOptions };
-    this.checkOptions(valueStart!, valueEnd!, step!);
+    this.checkOptions(valueStart!, valueEnd!, step!, minValue!, maxValue!);
     this.emit(ListenersName.modelValueChange);
   }
 
@@ -52,10 +56,12 @@ class Model extends Observer {
   private checkOptions(
     valueStart?: number,
     valueEnd?: number,
-    step?: number
+    step?: number,
+    minValue?: number,
+    maxValue?: number
   ): void {
     this.checkStep(step!);
-    this.checkMinValueLessMax();
+    this.checkMinValueLessMax(minValue!, maxValue!);
     this.checkRangeLessThanStepSize();
     this.checkValueStartInRange();
     this.checkValueEndInRange();
@@ -75,13 +81,62 @@ class Model extends Observer {
     }
   }
 
-  private checkMinValueLessMax(): void | Partial<ModelOptions> {
+  private checkMinValueLessMax(
+    prevMinValue: number,
+    prevMaxValue: number
+  ): void | Partial<ModelOptions> {
     const { minValue, maxValue, step } = this.options;
-    if (minValue === maxValue) {
-      return this.setOptions({ maxValue: minValue! + step! });
+
+    if (
+      isMinValueEqualMaxValueAndMinValueBiggerPrevValue(
+        minValue!,
+        maxValue!,
+        prevMinValue
+      )
+    ) {
+      return this.setOptions({
+        maxValue: minValue! + step!,
+        minValue: minValue
+      });
     }
-    if (minValue! > maxValue!) {
-      return this.setOptions({ minValue: maxValue! - step! });
+
+    if (
+      isMinValueEqualMaxValueAndMaxValueLessPrevValue(
+        minValue!,
+        maxValue!,
+        prevMaxValue
+      )
+    ) {
+      return this.setOptions({
+        maxValue: maxValue!,
+        minValue: maxValue! - step!
+      });
+    }
+
+    if (
+      isMinValueBiggerMaxValueAndMinValueBiggerPrevValue(
+        minValue!,
+        maxValue!,
+        prevMinValue
+      )
+    ) {
+      return this.setOptions({
+        maxValue: minValue! + step!,
+        minValue: minValue!
+      });
+    }
+
+    if (
+      isMinValueBiggerMaxValueAndMaxValueLessPrevValue(
+        minValue!,
+        maxValue!,
+        prevMaxValue
+      )
+    ) {
+      return this.setOptions({
+        maxValue: maxValue!,
+        minValue: maxValue! - step!
+      });
     }
   }
 
@@ -184,8 +239,8 @@ class Model extends Observer {
       )
     ) {
       return this.setOptions({
-        valueEnd: valueStart!,
-        valueStart: valueStart! - step!
+        valueEnd: valueStart! + step!,
+        valueStart: valueStart!
       });
     }
 

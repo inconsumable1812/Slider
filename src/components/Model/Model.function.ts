@@ -96,6 +96,38 @@ function isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue(
   return range && valueStart! > valueEnd! && valueEnd! < prevValueEnd;
 }
 
+function isMinValueEqualMaxValueAndMinValueBiggerPrevValue(
+  minValue: number,
+  maxValue: number,
+  prevMinValue: number
+): boolean {
+  return minValue === maxValue && minValue! > prevMinValue;
+}
+
+function isMinValueEqualMaxValueAndMaxValueLessPrevValue(
+  minValue: number,
+  maxValue: number,
+  prevMaxValue: number
+): boolean {
+  return minValue === maxValue && maxValue! < prevMaxValue;
+}
+
+function isMinValueBiggerMaxValueAndMinValueBiggerPrevValue(
+  minValue: number,
+  maxValue: number,
+  prevMinValue: number
+): boolean {
+  return minValue! > maxValue! && minValue! > prevMinValue;
+}
+
+function isMinValueBiggerMaxValueAndMaxValueLessPrevValue(
+  minValue: number,
+  maxValue: number,
+  prevMaxValue: number
+): boolean {
+  return minValue! > maxValue! && maxValue! < prevMaxValue;
+}
+
 export {
   isValueStartBiggerValueEnd,
   isValueStartBiggerMaxValue,
@@ -106,5 +138,9 @@ export {
   isRangeAndValueStartEqualValueEndAndValueStartEqualMinValue,
   isRangeAndValueStartEqualValueEndAndValueEndLessPrevValue,
   isRangeAndValueStartBiggerValueEndAndValueStartBiggerPrevValue,
-  isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue
+  isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue,
+  isMinValueEqualMaxValueAndMinValueBiggerPrevValue,
+  isMinValueEqualMaxValueAndMaxValueLessPrevValue,
+  isMinValueBiggerMaxValueAndMinValueBiggerPrevValue,
+  isMinValueBiggerMaxValueAndMaxValueLessPrevValue
 };

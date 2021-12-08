@@ -1,5 +1,9 @@
 import { roundToRequiredNumber } from '../../../utils/utils';
-import { JS_SCALE_POINT_CLASS } from '../../../constants';
+import {
+  JS_SCALE_POINT_CLASS,
+  MIN_SCALE_POINT_COUNT,
+  MAX_SCALE_POINT_COUNT
+} from '../../../constants';
 import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
@@ -46,6 +50,7 @@ class Scale extends Observer {
     this.minValue = minValue;
     this.step = step;
     this.scalePointCount = scalePointCount;
+
     this.deleteScalePoint();
     this.renderScalePoint();
   }
@@ -89,23 +94,29 @@ class Scale extends Observer {
 
       this.element.append(this.subElement);
     });
+
+    // this.emit(ListenersName.countOfSteps, arrayOfStepsValue.length);
   }
 
   private calculateStepValue(): number[][] {
     const { minValue, maxValue, step, scalePointCount } = this;
+
     const range = Math.abs(maxValue - minValue);
     const isCountBigThanScalePoint = Math.floor(range / step) > scalePointCount;
     const actualScaleSize = isCountBigThanScalePoint
       ? Math.round(Math.round(range / step) / (scalePointCount - 1)) * step
       : step;
-    const countOfSteps = isCountBigThanScalePoint
-      ? scalePointCount
-      : Math.floor(range / step);
+
+    let countOfSteps = scalePointCount;
+
+    if (countOfSteps < MIN_SCALE_POINT_COUNT)
+      countOfSteps = MIN_SCALE_POINT_COUNT;
 
     const arrayOfStepsValue = new Array(countOfSteps)
       .fill('')
       .map((_, index) => {
         let value = minValue + actualScaleSize * index;
+
         if (value > maxValue) value = maxValue;
         if (index === countOfSteps - 1) value = maxValue;
         return roundToRequiredNumber(value);
@@ -121,8 +132,6 @@ class Scale extends Observer {
         return roundToRequiredNumber(styleValue);
       })
       .filter((item, pos, arr) => !pos || item !== arr[pos - 1]);
-
-    this.emit(ListenersName.countOfSteps, arrayOfStepsValue.length);
 
     const arrayOfValue = [arrayOfStepsValue, arrayOfStepsStyleValue];
     return arrayOfValue;
