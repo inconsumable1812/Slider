@@ -1,4 +1,4 @@
-import render from '../utils/render';
+import render from '../../../utils/render';
 
 class Progress {
   element!: HTMLElement;

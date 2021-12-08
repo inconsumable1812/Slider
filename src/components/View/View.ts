@@ -3,6 +3,7 @@ import {
   MAX_SCALE_POINT_COUNT,
   VERTICAL_CLASS
 } from '../../constants';
+import render from '../../utils/render';
 import {
   ModelOptions,
   ViewComponents,
@@ -15,11 +16,18 @@ import Handle from './Handle/Handle';
 import Progress from './Progress/Progress';
 import Scale from './Scale/Scale';
 import Track from './Track/Track';
-import render from './utils/render';
 import {
   searchStyleValue,
   findClosestHandle,
-  isClickFromSecondHandlePosition
+  isClickFromSecondHandlePosition,
+  isRangeAndShowProgress,
+  isNotRangeAndShowProgress,
+  isNotRangeAndStayMergeTooltip,
+  isShowTooltipAndRange,
+  isHideTooltipAndRange,
+  isNewValueCorrect,
+  isFirstHandleRangeAndShowProgress,
+  isSecondHandleRangeAndShowProgress
 } from './view.function';
 
 class View extends Observer {
@@ -83,33 +91,37 @@ class View extends Observer {
       secondHandle.setValue(valueEnd);
       secondHandle.setStyle(searchStyleValue(minValue, maxValue, valueEnd));
       this.mergeTooltip();
-
-      if (showProgress) {
-        progress.setStyle(
-          searchStyleValue(minValue, maxValue, valueStart),
-          searchStyleValue(minValue, maxValue, valueEnd)
-        );
-      }
     } else {
-      if (firstHandle.getTooltipContent()!.includes('...')) {
-        firstHandle.setTooltipContent();
-      }
       secondHandle.element.remove();
-      if (showProgress) {
-        progress.setStyle(0, searchStyleValue(minValue, maxValue, valueStart));
-      }
+    }
+
+    if (isNotRangeAndStayMergeTooltip(range, firstHandle)) {
+      firstHandle.setTooltipContent();
+    }
+
+    if (isRangeAndShowProgress(range, showProgress)) {
+      progress.setStyle(
+        searchStyleValue(minValue, maxValue, valueStart),
+        searchStyleValue(minValue, maxValue, valueEnd)
+      );
+    }
+
+    if (isNotRangeAndShowProgress(range, showProgress)) {
+      progress.setStyle(0, searchStyleValue(minValue, maxValue, valueStart));
     }
 
     if (showTooltip) {
       firstHandle.showTooltipMethod();
-      if (range) {
-        secondHandle.showTooltipMethod();
-      }
     } else {
       firstHandle.hideTooltip();
-      if (range) {
-        secondHandle.hideTooltip();
-      }
+    }
+
+    if (isShowTooltipAndRange(showTooltip, range)) {
+      secondHandle.showTooltipMethod();
+    }
+
+    if (isHideTooltipAndRange(showTooltip, range)) {
+      secondHandle.hideTooltip();
     }
 
     track.setMaxMinValueAndStep(maxValue, minValue, step);
@@ -231,10 +243,13 @@ class View extends Observer {
     firstHandle.setStyle(firstHandleStyleValue);
     if (range) {
       secondHandle!.setStyle(secondHandleStyleValue);
-      if (showProgress) {
-        progress!.setStyle(firstHandleStyleValue, secondHandleStyleValue);
-      }
-    } else if (showProgress) {
+    }
+
+    if (isRangeAndShowProgress(range, showProgress)) {
+      progress!.setStyle(firstHandleStyleValue, secondHandleStyleValue);
+    }
+
+    if (isNotRangeAndShowProgress(range, showProgress)) {
       progress!.setStyle(0, firstHandleStyleValue);
     }
 
@@ -262,6 +277,7 @@ class View extends Observer {
     this.clickOnTrack();
     this.clickOnHandle();
     this.clickOnScale();
+    this.countOfSteps();
   }
 
   private mergeTooltip(): void {
@@ -281,6 +297,16 @@ class View extends Observer {
     }
   }
 
+  private countOfSteps(): void {
+    const { scale } = this.components;
+    scale.subscribe(ListenersName.countOfSteps, (count: number) => {
+      if (this.getOptions().scalePointCount !== count) {
+        return this.setOptions({ scalePointCount: count });
+      }
+      return null;
+    });
+  }
+
   private clickOnHandle(): void {
     const { track, progress, firstHandle, secondHandle } = this.components;
 
@@ -294,39 +320,20 @@ class View extends Observer {
         newValue
       );
 
-      function checkHandleAndNewValue(h: Handle, newV: number): boolean {
-        if (h === secondHandle) {
-          return newV > firstHandle.getValue();
-        }
-        if (h === firstHandle) {
-          return newV < secondHandle!.getValue();
-        }
-        return false;
-      }
-
       if (range) {
-        if (checkHandleAndNewValue(handle, newValue)) {
+        if (isNewValueCorrect(handle, newValue, firstHandle, secondHandle)) {
           handle.setValue(newValue);
           handle.setStyle(styleValue);
-          if (showProgress) {
-            progress.setStart(styleValue);
-          }
-        } else if (checkHandleAndNewValue(handle, newValue)) {
-          handle.setValue(newValue);
-          handle.setStyle(styleValue);
-
-          if (showProgress) {
-            progress.setEnd(styleValue);
-          }
         }
         this.mergeTooltip();
-      } else if (showProgress) {
-        progress.setStart(0);
-        progress.setEnd(styleValue);
-      }
-      if (!range) {
+      } else {
         handle.setValue(newValue);
         handle.setStyle(styleValue);
+      }
+
+      if (isNotRangeAndShowProgress(range, showProgress)) {
+        progress.setStart(0);
+        progress.setEnd(styleValue);
       }
 
       if (handle === firstHandle) {
@@ -367,13 +374,29 @@ class View extends Observer {
       );
 
       closetHandle.setStyle(styleValue);
-      if (range && showProgress) {
-        if (closetHandle === firstHandle) {
-          progress!.setStart(styleValue);
-        } else if (closetHandle === secondHandle) {
-          progress!.setEnd(styleValue);
-        }
-      } else if (showProgress) {
+
+      if (
+        isFirstHandleRangeAndShowProgress(
+          firstHandle,
+          closetHandle,
+          range,
+          showProgress
+        )
+      ) {
+        progress!.setStart(styleValue);
+      }
+      if (
+        isSecondHandleRangeAndShowProgress(
+          secondHandle,
+          closetHandle,
+          range,
+          showProgress
+        )
+      ) {
+        progress!.setEnd(styleValue);
+      }
+
+      if (isNotRangeAndShowProgress(range, showProgress)) {
         progress!.setStart(0);
         progress!.setEnd(styleValue);
       }
@@ -433,13 +456,27 @@ class View extends Observer {
         closetHandle.setValue(value);
         closetHandle.setStyle(styleValue);
 
-        if (range && showProgress) {
-          if (closetHandle === firstHandle) {
-            progress!.setStart(styleValue);
-          } else if (closetHandle === secondHandle) {
-            progress!.setEnd(styleValue);
-          }
-        } else if (showProgress) {
+        if (
+          isFirstHandleRangeAndShowProgress(
+            firstHandle,
+            closetHandle,
+            range,
+            showProgress
+          )
+        ) {
+          progress!.setStart(styleValue);
+        }
+        if (
+          isSecondHandleRangeAndShowProgress(
+            secondHandle,
+            closetHandle,
+            range,
+            showProgress
+          )
+        ) {
+          progress!.setEnd(styleValue);
+        }
+        if (isNotRangeAndShowProgress(range, showProgress)) {
           progress!.setStart(0);
           progress!.setEnd(styleValue);
         }

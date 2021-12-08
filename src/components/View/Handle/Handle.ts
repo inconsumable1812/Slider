@@ -1,8 +1,13 @@
-import { TOOLTIP_HIDE_CLASS, STEP_NUMBER_OF_ZEROS } from '../../../constants';
+import {
+  TOOLTIP_HIDE_CLASS,
+  Z_INDEX_DEFAULT,
+  Z_INDEX_BIG
+} from '../../../constants';
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
-import render from '../utils/render';
+import render from '../../../utils/render';
 import Track from '../Track/Track';
+import { roundToRequiredNumber } from '../../../utils/utils';
 
 class Handle extends Observer {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };
@@ -76,9 +81,9 @@ class Handle extends Observer {
 
   setZIndex(styleValue: number): void {
     if (styleValue >= 97) {
-      this.elements.handle.style.zIndex = '50';
-    } else if (this.elements.handle.style.zIndex === '50') {
-      this.elements.handle.style.zIndex = '1';
+      this.elements.handle.style.zIndex = Z_INDEX_BIG;
+    } else if (this.elements.handle.style.zIndex === Z_INDEX_BIG) {
+      this.elements.handle.style.zIndex = Z_INDEX_DEFAULT;
     }
   }
 
@@ -161,23 +166,24 @@ class Handle extends Observer {
       : track.element.getBoundingClientRect().width;
 
     const valueInPercent: number = valueInPx / widthOrHeight;
-    const valueInPercentRoundTo2: number = +valueInPercent.toFixed(4);
+    const valueInPercentRoundTo4: number =
+      Math.round(valueInPercent * 10000) / 10000;
 
     const delta: number = track.getMaxValue() - track.getMinValue();
 
-    const isValueCorrectInStepSize =
-      +(delta * valueInPercentRoundTo2).toFixed(STEP_NUMBER_OF_ZEROS) -
-      +((delta * valueInPercentRoundTo2) % step).toFixed(STEP_NUMBER_OF_ZEROS);
+    const valueCorrectInStepSize: number =
+      delta * valueInPercentRoundTo4 -
+      ((delta * valueInPercentRoundTo4) % step);
 
-    let newValue: number = +(
-      track.getMinValue() + isValueCorrectInStepSize
-    ).toFixed(STEP_NUMBER_OF_ZEROS);
+    let newValue: number =
+      track.getMinValue() + roundToRequiredNumber(valueCorrectInStepSize);
 
     if (valueInPercent <= 0) {
       newValue = track.getMinValue();
     } else if (valueInPercent >= 1) {
       newValue = track.getMaxValue();
     }
+
     this.emit(ListenersName.clickOnHandle, newValue);
   }
 }

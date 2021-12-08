@@ -5,7 +5,7 @@ import {
   Slider,
   ViewOptions
 } from '../type';
-import render from '../View/utils/render';
+import render from '../../utils/render';
 
 class Panel {
   root!: HTMLElement;
@@ -319,7 +319,6 @@ class Panel {
 
     // ValueStart
     const valueStartCallback = () => {
-      const range = this.inputs.range.checked;
       const maxValue = this.getMaxValue().maxValue;
       const valueStart = this.getValueStart().valueStart;
       const valueEnd = this.getValueEnd().valueEnd;
@@ -329,21 +328,9 @@ class Panel {
         valueEnd === undefined;
       const previousValue = this.slider.getOptions().valueStart;
 
-      const newValueBiggerThanMax = !isUndefined ? valueStart > maxValue : true;
-      const newValueBiggerThanSecond = !isUndefined
-        ? valueStart >= valueEnd
-        : true;
-
-      let newValue = this.getValueStart();
-
-      newValue = newValueBiggerThanMax
-        ? { valueStart: maxValue }
+      const newValue = isUndefined
+        ? { valueStart: previousValue }
         : this.getValueStart();
-
-      newValue =
-        newValueBiggerThanSecond && range
-          ? { valueStart: previousValue }
-          : this.getValueStart();
 
       this.slider.setOptions(newValue);
     };
@@ -368,14 +355,8 @@ class Panel {
       const previousValue = this.slider.getOptions().valueEnd;
       const isUndefined = valueEnd === undefined || valueStart === undefined;
 
-      const newValueLessThanFirst = !isUndefined
-        ? valueEnd <= valueStart
-        : true;
-
       let newValue = this.getValueEnd();
-      newValue = newValueLessThanFirst
-        ? { valueEnd: previousValue }
-        : this.getValueEnd();
+      newValue = isUndefined ? { valueEnd: previousValue } : this.getValueEnd();
 
       this.slider.setOptions(newValue);
     };

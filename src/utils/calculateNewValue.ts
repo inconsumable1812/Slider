@@ -2,7 +2,7 @@ import {
   STEP_NUMBER_OF_ZEROS,
   MIN_STEP,
   STEP_DECIMAL_PART
-} from '../../../constants';
+} from '../constants';
 
 function calculateNewValue(
   minValue: number,

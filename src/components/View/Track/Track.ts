@@ -1,7 +1,7 @@
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
-import calculateNewValue from '../utils/calculateNewValue';
-import render from '../utils/render';
+import calculateNewValue from '../../../utils/calculateNewValue';
+import render from '../../../utils/render';
 
 class Track extends Observer {
   element!: HTMLElement;

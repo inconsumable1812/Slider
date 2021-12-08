@@ -1,19 +1,8 @@
-import { JS_SCALE_POINT_CLASS, STEP_NUMBER_OF_ZEROS } from '../../../constants';
+import { roundToRequiredNumber } from '../../../utils/utils';
+import { JS_SCALE_POINT_CLASS } from '../../../constants';
+import render from '../../../utils/render';
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
-import render from '../utils/render';
-
-function isScalePointCorrectAndIIsNotLastNumber(
-  scalePointCountLess: boolean,
-  i: number,
-  actualCount: number
-): boolean {
-  return scalePointCountLess && i === actualCount - 1;
-}
-
-function isLastNumber(i: number, j: number, actualCount: number): boolean {
-  return i === actualCount - 1 || j === actualCount - 1;
-}
 
 class Scale extends Observer {
   element!: HTMLElement;
@@ -80,78 +69,62 @@ class Scale extends Observer {
   }
 
   private renderScalePoint(): void {
-    const { isVertical, scalePointCount } = this;
+    const { isVertical } = this;
     const arrayOfValue: number[][] = this.calculateStepValue();
     const arrayOfStepsValue: number[] = arrayOfValue[0];
     const arrayOfStepsStyleValue: number[] = arrayOfValue[1];
-    const scalePointCountLess: boolean =
-      scalePointCount < arrayOfStepsValue.length;
-    const actualCount: number = scalePointCountLess
-      ? arrayOfStepsValue.length - 1
-      : arrayOfStepsValue.length;
 
     const subElementStyle: string = isVertical ? 'top' : 'left';
 
-    let j = 0;
-    for (let i = 0; i < actualCount; i += 1) {
-      if (
-        isScalePointCorrectAndIIsNotLastNumber(
-          scalePointCountLess,
-          i,
-          actualCount
-        )
-      ) {
-        j = i;
-        i += 1;
-      }
-
+    arrayOfStepsValue.forEach((el, index) => {
       this.subElement = render(`
-      <div class="range-slider__scale_point ${JS_SCALE_POINT_CLASS}">${arrayOfStepsValue[i]}</div>
-    `);
-      this.subElement.style[subElementStyle] = arrayOfStepsStyleValue[i] + '%';
-      if (isLastNumber(i, j, actualCount)) {
+      <div class="range-slider__scale_point ${JS_SCALE_POINT_CLASS}">${el}</div>
+      `);
+      this.subElement.style[subElementStyle] =
+        arrayOfStepsStyleValue[index] + '%';
+
+      if (index === arrayOfStepsValue.length - 1) {
         this.subElement.classList.add('range-slider__scale_point-end');
       }
+
       this.element.append(this.subElement);
-    }
+    });
   }
 
   private calculateStepValue(): number[][] {
     const { minValue, maxValue, step, scalePointCount } = this;
     const range = Math.abs(maxValue - minValue);
-    const isLastStepBigThanMaxValue: boolean = (range %
-      step) as unknown as boolean;
     const isCountBigThanScalePoint = Math.floor(range / step) > scalePointCount;
     const actualScaleSize = isCountBigThanScalePoint
       ? Math.round(Math.round(range / step) / (scalePointCount - 1)) * step
       : step;
-    let countOfSteps = isCountBigThanScalePoint
-      ? scalePointCount - 1
+    const countOfSteps = isCountBigThanScalePoint
+      ? scalePointCount
       : Math.floor(range / step);
 
-    countOfSteps = isLastStepBigThanMaxValue ? countOfSteps + 1 : countOfSteps;
+    const arrayOfStepsValue = new Array(countOfSteps)
+      .fill('')
+      .map((_, index) => {
+        let value = minValue + actualScaleSize * index;
+        if (value > maxValue) value = maxValue;
+        if (index === countOfSteps - 1) value = maxValue;
+        return roundToRequiredNumber(value);
+      })
+      .filter((item, pos, arr) => !pos || item !== arr[pos - 1]);
 
-    const arrayOfStepsValue = [];
-    const arrayOfStepsStyleValue = [];
-    for (let i = 0; i <= countOfSteps; i += 1) {
-      let stepsValue = +(minValue + actualScaleSize * i).toFixed(
-        STEP_NUMBER_OF_ZEROS
-      );
-      stepsValue = stepsValue > maxValue ? maxValue : stepsValue;
-      stepsValue = i === countOfSteps ? maxValue : stepsValue;
-      arrayOfStepsValue.push(stepsValue);
+    const arrayOfStepsStyleValue = new Array(countOfSteps)
+      .fill('')
+      .map((_, index) => {
+        let styleValue = Math.abs(actualScaleSize / range) * index * 100;
+        if (styleValue > 100) styleValue = 100;
+        if (index === countOfSteps - 1) styleValue = 100;
+        return roundToRequiredNumber(styleValue);
+      })
+      .filter((item, pos, arr) => !pos || item !== arr[pos - 1]);
 
-      let stepStyleValue = Math.abs(actualScaleSize / range) * i * 100;
-      stepStyleValue =
-        stepStyleValue > 100
-          ? 100
-          : +stepStyleValue.toFixed(STEP_NUMBER_OF_ZEROS);
-      arrayOfStepsStyleValue.push(stepStyleValue);
-    }
-    arrayOfStepsStyleValue[countOfSteps] = 100;
+    this.emit(ListenersName.countOfSteps, arrayOfStepsValue.length);
 
     const arrayOfValue = [arrayOfStepsValue, arrayOfStepsStyleValue];
-
     return arrayOfValue;
   }
 }

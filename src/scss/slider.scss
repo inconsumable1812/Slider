@@ -27,7 +27,7 @@
     border: $handle-border solid white;
     top: math.div(-$handle-size, $track-height) - $handle-border;
     transform: translate(-25%);
-    z-index: 2;
+    z-index: 1;
     &_num_1 {
       left: 10%;
     }
@@ -73,7 +73,7 @@
       transform: translate(-35%);
       &-end {
         background: white;
-        z-index: 100;
+        z-index: 3;
       }
     }
   }
