@@ -35,17 +35,20 @@ function findClosestCorrectValue(
 ) {
   const delta = roundToRequiredNumber(value, minValue, step);
 
-  const deltaOfMaxValue = maxValue % step;
+  const deltaOfMaxValue = roundToRequiredNumber(maxValue % step);
   const lastValueBeforeMax = maxValue - deltaOfMaxValue;
 
   let newValue = roundToRequiredNumber(value);
+
   let incorrectValue = roundToRequiredNumber(newValue, minValue, step);
 
   if (
     isValueNearMaxAndNeedGoUp(newValue, lastValueBeforeMax, deltaOfMaxValue)
   ) {
     while (newValue !== maxValue) {
-      newValue = roundToRequiredNumber(newValue) + MIN_STEP;
+      newValue = roundToRequiredNumber(
+        roundToRequiredNumber(newValue) + MIN_STEP
+      );
     }
     return newValue;
   }
@@ -54,7 +57,9 @@ function findClosestCorrectValue(
     isValueNearMaxAndNeedGoDown(newValue, lastValueBeforeMax, deltaOfMaxValue)
   ) {
     while (incorrectValue) {
-      newValue = roundToRequiredNumber(newValue) - MIN_STEP;
+      newValue = roundToRequiredNumber(
+        roundToRequiredNumber(newValue) - MIN_STEP
+      );
       incorrectValue = roundToRequiredNumber(newValue, minValue, step);
     }
     return newValue;
@@ -62,17 +67,21 @@ function findClosestCorrectValue(
 
   if (isNeedGoDown(delta, step)) {
     while (incorrectValue) {
-      newValue = roundToRequiredNumber(newValue) - MIN_STEP;
+      newValue = roundToRequiredNumber(
+        roundToRequiredNumber(newValue) - MIN_STEP
+      );
       incorrectValue = roundToRequiredNumber(newValue, minValue, step);
     }
     return newValue;
   }
 
   while (incorrectValue) {
-    newValue = roundToRequiredNumber(newValue) + MIN_STEP;
+    newValue = roundToRequiredNumber(
+      roundToRequiredNumber(newValue) + MIN_STEP
+    );
+
     incorrectValue = roundToRequiredNumber(newValue, minValue, step);
   }
-
   return newValue;
 }
 

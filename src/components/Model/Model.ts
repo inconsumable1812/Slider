@@ -95,8 +95,8 @@ class Model extends Observer {
       )
     ) {
       return this.setOptions({
-        maxValue: minValue! + step!,
-        minValue: minValue
+        maxValue: roundToRequiredNumber(minValue!) + step!,
+        minValue: roundToRequiredNumber(minValue!)
       });
     }
 
@@ -108,8 +108,8 @@ class Model extends Observer {
       )
     ) {
       return this.setOptions({
-        maxValue: maxValue!,
-        minValue: maxValue! - step!
+        maxValue: roundToRequiredNumber(maxValue!),
+        minValue: roundToRequiredNumber(maxValue!) - step!
       });
     }
 
@@ -121,8 +121,8 @@ class Model extends Observer {
       )
     ) {
       return this.setOptions({
-        maxValue: minValue! + step!,
-        minValue: minValue!
+        maxValue: roundToRequiredNumber(minValue!) + step!,
+        minValue: roundToRequiredNumber(minValue!)
       });
     }
 
@@ -134,9 +134,17 @@ class Model extends Observer {
       )
     ) {
       return this.setOptions({
-        maxValue: maxValue!,
-        minValue: maxValue! - step!
+        maxValue: roundToRequiredNumber(maxValue!),
+        minValue: roundToRequiredNumber(maxValue!) - step!
       });
+    }
+
+    if (minValue !== prevMinValue) {
+      return this.setOptions({ minValue: roundToRequiredNumber(minValue!) });
+    }
+
+    if (maxValue !== prevMaxValue) {
+      return this.setOptions({ maxValue: roundToRequiredNumber(maxValue!) });
     }
   }
 

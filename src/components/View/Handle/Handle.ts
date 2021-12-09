@@ -176,7 +176,8 @@ class Handle extends Observer {
       ((delta * valueInPercentRoundTo4) % step);
 
     let newValue: number =
-      track.getMinValue() + roundToRequiredNumber(valueCorrectInStepSize);
+      roundToRequiredNumber(track.getMinValue()) +
+      roundToRequiredNumber(valueCorrectInStepSize);
 
     if (valueInPercent <= 0) {
       newValue = track.getMinValue();
@@ -184,7 +185,7 @@ class Handle extends Observer {
       newValue = track.getMaxValue();
     }
 
-    this.emit(ListenersName.clickOnHandle, newValue);
+    this.emit(ListenersName.clickOnHandle, roundToRequiredNumber(newValue));
   }
 }
 

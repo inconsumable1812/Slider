@@ -13,9 +13,9 @@ function roundToRequiredNumber(
 ) {
   if (minValue !== undefined && step !== undefined) {
     return (
-      Math.round(
-        ((value - minValue) * STEP_DECIMAL_PART) % (step * STEP_DECIMAL_PART)
-      ) / STEP_DECIMAL_PART
+      (Math.round((value - minValue) * STEP_DECIMAL_PART) %
+        Math.round(step * STEP_DECIMAL_PART)) /
+      STEP_DECIMAL_PART
     );
   }
 

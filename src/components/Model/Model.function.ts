@@ -24,7 +24,7 @@ function isIncorrectStepInValueStart(
 ): boolean {
   return (
     ((Math.round(Math.abs(valueStart - minValue) * STEP_DECIMAL_PART) %
-      (step * STEP_DECIMAL_PART)) as unknown as boolean) &&
+      Math.round(step * STEP_DECIMAL_PART)) as unknown as boolean) &&
     valueStart !== maxValue
   );
 }
@@ -37,7 +37,7 @@ function isIncorrectStepInValueEnd(
 ): boolean {
   return (
     ((Math.round(Math.abs(valueEnd - minValue) * STEP_DECIMAL_PART) %
-      (step * STEP_DECIMAL_PART)) as unknown as boolean) &&
+      Math.round(step * STEP_DECIMAL_PART)) as unknown as boolean) &&
     valueEnd !== maxValue
   );
 }

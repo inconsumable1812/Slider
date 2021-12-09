@@ -1,8 +1,7 @@
 import { roundToRequiredNumber } from '../../../utils/utils';
 import {
   JS_SCALE_POINT_CLASS,
-  MIN_SCALE_POINT_COUNT,
-  MAX_SCALE_POINT_COUNT
+  MIN_SCALE_POINT_COUNT
 } from '../../../constants';
 import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
