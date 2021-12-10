@@ -3,9 +3,12 @@ import {
   panelElements,
   panelInputs,
   Slider,
-  ViewOptions
+  ViewOptions,
+  ListenersName
 } from '../type';
 import { render } from '../../utils/utils';
+import Model from 'components/Model/Model';
+import View from 'components/View/View';
 
 class Panel {
   root!: HTMLElement;
@@ -13,12 +16,29 @@ class Panel {
   private inputs!: panelInputs;
   private track!: HTMLElement;
 
-  constructor(private selector: Element, private slider: Slider) {}
+  constructor(
+    private selector: Element,
+    private slider: Slider,
+    private model: Model,
+    private view: View
+  ) {}
 
   public init(): void {
     this.render();
     this.getTrack();
-    this.setValueWhenClickOnSlider();
+    this.updateOptionsFromSlider();
+  }
+
+  private updateOptionsFromSlider() {
+    this.model.subscribe(
+      ListenersName.modelValueChange,
+      this.setOptionsFromSlider.bind(this)
+    );
+
+    this.view.subscribe(
+      ListenersName.viewChanged,
+      this.setOptionsFromSlider.bind(this)
+    );
   }
 
   public getInputs(): panelInputs {
@@ -52,35 +72,15 @@ class Panel {
     this.inputs.scalePointCount.value = scalePointCount!.toString();
     this.inputs.showProgress.checked = showProgress as boolean;
     this.inputs.isVertical.checked = isVertical as boolean;
+
+    this.inputs.valueStart.setAttribute('min', `${minValue}`);
+    this.inputs.valueEnd.setAttribute('min', `${minValue}`);
+    this.inputs.valueStart.setAttribute('step', `${step}`);
+    this.inputs.valueEnd.setAttribute('step', `${step}`);
   }
 
   private getTrack(): void {
     this.track = this.slider.getViewRoot();
-  }
-
-  private setValueWhenClickOnSlider(): void {
-    const setValue = () => {
-      this.inputs.valueStart.value = this.slider.getFirstValue().toString();
-      this.inputs.valueEnd.value = this.slider.getSecondValue().toString();
-    };
-    const mouseDown = () => {
-      this.inputs.valueStart.value = this.slider.getFirstValue().toString();
-      this.inputs.valueEnd.value = this.slider.getSecondValue().toString();
-      document.addEventListener('pointermove', setValue);
-    };
-
-    const mouseUp = () => {
-      document.removeEventListener('pointermove', setValue);
-    };
-
-    const click = () => {
-      this.inputs.valueStart.value = this.slider.getFirstValue().toString();
-      this.inputs.valueEnd.value = this.slider.getSecondValue().toString();
-    };
-
-    this.track.addEventListener('pointerdown', mouseDown);
-    this.track.addEventListener('pointerup', mouseUp);
-    this.track.addEventListener('click', click);
   }
 
   private render(): void {

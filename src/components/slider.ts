@@ -44,30 +44,6 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
 
   let panel: Panel;
 
-  // function getContainer() {
-  //   return selector;
-  // }
-
-  // function getOptions(): sliderOptions {
-  //   const modelOptions = model.getOptions();
-  //   const viewOptions = view.getOptions();
-
-  //   return { ...modelOptions, ...viewOptions };
-  // }
-
-  // function setDataAtr() {
-  //   const keys = Object.keys(getOptions());
-  //   const values = Object.values(getOptions());
-  //   const container = getContainer();
-
-  //   const keysDash = keys.map((el) => camelCaseToDash(el));
-  //   keysDash.forEach((el, i) =>
-  //     container.setAttribute('data-' + el, values[i].toString())
-  //   );
-  // }
-
-  // setDataAtr();
-
   const slider = {
     getContainer(): Element {
       return selector;
@@ -118,8 +94,14 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     getSecondValue(): number {
       return model.getSecondValue();
     },
+    // getModel() {
+    //   return model;
+    // },
+    // getView() {
+    //   return view;
+    // },
     addControlPanel(): Panel {
-      panel = new Panel(selector, slider);
+      panel = new Panel(selector, slider, model, view);
       panel.init();
       return panel;
     },
