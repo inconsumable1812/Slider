@@ -46,7 +46,7 @@ type sliderOptions = {
 };
 
 type Slider = {
-  getContainer(): HTMLElement;
+  getContainer(): Element;
   getViewRoot(): HTMLElement;
   getOptions(): sliderOptions;
   setOptions(options: sliderOptions): void;

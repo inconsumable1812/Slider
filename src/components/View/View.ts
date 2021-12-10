@@ -3,7 +3,14 @@ import {
   MAX_SCALE_POINT_COUNT,
   VERTICAL_CLASS
 } from '../../constants';
-import { render } from '../../utils/utils';
+import {
+  render,
+  camelCaseToDash,
+  toNumber,
+  isNeedToChangeValue,
+  toBoolean,
+  isNeedToChangeIfValueBoolean
+} from '../../utils/utils';
 import {
   ModelOptions,
   ViewComponents,
@@ -33,21 +40,21 @@ import {
 class View extends Observer {
   private components!: ViewComponents;
   root!: HTMLElement;
-  private el: Element;
   constructor(
-    selector: Element,
+    private selector: HTMLElement,
     private modelOptions: ModelOptions,
     private viewOptions: ViewOptions = DEFAULT_VIEW_OPTIONS
   ) {
     super();
-    this.el = selector;
     this.initViewOptions();
     this.checkScalePointCount();
+    this.observeAtr();
   }
 
   setOptions(viewOptions: Partial<ViewOptions>): void {
     this.viewOptions = { ...this.viewOptions, ...viewOptions };
     this.checkScalePointCount();
+    this.setDataAtr();
     this.emit(ListenersName.viewChanged, this.viewOptions);
   }
 
@@ -253,13 +260,14 @@ class View extends Observer {
       progress!.setStyle(0, firstHandleStyleValue);
     }
 
-    this.el.append(this.root);
+    this.selector.append(this.root);
 
     this.bindEventListeners();
   }
 
   private initViewOptions(): void {
     this.viewOptions = { ...DEFAULT_VIEW_OPTIONS, ...this.viewOptions };
+    this.setDataAtr();
   }
 
   // eslint-disable-next-line consistent-return
@@ -493,6 +501,175 @@ class View extends Observer {
         closetHandle.handleMouseDown(event);
       }
     );
+  }
+
+  private setDataAtr() {
+    const keys = Object.keys(this.getOptions());
+    const values = Object.values(this.getOptions());
+    const container = this.selector;
+
+    const keysDash = keys.map((el) => camelCaseToDash(el));
+    keysDash.forEach((el, i) =>
+      container.setAttribute('data-' + el, values[i].toString())
+    );
+  }
+
+  private observeAtr() {
+    this.observeScalePointCountAtr();
+    this.observeShowTooltipAtr();
+    this.observeIsVerticalAtr();
+    this.observeShowProgressAtr();
+    this.observeShowScaleAtr();
+  }
+
+  private observeScalePointCountAtr() {
+    const callback: MutationCallback = (mutationRecords) => {
+      const key = 'scalePointCount';
+      const val = this.selector.dataset[key];
+      const oldValue = mutationRecords[0].oldValue;
+
+      const valFromOptions = this.getOptions().scalePointCount;
+      const oldValueNumber = toNumber(oldValue!, valFromOptions);
+      const valNumber = toNumber(val!, valFromOptions);
+
+      if (isNeedToChangeValue(val!)) {
+        this.selector.setAttribute(
+          'data-scale-point-count',
+          valFromOptions.toString()
+        );
+      }
+
+      if (valNumber !== oldValueNumber) {
+        this.setOptions({ scalePointCount: valNumber });
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(this.selector, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ['data-scale-point-count']
+    });
+  }
+
+  private observeShowTooltipAtr() {
+    const callback: MutationCallback = (mutationRecords) => {
+      const key = 'showTooltip';
+      const val = this.selector.dataset[key];
+      const oldValue = mutationRecords[0].oldValue;
+
+      const valFromOptions = this.getOptions().showTooltip;
+      const oldValueBoolean = toBoolean(oldValue!);
+      const valBoolean = toBoolean(val!);
+
+      if (isNeedToChangeIfValueBoolean(val!)) {
+        this.selector.setAttribute(
+          'data-show-tooltip',
+          valFromOptions.toString()
+        );
+      }
+
+      if (valBoolean !== oldValueBoolean) {
+        this.setOptions({ showTooltip: valBoolean });
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(this.selector, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ['data-show-tooltip']
+    });
+  }
+
+  private observeIsVerticalAtr() {
+    const callback: MutationCallback = (mutationRecords) => {
+      const key = 'isVertical';
+      const val = this.selector.dataset[key];
+      const oldValue = mutationRecords[0].oldValue;
+
+      const valFromOptions = this.getOptions().isVertical;
+      const oldValueBoolean = toBoolean(oldValue!);
+      const valBoolean = toBoolean(val!);
+
+      if (isNeedToChangeIfValueBoolean(val!)) {
+        this.selector.setAttribute(
+          'data-is-vertical',
+          valFromOptions.toString()
+        );
+      }
+
+      if (valBoolean !== oldValueBoolean) {
+        this.setOptions({ isVertical: valBoolean });
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(this.selector, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ['data-is-vertical']
+    });
+  }
+
+  private observeShowProgressAtr() {
+    const callback: MutationCallback = (mutationRecords) => {
+      const key = 'showProgress';
+      const val = this.selector.dataset[key];
+      const oldValue = mutationRecords[0].oldValue;
+
+      const valFromOptions = this.getOptions().showProgress;
+      const oldValueBoolean = toBoolean(oldValue!);
+      const valBoolean = toBoolean(val!);
+
+      if (isNeedToChangeIfValueBoolean(val!)) {
+        this.selector.setAttribute(
+          'data-show-progress',
+          valFromOptions.toString()
+        );
+      }
+
+      if (valBoolean !== oldValueBoolean) {
+        this.setOptions({ showProgress: valBoolean });
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(this.selector, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ['data-show-progress']
+    });
+  }
+
+  private observeShowScaleAtr() {
+    const callback: MutationCallback = (mutationRecords) => {
+      const key = 'showScale';
+      const val = this.selector.dataset[key];
+      const oldValue = mutationRecords[0].oldValue;
+
+      const valFromOptions = this.getOptions().showScale;
+      const oldValueBoolean = toBoolean(oldValue!);
+      const valBoolean = toBoolean(val!);
+
+      if (isNeedToChangeIfValueBoolean(val!)) {
+        this.selector.setAttribute(
+          'data-show-scale',
+          valFromOptions.toString()
+        );
+      }
+
+      if (valBoolean !== oldValueBoolean) {
+        this.setOptions({ showScale: valBoolean });
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(this.selector, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ['data-show-scale']
+    });
   }
 }
 

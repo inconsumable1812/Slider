@@ -5,6 +5,7 @@ import Model from './Model/Model';
 import Panel from './Panel/Panel';
 import Presenter from './Presenter/Presenter';
 import View from './View/View';
+import { camelCaseToDash } from '../utils/utils';
 
 const create = (selector: HTMLElement, options: sliderOptions = {}) => {
   function prepareOptions(
@@ -30,7 +31,7 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     DEFAULT_VIEW_OPTIONS
   ) as Partial<ViewOptions>;
 
-  const model = new Model(updateModelOptions);
+  const model = new Model(updateModelOptions, selector);
   const modelOptionsInit = model.getOptions();
 
   const view = new View(
@@ -43,8 +44,32 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
 
   let panel: Panel;
 
+  // function getContainer() {
+  //   return selector;
+  // }
+
+  // function getOptions(): sliderOptions {
+  //   const modelOptions = model.getOptions();
+  //   const viewOptions = view.getOptions();
+
+  //   return { ...modelOptions, ...viewOptions };
+  // }
+
+  // function setDataAtr() {
+  //   const keys = Object.keys(getOptions());
+  //   const values = Object.values(getOptions());
+  //   const container = getContainer();
+
+  //   const keysDash = keys.map((el) => camelCaseToDash(el));
+  //   keysDash.forEach((el, i) =>
+  //     container.setAttribute('data-' + el, values[i].toString())
+  //   );
+  // }
+
+  // setDataAtr();
+
   const slider = {
-    getContainer(): HTMLElement {
+    getContainer(): Element {
       return selector;
     },
     getViewRoot(): HTMLElement {
@@ -55,6 +80,16 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
       const viewOptions = view.getOptions();
 
       return { ...modelOptions, ...viewOptions };
+    },
+    setDataAtr() {
+      const keys = Object.keys(this.getOptions());
+      const values = Object.values(this.getOptions());
+      const container = this.getContainer();
+
+      const keysDash = keys.map((el) => camelCaseToDash(el));
+      keysDash.forEach((el, i) =>
+        container.setAttribute('data-' + el, values[i].toString())
+      );
     },
     setOptions(options: sliderOptions): void {
       const updateModelOptions = prepareOptions(
@@ -74,6 +109,8 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
       if (panel) {
         panel.setOptionsFromSlider();
       }
+
+      this.setDataAtr();
     },
     getFirstValue(): number {
       return model.getFirstValue();

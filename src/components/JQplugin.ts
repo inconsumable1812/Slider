@@ -19,4 +19,13 @@ $.fn.extend({
   }
 });
 
-export default $.fn.JQSlider;
+const sliders = document.querySelectorAll(
+  '.super-slider-here'
+) as NodeListOf<HTMLElement>;
+
+// sliders[0].setAttribute('dataMinValue', '0');
+// console.log(sliders[0].dataset.minValue);
+
+sliders.forEach((slider) => create(slider));
+
+// export default $.fn.JQSlider;
