@@ -1,3 +1,4 @@
+import { render } from '../../utils/utils';
 import {
   ModelOptions,
   panelElements,
@@ -6,15 +7,13 @@ import {
   ViewOptions,
   ListenersName
 } from '../type';
-import { render } from '../../utils/utils';
-import Model from 'components/Model/Model';
-import View from 'components/View/View';
+import Model from '../Model/Model';
+import View from '../View/View';
 
 class Panel {
-  root!: HTMLElement;
+  private root!: HTMLElement;
   private elements!: panelElements;
   private inputs!: panelInputs;
-  private track!: HTMLElement;
 
   constructor(
     private selector: Element,
@@ -25,7 +24,6 @@ class Panel {
 
   public init(): void {
     this.render();
-    this.getTrack();
     this.updateOptionsFromSlider();
   }
 
@@ -77,10 +75,6 @@ class Panel {
     this.inputs.valueEnd.setAttribute('min', `${minValue}`);
     this.inputs.valueStart.setAttribute('step', `${step}`);
     this.inputs.valueEnd.setAttribute('step', `${step}`);
-  }
-
-  private getTrack(): void {
-    this.track = this.slider.getViewRoot();
   }
 
   private render(): void {

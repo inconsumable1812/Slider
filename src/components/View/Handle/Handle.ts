@@ -3,11 +3,11 @@ import {
   Z_INDEX_DEFAULT,
   Z_INDEX_BIG
 } from '../../../constants';
+import { roundToRequiredNumber } from '../../../utils/utils';
+import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
 import { ListenersName } from '../../type';
-import { render } from '../../../utils/utils';
 import Track from '../Track/Track';
-import { roundToRequiredNumber } from '../../../utils/utils';
 
 class Handle extends Observer {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };

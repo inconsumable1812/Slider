@@ -266,7 +266,12 @@ class View extends Observer {
   }
 
   private initViewOptions(): void {
-    this.viewOptions = { ...DEFAULT_VIEW_OPTIONS, ...this.viewOptions };
+    const optionsFromDataAtr = this.initOptionsFromDataAtr();
+    this.viewOptions = {
+      ...DEFAULT_VIEW_OPTIONS,
+      ...this.viewOptions,
+      ...optionsFromDataAtr
+    };
     this.setDataAtr();
   }
 
@@ -670,6 +675,36 @@ class View extends Observer {
       attributeOldValue: true,
       attributeFilter: ['data-show-scale']
     });
+  }
+
+  private initOptionsFromDataAtr(): Partial<ViewOptions> {
+    const keys = Object.keys(this.selector.dataset);
+    const values = Object.values(this.selector.dataset);
+    const newOptions: any = {};
+
+    // eslint-disable-next-line no-return-assign
+    keys.forEach((key, i) => (newOptions[key] = values[i]));
+    Object.keys(newOptions).forEach((el) => {
+      if (el === 'scalePointCount') {
+        newOptions[el] = toNumber(
+          newOptions[el],
+          DEFAULT_VIEW_OPTIONS.scalePointCount
+        );
+      }
+      if (el === 'showTooltip') {
+        newOptions[el] = toBoolean(newOptions[el]);
+      }
+      if (el === 'isVertical') {
+        newOptions[el] = toBoolean(newOptions[el]);
+      }
+      if (el === 'showProgress') {
+        newOptions[el] = toBoolean(newOptions[el]);
+      }
+      if (el === 'showScale') {
+        newOptions[el] = toBoolean(newOptions[el]);
+      }
+    });
+    return newOptions;
   }
 }
 

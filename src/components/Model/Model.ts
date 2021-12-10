@@ -61,7 +61,55 @@ class Model extends Observer {
   }
 
   private init(): void {
-    this.options = { ...DEFAULT_MODEL_OPTIONS, ...this.options };
+    const optionsFromDataAtr = this.initOptionsFromDataAtr();
+    this.options = {
+      ...DEFAULT_MODEL_OPTIONS,
+      ...this.options,
+      ...optionsFromDataAtr
+    };
+  }
+
+  private initOptionsFromDataAtr(): Partial<ModelOptions> {
+    const keys = Object.keys(this.selector.dataset);
+    const values = Object.values(this.selector.dataset);
+    const newOptions: any = {};
+
+    // eslint-disable-next-line no-return-assign
+    keys.forEach((key, i) => (newOptions[key] = values[i]));
+    Object.keys(newOptions).forEach((el) => {
+      if (el === 'minValue') {
+        newOptions[el] = toNumber(
+          newOptions[el],
+          DEFAULT_MODEL_OPTIONS.minValue
+        );
+      }
+      if (el === 'maxValue') {
+        newOptions[el] = toNumber(
+          newOptions[el],
+          DEFAULT_MODEL_OPTIONS.maxValue
+        );
+      }
+      if (el === 'valueStart') {
+        newOptions[el] = toNumber(
+          newOptions[el],
+          DEFAULT_MODEL_OPTIONS.valueStart
+        );
+      }
+      if (el === 'valueEnd') {
+        newOptions[el] = toNumber(
+          newOptions[el],
+          DEFAULT_MODEL_OPTIONS.valueEnd
+        );
+      }
+      if (el === 'step') {
+        newOptions[el] = toNumber(newOptions[el], DEFAULT_MODEL_OPTIONS.step);
+      }
+      if (el === 'range') {
+        newOptions[el] = toBoolean(newOptions[el]);
+      }
+    });
+
+    return newOptions;
   }
 
   private setDataAtr() {

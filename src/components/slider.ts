@@ -94,12 +94,6 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     getSecondValue(): number {
       return model.getSecondValue();
     },
-    // getModel() {
-    //   return model;
-    // },
-    // getView() {
-    //   return view;
-    // },
     addControlPanel(): Panel {
       panel = new Panel(selector, slider, model, view);
       panel.init();
