@@ -43,6 +43,13 @@
 
 ## Использование плагина
 
+Слайдер автоматически проинициализируется на элементах с классом "super-slider-here", при этом опции можно передать через data атрибуты.
+
+```
+<div class="super-slider-here" data-min-value="5" data-is-vertical="true"></div>
+```
+
+Ручная инициализация
 ```
 const $slider = $('#app').JQSlider()
 ```
