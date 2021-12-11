@@ -9,7 +9,9 @@ import {
   toNumber,
   isNeedToChangeValue,
   toBoolean,
-  isNeedToChangeIfValueBoolean
+  isNeedToChangeIfValueBoolean,
+  objectFilter,
+  filterViewOptions
 } from '../../utils/utils';
 import {
   ModelOptions,
@@ -267,6 +269,7 @@ class View extends Observer {
 
   private initViewOptions(): void {
     const optionsFromDataAtr = this.initOptionsFromDataAtr();
+
     this.viewOptions = {
       ...DEFAULT_VIEW_OPTIONS,
       ...this.viewOptions,
@@ -678,33 +681,33 @@ class View extends Observer {
   }
 
   private initOptionsFromDataAtr(): Partial<ViewOptions> {
-    const keys = Object.keys(this.selector.dataset);
-    const values = Object.values(this.selector.dataset);
-    const newOptions: any = {};
+    const objectFromDataAtr = { ...this.selector.dataset };
+    const FilterObjectFromDataAtr = objectFilter(objectFromDataAtr, ([key]) =>
+      filterViewOptions(key)
+    );
 
-    // eslint-disable-next-line no-return-assign
-    keys.forEach((key, i) => (newOptions[key] = values[i]));
-    Object.keys(newOptions).forEach((el) => {
-      if (el === 'scalePointCount') {
-        newOptions[el] = toNumber(
-          newOptions[el],
+    Object.keys(FilterObjectFromDataAtr).forEach((key) => {
+      if (key === 'scalePointCount') {
+        FilterObjectFromDataAtr[key] = toNumber(
+          FilterObjectFromDataAtr[key],
           DEFAULT_VIEW_OPTIONS.scalePointCount
         );
       }
-      if (el === 'showTooltip') {
-        newOptions[el] = toBoolean(newOptions[el]);
+      if (key === 'showTooltip') {
+        FilterObjectFromDataAtr[key] = toBoolean(FilterObjectFromDataAtr[key]);
       }
-      if (el === 'isVertical') {
-        newOptions[el] = toBoolean(newOptions[el]);
+      if (key === 'isVertical') {
+        FilterObjectFromDataAtr[key] = toBoolean(FilterObjectFromDataAtr[key]);
       }
-      if (el === 'showProgress') {
-        newOptions[el] = toBoolean(newOptions[el]);
+      if (key === 'showProgress') {
+        FilterObjectFromDataAtr[key] = toBoolean(FilterObjectFromDataAtr[key]);
       }
-      if (el === 'showScale') {
-        newOptions[el] = toBoolean(newOptions[el]);
+      if (key === 'showScale') {
+        FilterObjectFromDataAtr[key] = toBoolean(FilterObjectFromDataAtr[key]);
       }
     });
-    return newOptions;
+
+    return FilterObjectFromDataAtr;
   }
 }
 

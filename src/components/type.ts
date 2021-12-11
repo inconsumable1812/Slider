@@ -100,6 +100,10 @@ type Listeners = {
   [key in ListenersName]?: ListenersFunction[];
 };
 
+type PrepareModelOptionsFromDataFtr = {
+  minValue: string;
+};
+
 export {
   ModelOptions,
   ViewOptions,
@@ -110,5 +114,6 @@ export {
   panelInputs,
   Listeners,
   ListenersFunction,
-  ListenersName
+  ListenersName,
+  PrepareModelOptionsFromDataFtr
 };

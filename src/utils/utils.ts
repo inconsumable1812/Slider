@@ -56,6 +56,34 @@ function isNeedToChangeIfValueBoolean(value: string): boolean {
   return true;
 }
 
+function filterModelOptions(element: string): boolean {
+  return (
+    element === 'minValue' ||
+    element === 'maxValue' ||
+    element === 'valueStart' ||
+    element === 'valueEnd' ||
+    element === 'step' ||
+    element === 'range'
+  );
+}
+
+function filterViewOptions(element: string): boolean {
+  return (
+    element === 'scalePointCount' ||
+    element === 'showTooltip' ||
+    element === 'isVertical' ||
+    element === 'showProgress' ||
+    element === 'showScale'
+  );
+}
+
+function objectFilter(
+  obj: object,
+  predicate: (value: [string, string]) => boolean
+) {
+  return Object.fromEntries(Object.entries(obj).filter(predicate));
+}
+
 export {
   roundToRequiredNumber,
   render,
@@ -64,5 +92,8 @@ export {
   toNumber,
   isNeedToChangeValue,
   toBoolean,
-  isNeedToChangeIfValueBoolean
+  isNeedToChangeIfValueBoolean,
+  filterModelOptions,
+  objectFilter,
+  filterViewOptions
 };

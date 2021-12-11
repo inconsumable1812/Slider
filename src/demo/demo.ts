@@ -29,7 +29,7 @@ const sliderFourthConfig: Partial<sliderOptions> = {
 
 const sliderSecond = $('#app_2').JQSlider();
 const sliderSecondPanel = sliderSecond.JQSlider('addControlPanel');
-sliderSecond.JQSlider('setOptions', { minValue: 5 });
+// sliderSecond.JQSlider('setOptions', { minValue: 5 });
 
 const sliderThird = $('#app_3').JQSlider(sliderThirdConfig);
 const sliderThirdPanel = sliderThird.JQSlider('addControlPanel');

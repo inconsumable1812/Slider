@@ -7,7 +7,9 @@ import {
   toNumber,
   isNeedToChangeValue,
   toBoolean,
-  isNeedToChangeIfValueBoolean
+  isNeedToChangeIfValueBoolean,
+  filterModelOptions,
+  objectFilter
 } from '../../utils/utils';
 import { DEFAULT_MODEL_OPTIONS } from '../default';
 import { ModelOptions, ListenersName } from '../type';
@@ -62,6 +64,7 @@ class Model extends Observer {
 
   private init(): void {
     const optionsFromDataAtr = this.initOptionsFromDataAtr();
+
     this.options = {
       ...DEFAULT_MODEL_OPTIONS,
       ...this.options,
@@ -70,46 +73,48 @@ class Model extends Observer {
   }
 
   private initOptionsFromDataAtr(): Partial<ModelOptions> {
-    const keys = Object.keys(this.selector.dataset);
-    const values = Object.values(this.selector.dataset);
-    const newOptions: any = {};
+    const objectFromDataAtr = { ...this.selector.dataset };
+    const FilterObjectFromDataAtr = objectFilter(objectFromDataAtr, ([key]) =>
+      filterModelOptions(key)
+    );
 
-    // eslint-disable-next-line no-return-assign
-    keys.forEach((key, i) => (newOptions[key] = values[i]));
-    Object.keys(newOptions).forEach((el) => {
-      if (el === 'minValue') {
-        newOptions[el] = toNumber(
-          newOptions[el],
+    Object.keys(FilterObjectFromDataAtr).forEach((key) => {
+      if (key === 'minValue') {
+        FilterObjectFromDataAtr[key] = toNumber(
+          FilterObjectFromDataAtr[key],
           DEFAULT_MODEL_OPTIONS.minValue
         );
       }
-      if (el === 'maxValue') {
-        newOptions[el] = toNumber(
-          newOptions[el],
+      if (key === 'maxValue') {
+        FilterObjectFromDataAtr[key] = toNumber(
+          FilterObjectFromDataAtr[key],
           DEFAULT_MODEL_OPTIONS.maxValue
         );
       }
-      if (el === 'valueStart') {
-        newOptions[el] = toNumber(
-          newOptions[el],
+      if (key === 'valueStart') {
+        FilterObjectFromDataAtr[key] = toNumber(
+          FilterObjectFromDataAtr[key],
           DEFAULT_MODEL_OPTIONS.valueStart
         );
       }
-      if (el === 'valueEnd') {
-        newOptions[el] = toNumber(
-          newOptions[el],
+      if (key === 'valueEnd') {
+        FilterObjectFromDataAtr[key] = toNumber(
+          FilterObjectFromDataAtr[key],
           DEFAULT_MODEL_OPTIONS.valueEnd
         );
       }
-      if (el === 'step') {
-        newOptions[el] = toNumber(newOptions[el], DEFAULT_MODEL_OPTIONS.step);
+      if (key === 'step') {
+        FilterObjectFromDataAtr[key] = toNumber(
+          FilterObjectFromDataAtr[key],
+          DEFAULT_MODEL_OPTIONS.step
+        );
       }
-      if (el === 'range') {
-        newOptions[el] = toBoolean(newOptions[el]);
+      if (key === 'range') {
+        FilterObjectFromDataAtr[key] = toBoolean(FilterObjectFromDataAtr[key]);
       }
     });
 
-    return newOptions;
+    return FilterObjectFromDataAtr;
   }
 
   private setDataAtr() {
