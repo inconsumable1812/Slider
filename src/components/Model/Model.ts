@@ -393,6 +393,12 @@ class Model extends Observer {
     if (minValue !== prevMinValue) {
       return this.setOptions({ minValue: roundToRequiredNumber(minValue!) });
     }
+    if (minValue >= maxValue!) {
+      return this.setOptions({
+        maxValue: roundToRequiredNumber(minValue! + step!),
+        minValue: roundToRequiredNumber(minValue!)
+      });
+    }
 
     if (maxValue !== prevMaxValue) {
       return this.setOptions({ maxValue: roundToRequiredNumber(maxValue!) });
@@ -425,7 +431,10 @@ class Model extends Observer {
   private checkValueEndInRange(): void | Partial<ModelOptions> {
     const { minValue, maxValue, step, valueEnd } = this.options;
     if (valueEnd! < minValue!) {
-      return this.setOptions({ valueEnd: minValue! + step! });
+      return this.setOptions({
+        valueEnd: minValue! + step!,
+        valueStart: minValue
+      });
     }
     if (valueEnd! > maxValue!) {
       return this.setOptions({ valueEnd: maxValue });

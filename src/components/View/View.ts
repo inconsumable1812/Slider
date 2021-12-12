@@ -293,7 +293,6 @@ class View extends Observer {
     this.clickOnTrack();
     this.clickOnHandle();
     this.clickOnScale();
-    this.countOfSteps();
   }
 
   private mergeTooltip(): void {
@@ -311,16 +310,6 @@ class View extends Observer {
       firstHandle.setTooltipContent();
       secondHandle?.setTooltipContent();
     }
-  }
-
-  private countOfSteps(): void {
-    const { scale } = this.components;
-    scale.subscribe(ListenersName.countOfSteps, (count: number) => {
-      if (this.getOptions().scalePointCount !== count) {
-        return this.setOptions({ scalePointCount: count });
-      }
-      return null;
-    });
   }
 
   private clickOnHandle(): void {

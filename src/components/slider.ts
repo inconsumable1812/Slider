@@ -1,11 +1,11 @@
 /* eslint-disable no-shadow */
+import { camelCaseToDash } from '../utils/utils';
 import { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS } from './default';
 import { ModelOptions, sliderOptions, ViewOptions } from './type';
 import Model from './Model/Model';
 import Panel from './Panel/Panel';
 import Presenter from './Presenter/Presenter';
 import View from './View/View';
-import { camelCaseToDash } from '../utils/utils';
 
 const create = (selector: HTMLElement, options: sliderOptions = {}) => {
   function prepareOptions(
@@ -57,7 +57,13 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
 
       return { ...modelOptions, ...viewOptions };
     },
-    setDataAtr() {
+    getModel(): Model {
+      return model;
+    },
+    getView(): View {
+      return view;
+    },
+    setDataAtr(): void {
       const keys = Object.keys(this.getOptions());
       const values = Object.values(this.getOptions());
       const container = this.getContainer();

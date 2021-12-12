@@ -9,7 +9,7 @@ declare global {
     JQSlider(
       methodOrOptions?: string | sliderOptions,
       newOptions?: sliderOptions
-    ): JQuery;
+    ): JQuery | sliderOptions;
   }
 }
 

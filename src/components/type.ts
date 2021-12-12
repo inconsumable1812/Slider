@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-shadow */
+import Model from './Model/Model';
 import Panel from './Panel/Panel';
 import Handle from './View/Handle/Handle';
 import Progress from './View/Progress/Progress';
 import Scale from './View/Scale/Scale';
 import Track from './View/Track/Track';
+import View from './View/View';
 
 type ModelOptions = {
   minValue: number;
@@ -53,6 +55,9 @@ type Slider = {
   getFirstValue(): number;
   getSecondValue(): number;
   addControlPanel(): Panel;
+  getModel(): Model;
+  getView(): View;
+  setDataAtr(): void;
 };
 
 type panelElements = {
@@ -92,8 +97,7 @@ enum ListenersName {
   modelValueChange = 'modelValueChange',
   clickOnTrack = 'clickOnTrack',
   clickOnScale = 'clickOnScale',
-  clickOnHandle = 'clickOnHandle',
-  countOfSteps = 'countOfSteps'
+  clickOnHandle = 'clickOnHandle'
 }
 
 type Listeners = {

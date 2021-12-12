@@ -1,60 +1,71 @@
 import findClosestCorrectValue from './findClosestCorrectValue';
 
 const options1 = {
-  minValue: 0,
+  step: 1,
+  value: 21,
   maxValue: 100,
-  progressInPercents: 0.2,
-  step: 1
+  minValue: 0
 };
 const options2 = {
-  minValue: 10,
+  step: 31,
+  value: 40,
   maxValue: 101,
-  progressInPercents: 0.9,
-  step: 31
+  minValue: 10
 };
 
 describe('calculate new value', () => {
   test('check return correct value with options1', () => {
     expect(
       findClosestCorrectValue(
-        options1.minValue,
+        options1.step,
+        options1.value,
         options1.maxValue,
-        options1.progressInPercents,
-        options1.step
+        options1.minValue
       )
-    ).toBe(20);
+    ).toBe(21);
+  });
+
+  test('check return correct closest value when value bigger max', () => {
+    expect(
+      findClosestCorrectValue(
+        options2.step,
+        150,
+        options2.maxValue,
+        options2.minValue
+      )
+    ).toBe(101);
   });
 
   test('check return correct closest value with options2', () => {
     expect(
       findClosestCorrectValue(
-        options2.minValue,
+        options2.step,
+        88,
         options2.maxValue,
-        0.4,
-        options2.step
+        options2.minValue
       )
-    ).toBe(41);
+    ).toBe(101);
   });
 
-  test('another check return correct closest value with options2', () => {
+  test('check return correct closest value when value less min', () => {
     expect(
       findClosestCorrectValue(
-        options2.minValue,
+        options2.step,
+        -50,
         options2.maxValue,
-        0.55,
-        options2.step
+        options2.minValue
       )
-    ).toBe(41);
+    ).toBe(10);
   });
 
   test('check return correct value with options2', () => {
     expect(
       findClosestCorrectValue(
-        options2.minValue,
+        options2.step,
+        options2.value,
         options2.maxValue,
-        options2.progressInPercents,
-        options2.step
+        options2.minValue
       )
-    ).toBe(72);
+    ).toBe(41);
   });
 });

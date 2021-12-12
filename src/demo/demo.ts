@@ -5,12 +5,13 @@ import { sliderOptions } from '../components/type';
 import '../components/slider';
 import '../components/JQplugin';
 
-const slider = $('#app').JQSlider();
+const slider = $('#app').JQSlider() as JQuery;
 slider.JQSlider('addControlPanel');
 
 const sliderSecondConfig: Partial<sliderOptions> = {
-  minValue: 500,
-  maxValue: 1000
+  minValue: 100,
+  maxValue: 33,
+  range: false
 };
 
 const sliderThirdConfig: Partial<sliderOptions> = {
@@ -27,12 +28,12 @@ const sliderFourthConfig: Partial<sliderOptions> = {
   showProgress: true
 };
 
-const sliderSecond = $('#app_2').JQSlider();
+const sliderSecond = $('#app_2').JQSlider(sliderSecondConfig) as JQuery;
 const sliderSecondPanel = sliderSecond.JQSlider('addControlPanel');
 // sliderSecond.JQSlider('setOptions', { minValue: 5 });
 
-const sliderThird = $('#app_3').JQSlider(sliderThirdConfig);
+const sliderThird = $('#app_3').JQSlider(sliderThirdConfig) as JQuery;
 const sliderThirdPanel = sliderThird.JQSlider('addControlPanel');
 
-const sliderFourth = $('#app_4').JQSlider(sliderFourthConfig);
+const sliderFourth = $('#app_4').JQSlider(sliderFourthConfig) as JQuery;
 const sliderFourthPanel = sliderFourth.JQSlider('addControlPanel');

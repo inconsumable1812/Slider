@@ -35,12 +35,24 @@ function findClosestCorrectValue(
 ) {
   const delta = roundToRequiredNumber(value, minValue, step);
 
-  const deltaOfMaxValue = roundToRequiredNumber(maxValue % step);
+  const deltaOfMaxValue = roundToRequiredNumber(
+    Math.abs(maxValue - minValue) % step
+  );
   const lastValueBeforeMax = maxValue - deltaOfMaxValue;
 
   let newValue = roundToRequiredNumber(value);
 
   let incorrectValue = roundToRequiredNumber(newValue, minValue, step);
+
+  if (value >= maxValue) {
+    newValue = maxValue;
+    return newValue;
+  }
+
+  if (value <= minValue) {
+    newValue = minValue;
+    return minValue;
+  }
 
   if (
     isValueNearMaxAndNeedGoUp(newValue, lastValueBeforeMax, deltaOfMaxValue)

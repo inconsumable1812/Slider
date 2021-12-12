@@ -1,4 +1,6 @@
 module.exports = {
-  testEnvironment: 'jsdom'
-  // ... other options
-}
+  testEnvironment: 'jsdom',
+  moduleNameMapper: {
+    '.*\\.scss$': '<rootDir>/src/components/JQplugin.test.ts'
+  }
+};

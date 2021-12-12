@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { ModelOptions, ViewOptions } from '../type';
 import View from './View';
 
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const dom = new JSDOM(`<!DOCTYPE html><div id="app" class="container"></div>`);
-const selector = dom.window.document.querySelector('#app');
+function getExampleDOM() {
+  const div = document.createElement('div');
+  return div;
+}
 
 const modelOptions1: ModelOptions = {
   minValue: 0,
@@ -50,15 +49,17 @@ const viewOptions4: ViewOptions = {
 };
 
 describe('View', () => {
+  let container: HTMLElement;
   let viewDefault: View;
   let viewAllTrue: View;
   let viewAllFalse: View;
   let view4: View;
   beforeEach(() => {
-    viewDefault = new View(selector, modelOptions1);
-    viewAllTrue = new View(selector, modelOptions2, viewOptions2);
-    viewAllFalse = new View(selector, modelOptions1, viewOptions3);
-    view4 = new View(selector, modelOptions1, viewOptions4);
+    container = getExampleDOM();
+    viewDefault = new View(container, modelOptions1);
+    viewAllTrue = new View(container, modelOptions2, viewOptions2);
+    viewAllFalse = new View(container, modelOptions1, viewOptions3);
+    view4 = new View(container, modelOptions1, viewOptions4);
   });
 
   test('root is HTMLElement', () => {
@@ -178,7 +179,7 @@ describe('View', () => {
     expect(fn).toBeCalled();
   });
 
-  test('check mousemove on track', () => {
+  test('check click on handle', () => {
     viewDefault.render();
     const fn = jest.fn();
     viewDefault.subscribe('viewChanged', fn);
@@ -189,18 +190,18 @@ describe('View', () => {
     expect(fn).toBeCalled();
   });
 
-  test('check mousemove on track with range true', () => {
+  test('check click on handle with range true', () => {
     viewAllTrue.render();
     const fn = jest.fn();
     viewAllTrue.subscribe('viewChanged', fn);
-    const firstHandle = viewAllTrue.getComponents().firstHandle;
-    firstHandle.element.dispatchEvent(new Event('pointerdown'));
+    const secondHandle = viewAllTrue.getComponents().secondHandle;
+    secondHandle.element.dispatchEvent(new Event('pointerdown'));
     document.dispatchEvent(new Event('pointermove'));
     document.dispatchEvent(new Event('pointerup'));
     expect(fn).toBeCalled();
   });
 
-  test('check mousemove on track with options 4', () => {
+  test('check click on handle with options 4', () => {
     view4.render();
     const fn = jest.fn();
     view4.subscribe('viewChanged', fn);
@@ -243,5 +244,66 @@ describe('View', () => {
       .getComponents()
       .firstHandle.getTooltipContent()!;
     expect(newFirstTooltip).toBe('5');
+  });
+
+  test('check unMerge tooltip, when range became false', () => {
+    viewAllTrue.render();
+    viewAllTrue.changeModelOptions({ valueStart: 97 });
+    viewAllTrue.updateView();
+    const firstTooltip: string = viewAllTrue
+      .getComponents()
+      .firstHandle.getTooltipContent()!;
+    expect(firstTooltip).toBe('97...99');
+    viewAllTrue.changeModelOptions({ range: false });
+    viewAllTrue.updateView();
+    const newFirstTooltip: string = viewAllTrue
+      .getComponents()
+      .firstHandle.getTooltipContent()!;
+    expect(newFirstTooltip).toBe('97');
+  });
+});
+
+describe('check change data attribute, view', () => {
+  let container: HTMLElement;
+  let viewDefault: View;
+
+  test('check data-scale-point-count', () => {
+    container = getExampleDOM();
+    viewDefault = new View(container, modelOptions1);
+    viewDefault.render();
+    container.setAttribute('data-scale-point-count', 'error');
+    expect(viewDefault.getOptions().scalePointCount).toBe(11);
+  });
+
+  test('check data-show-tooltip', () => {
+    container = getExampleDOM();
+    viewDefault = new View(container, modelOptions1);
+    viewDefault.render();
+    container.setAttribute('data-show-tooltip', 'error');
+    expect(viewDefault.getOptions().showTooltip).toBeTruthy();
+  });
+
+  test('check data-is-vertical', () => {
+    container = getExampleDOM();
+    viewDefault = new View(container, modelOptions1);
+    viewDefault.render();
+    container.setAttribute('data-is-vertical', 'error');
+    expect(viewDefault.getOptions().isVertical).toBeFalsy();
+  });
+
+  test('check data-show-progress', () => {
+    container = getExampleDOM();
+    viewDefault = new View(container, modelOptions1);
+    viewDefault.render();
+    container.setAttribute('data-show-progress', 'error');
+    expect(viewDefault.getOptions().showProgress).toBeFalsy();
+  });
+
+  test('check data-show-scale', () => {
+    container = getExampleDOM();
+    viewDefault = new View(container, modelOptions1);
+    viewDefault.render();
+    container.setAttribute('data-show-scale', 'error');
+    expect(viewDefault.getOptions().showScale).toBeTruthy();
   });
 });

@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import Model from '../Model/Model';
 import { ModelOptions, ViewOptions } from '../type';
 import View from '../View/View';
 import Presenter from './Presenter';
 
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const dom = new JSDOM(`<!DOCTYPE html><div id="app" class="container"></div>`);
-const selector = dom.window.document.querySelector('#app');
+function getExampleDOM() {
+  const div = document.createElement('div');
+  return div;
+}
 
 const DEFAULT_MODEL_OPTIONS: ModelOptions = {
   minValue: 0,
@@ -27,13 +26,15 @@ const DEFAULT_VIEW_OPTIONS: ViewOptions = {
 };
 
 describe('Presenter', () => {
+  let container: HTMLElement;
   let presenter: Presenter;
   let view: View;
   let model: Model;
 
   beforeEach(() => {
-    model = new Model(DEFAULT_MODEL_OPTIONS);
-    view = new View(selector, DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS);
+    container = getExampleDOM();
+    model = new Model(DEFAULT_MODEL_OPTIONS, container);
+    view = new View(container, DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS);
     presenter = new Presenter(model, view);
   });
 

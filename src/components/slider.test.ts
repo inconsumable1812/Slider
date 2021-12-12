@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import Panel from './Panel/Panel';
 import { create } from './slider';
 import { Slider, sliderOptions } from './type';
 
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const dom = new JSDOM(`<!DOCTYPE html><div id="app" class="container"></div>`);
-const selector = dom.window.document.querySelector('#app');
+function getExampleDOM() {
+  const div = document.createElement('div');
+  return div;
+}
 
 const options: sliderOptions = {
   minValue: 0,
@@ -23,29 +22,41 @@ const options: sliderOptions = {
 };
 
 describe('Slider', () => {
+  let container: HTMLElement;
   let slider: Slider;
   let sliderDefault: Slider;
 
   beforeEach(() => {
-    slider = create(selector, options);
+    container = getExampleDOM();
+    slider = create(container, options);
   });
 
   test('check correct return valueStart', () => {
     expect(slider.getFirstValue()).toBe(40);
   });
 
+  test('check correct return valueEnd', () => {
+    expect(slider.getSecondValue()).toBe(50);
+  });
+
   test('check correct return valueStart when default options', () => {
-    sliderDefault = create(selector);
+    sliderDefault = create(container);
     expect(sliderDefault.getFirstValue()).toBe(
       sliderDefault.getOptions().valueStart
     );
   });
 
   test('check correct return container', () => {
-    expect(slider.getContainer()).toBe(selector);
+    expect(slider.getContainer()).toBe(container);
   });
 
   test('check add control panel', () => {
     expect(slider.addControlPanel()).toBeInstanceOf(Panel);
+  });
+
+  test('check correct change options with control panel', () => {
+    slider.addControlPanel();
+    slider.setOptions({ minValue: 10 });
+    expect(slider.getOptions().minValue).toBe(10);
   });
 });

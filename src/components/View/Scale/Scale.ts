@@ -78,7 +78,7 @@ class Scale extends Observer {
     const arrayOfStepsValue: number[] = arrayOfValue[0];
     const arrayOfStepsStyleValue: number[] = arrayOfValue[1];
 
-    const subElementStyle: string = isVertical ? 'top' : 'left';
+    const subElementStyle = isVertical ? 'top' : 'left';
 
     arrayOfStepsValue.forEach((el, index) => {
       this.subElement = render(`

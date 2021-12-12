@@ -1,6 +1,12 @@
 import { MIN_STEP } from '../../constants';
 import { ModelOptions } from '../type';
 import Model from './Model';
+import { DEFAULT_MODEL_OPTIONS } from '../default';
+
+function getExampleDOM() {
+  const div = document.createElement('div');
+  return div;
+}
 
 const optionsMinBiggerMax: Partial<ModelOptions> = {
   minValue: 100,
@@ -130,8 +136,14 @@ const optionsCorrectValueEndInStep: Partial<ModelOptions> = {
 };
 
 describe('Model', () => {
+  let container: HTMLElement;
+
+  beforeEach(() => {
+    container = getExampleDOM();
+  });
+
   test('check default options and set options', () => {
-    const modelDefault = new Model();
+    const modelDefault = new Model(DEFAULT_MODEL_OPTIONS, container);
     modelDefault.setOptions({
       minValue: 200,
       maxValue: 300,
@@ -142,38 +154,49 @@ describe('Model', () => {
   });
 
   test('check when min value are bigger that max value', () => {
-    const modelMinBiggerMax = new Model(optionsMinBiggerMax);
-    expect(modelMinBiggerMax.getOptions().minValue).toBeLessThan(
-      modelMinBiggerMax.getOptions().maxValue
+    const modelMinBiggerMax = new Model(optionsMinBiggerMax, container);
+    expect(modelMinBiggerMax.getOptions().maxValue).toBe(
+      modelMinBiggerMax.getOptions().minValue +
+        modelMinBiggerMax.getOptions().step
     );
   });
 
   test('check step are not bigger than range', () => {
-    const modelRangeLessThanStepSize = new Model(optionsRangeLessThanStepSize);
+    const modelRangeLessThanStepSize = new Model(
+      optionsRangeLessThanStepSize,
+      container
+    );
     expect(modelRangeLessThanStepSize.getOptions().step).toBe(95);
   });
 
   test('check when range are less than step size', () => {
-    const modelsStepNotLess1 = new Model(optionsStepNotLess1);
+    const modelsStepNotLess1 = new Model(optionsStepNotLess1, container);
     expect(modelsStepNotLess1.getOptions().step).toBe(MIN_STEP);
   });
 
   test('check when min value are equal max value', () => {
-    const modelMinEqualMax = new Model(optionsMinEqualMax);
-    expect(modelMinEqualMax.getOptions().minValue).toBeLessThan(
-      modelMinEqualMax.getOptions().maxValue
+    const modelMinEqualMax = new Model(optionsMinEqualMax, container);
+    expect(modelMinEqualMax.getOptions().maxValue).toBe(
+      modelMinEqualMax.getOptions().minValue +
+        modelMinEqualMax.getOptions().step
     );
   });
 
   test('check when value start are less that min value', () => {
-    const ModelValueStartLessMin = new Model(optionsValueStartLessMin);
+    const ModelValueStartLessMin = new Model(
+      optionsValueStartLessMin,
+      container
+    );
     expect(ModelValueStartLessMin.getOptions().minValue).toBeLessThanOrEqual(
       ModelValueStartLessMin.getOptions().valueStart
     );
   });
 
   test('check when value start are bigger that max value, range false', () => {
-    const ModelValueStartBiggerMax = new Model(optionsValueStartBiggerMax);
+    const ModelValueStartBiggerMax = new Model(
+      optionsValueStartBiggerMax,
+      container
+    );
     expect(ModelValueStartBiggerMax.getOptions().maxValue).toBe(
       ModelValueStartBiggerMax.getOptions().valueStart
     );
@@ -181,7 +204,8 @@ describe('Model', () => {
 
   test('check when value start are bigger that max value, range true', () => {
     const ModelValueStartBiggerMaxWithRange = new Model(
-      optionsValueStartBiggerMaxWithRange
+      optionsValueStartBiggerMaxWithRange,
+      container
     );
     expect(
       ModelValueStartBiggerMaxWithRange.getOptions().maxValue
@@ -191,14 +215,17 @@ describe('Model', () => {
   });
 
   test('check when value end are less that min value', () => {
-    const ModelValueEndLessMin = new Model(optionsValueEndLessMin);
+    const ModelValueEndLessMin = new Model(optionsValueEndLessMin, container);
     expect(ModelValueEndLessMin.getOptions().minValue).toBeLessThan(
       ModelValueEndLessMin.getOptions().valueEnd
     );
   });
 
   test('check when value end are bigger that max value', () => {
-    const ModelValueEndBiggerMax = new Model(optionsValueEndBiggerMax);
+    const ModelValueEndBiggerMax = new Model(
+      optionsValueEndBiggerMax,
+      container
+    );
     expect(ModelValueEndBiggerMax.getOptions().maxValue).toBe(
       ModelValueEndBiggerMax.getOptions().valueEnd
     );
@@ -206,7 +233,8 @@ describe('Model', () => {
 
   test('check when range true, value start === value end and value end === max', () => {
     const ModelRangeTrueValueEqualValueEndMax = new Model(
-      optionsRangeTrueValueEqualValueEndMax
+      optionsRangeTrueValueEqualValueEndMax,
+      container
     );
     expect(
       ModelRangeTrueValueEqualValueEndMax.getOptions().valueStart
@@ -215,7 +243,8 @@ describe('Model', () => {
 
   test('check when range true, value start === value end and value start === min', () => {
     const ModelRangeTrueValueEqualValueStartMin = new Model(
-      optionsRangeTrueValueEqualValueStartMin
+      optionsRangeTrueValueEqualValueStartMin,
+      container
     );
     expect(
       ModelRangeTrueValueEqualValueStartMin.getOptions().valueStart
@@ -223,7 +252,10 @@ describe('Model', () => {
   });
 
   test('check when range true, value start === value end', () => {
-    const ModelRangeTrueValueEqual = new Model(optionsRangeTrueValueEqual);
+    const ModelRangeTrueValueEqual = new Model(
+      optionsRangeTrueValueEqual,
+      container
+    );
     expect(ModelRangeTrueValueEqual.getOptions().valueStart).toBeLessThan(
       ModelRangeTrueValueEqual.getOptions().valueEnd
     );
@@ -231,7 +263,8 @@ describe('Model', () => {
 
   test('check when range true, value start > value end', () => {
     const ModelRangeTrueValueStartBigger = new Model(
-      optionsRangeTrueValueStartBigger
+      optionsRangeTrueValueStartBigger,
+      container
     );
     expect(ModelRangeTrueValueStartBigger.getOptions().valueStart).toBeLessThan(
       ModelRangeTrueValueStartBigger.getOptions().valueEnd
@@ -240,7 +273,8 @@ describe('Model', () => {
 
   test('check when range false, value start >= value end and value start !== max', () => {
     const ModelRangeFalseValueStartBiggerNotEqualMax = new Model(
-      optionsRangeFalseValueStartBiggerNotEqualMax
+      optionsRangeFalseValueStartBiggerNotEqualMax,
+      container
     );
     expect(
       ModelRangeFalseValueStartBiggerNotEqualMax.getOptions().valueStart
@@ -251,7 +285,8 @@ describe('Model', () => {
 
   test('check when range false, value start === max', () => {
     const ModelRangeFalseValueStartEqualMax = new Model(
-      optionsRangeFalseValueStartEqualMax
+      optionsRangeFalseValueStartEqualMax,
+      container
     );
     expect(ModelRangeFalseValueStartEqualMax.getOptions().valueStart).toBe(
       ModelRangeFalseValueStartEqualMax.getOptions().valueEnd
@@ -260,7 +295,8 @@ describe('Model', () => {
 
   test('check correct value start in step size', () => {
     const ModelCorrectValueStartInStep = new Model(
-      optionsCorrectValueStartInStep
+      optionsCorrectValueStartInStep,
+      container
     );
     expect(ModelCorrectValueStartInStep.getOptions().valueStart).toBe(
       ModelCorrectValueStartInStep.getOptions().minValue
@@ -268,7 +304,10 @@ describe('Model', () => {
   });
 
   test('check correct value end in step size', () => {
-    const ModelCorrectValueEndInStep = new Model(optionsCorrectValueEndInStep);
+    const ModelCorrectValueEndInStep = new Model(
+      optionsCorrectValueEndInStep,
+      container
+    );
     expect(ModelCorrectValueEndInStep.getOptions().valueEnd).toBe(100);
   });
 });

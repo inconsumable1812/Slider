@@ -12,15 +12,15 @@ class Presenter {
     this.connect();
   }
 
-  private getModelOptions(): ModelOptions {
+  public getModelOptions(): ModelOptions {
     return this.model.getOptions();
   }
 
-  private setModelOptions(modelOptions: Partial<ModelOptions>): void {
+  public setModelOptions(modelOptions: Partial<ModelOptions>): void {
     this.model.setOptions(modelOptions);
   }
 
-  private updateView(): void {
+  public updateView(): void {
     this.view.changeModelOptions(this.getModelOptions());
     this.view.updateView();
   }

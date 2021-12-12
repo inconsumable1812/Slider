@@ -2,11 +2,10 @@ import { create } from '../slider';
 import { Slider, sliderOptions } from '../type';
 import Panel from './Panel';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const dom = new JSDOM(`<!DOCTYPE html><div id="app" class="container"></div>`);
-const selector = dom.window.document.querySelector('#app');
+function getExampleDOM() {
+  const div = document.createElement('div');
+  return div;
+}
 
 const options: sliderOptions = {
   minValue: 0,
@@ -23,6 +22,7 @@ const options: sliderOptions = {
 };
 
 describe('Panel', () => {
+  let container: HTMLElement;
   let panel: Panel;
   let slider: Slider;
   const changeEvent = new InputEvent('change');
@@ -34,13 +34,14 @@ describe('Panel', () => {
   const blur = new Event('blur');
 
   beforeEach(() => {
-    slider = create(selector, options);
-    panel = new Panel(selector, slider);
+    container = getExampleDOM();
+    slider = create(container, options);
+    panel = new Panel(container, slider, slider.getModel(), slider.getView());
     panel.init();
   });
 
   test('root is HTMLElement', () => {
-    expect(panel.root).toBeInstanceOf(HTMLElement);
+    expect(panel.getRoot()).toBeInstanceOf(HTMLElement);
   });
 
   test('check correct change minValue', () => {
@@ -196,7 +197,8 @@ describe('Panel', () => {
       const minValue = panel.getInputs().minValue;
       minValue.value = newMin.toString();
       minValue.dispatchEvent(changeEvent);
-      expect(slider.getOptions().minValue).toBe(99);
+      expect(slider.getOptions().minValue).toBe(101);
+      expect(slider.getOptions().maxValue).toBe(102);
     });
 
     test('when new minValue bigger than range', () => {
@@ -256,7 +258,8 @@ describe('Panel', () => {
       range.dispatchEvent(changeEvent);
       valueStart.value = newValue.toString();
       valueStart.dispatchEvent(changeEvent);
-      expect(slider.getOptions().valueStart).toBe(40);
+      expect(slider.getOptions().valueStart).toBe(60);
+      expect(slider.getOptions().valueEnd).toBe(61);
     });
 
     test('when new valueEnd less minValue', () => {
@@ -264,7 +267,8 @@ describe('Panel', () => {
       const valueEnd = panel.getInputs().valueEnd;
       valueEnd.value = newValue.toString();
       valueEnd.dispatchEvent(changeEvent);
-      expect(slider.getOptions().valueEnd).toBe(50);
+      expect(slider.getOptions().valueStart).toBe(0);
+      expect(slider.getOptions().valueEnd).toBe(1);
     });
 
     test('when new valueEnd bigger maxValue', () => {
@@ -284,7 +288,7 @@ describe('Panel', () => {
       range.dispatchEvent(changeEvent);
       valueEnd.value = newValue.toString();
       valueEnd.dispatchEvent(changeEvent);
-      expect(slider.getOptions().valueEnd).toBe(50);
+      expect(slider.getOptions().valueEnd).toBe(20);
     });
 
     test('when new step bigger than range', () => {

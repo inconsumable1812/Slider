@@ -61,7 +61,7 @@ describe('Handle', () => {
 
   test('check correct set z-index', () => {
     handel.setStyle(98);
-    expect(handel.element.style.zIndex).toBe('50');
+    expect(handel.element.style.zIndex).toBe('2');
   });
 
   describe('is vertical', () => {
@@ -100,7 +100,9 @@ describe('Handle', () => {
 
   test('return correct class to show tooltip', () => {
     handelVertical.showTooltipMethod();
-    expect(handelVertical.getElement().querySelector('.range-slider__tooltip_hide')).toBeNull();
+    expect(
+      handelVertical.getElement().querySelector('.range-slider__tooltip_hide')
+    ).toBeNull();
   });
 
   test('return correct value when set new value', () => {

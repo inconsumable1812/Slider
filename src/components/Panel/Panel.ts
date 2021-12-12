@@ -27,6 +27,10 @@ class Panel {
     this.updateOptionsFromSlider();
   }
 
+  public getRoot() {
+    return this.root;
+  }
+
   private updateOptionsFromSlider() {
     this.model.subscribe(
       ListenersName.modelValueChange,
