@@ -16,7 +16,7 @@ class Panel {
   private inputs!: panelInputs;
 
   constructor(
-    private selector: Element,
+    private selector: HTMLElement,
     private slider: Slider,
     private model: Model,
     private view: View
@@ -27,20 +27,8 @@ class Panel {
     this.updateOptionsFromSlider();
   }
 
-  public getRoot() {
+  public getRoot(): HTMLElement {
     return this.root;
-  }
-
-  private updateOptionsFromSlider() {
-    this.model.subscribe(
-      ListenersName.modelValueChange,
-      this.setOptionsFromSlider.bind(this)
-    );
-
-    this.view.subscribe(
-      ListenersName.viewChanged,
-      this.setOptionsFromSlider.bind(this)
-    );
   }
 
   public getInputs(): panelInputs {
@@ -187,6 +175,18 @@ class Panel {
 
     this.addListeners();
     this.setOptionsFromSlider();
+  }
+
+  private updateOptionsFromSlider(): void {
+    this.model.subscribe(
+      ListenersName.modelValueChange,
+      this.setOptionsFromSlider.bind(this)
+    );
+
+    this.view.subscribe(
+      ListenersName.viewChanged,
+      this.setOptionsFromSlider.bind(this)
+    );
   }
 
   private getMaxValue(): Partial<ModelOptions> {

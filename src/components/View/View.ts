@@ -500,7 +500,7 @@ class View extends Observer {
     );
   }
 
-  private setDataAtr() {
+  private setDataAtr(): void {
     const keys = Object.keys(this.getOptions());
     const values = Object.values(this.getOptions());
     const container = this.selector;
@@ -511,7 +511,7 @@ class View extends Observer {
     );
   }
 
-  private observeAtr() {
+  private observeAtr(): void {
     this.observeScalePointCountAtr();
     this.observeShowTooltipAtr();
     this.observeIsVerticalAtr();
@@ -519,7 +519,7 @@ class View extends Observer {
     this.observeShowScaleAtr();
   }
 
-  private observeScalePointCountAtr() {
+  private observeScalePointCountAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'scalePointCount';
       const val = this.selector.dataset[key];
@@ -549,7 +549,7 @@ class View extends Observer {
     });
   }
 
-  private observeShowTooltipAtr() {
+  private observeShowTooltipAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'showTooltip';
       const val = this.selector.dataset[key];
@@ -579,7 +579,7 @@ class View extends Observer {
     });
   }
 
-  private observeIsVerticalAtr() {
+  private observeIsVerticalAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'isVertical';
       const val = this.selector.dataset[key];
@@ -609,7 +609,7 @@ class View extends Observer {
     });
   }
 
-  private observeShowProgressAtr() {
+  private observeShowProgressAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'showProgress';
       const val = this.selector.dataset[key];
@@ -639,7 +639,7 @@ class View extends Observer {
     });
   }
 
-  private observeShowScaleAtr() {
+  private observeShowScaleAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'showScale';
       const val = this.selector.dataset[key];

@@ -7,11 +7,6 @@ class Presenter {
     this.render();
   }
 
-  private render(): void {
-    this.view.render();
-    this.connect();
-  }
-
   public getModelOptions(): ModelOptions {
     return this.model.getOptions();
   }
@@ -23,6 +18,11 @@ class Presenter {
   public updateView(): void {
     this.view.changeModelOptions(this.getModelOptions());
     this.view.updateView();
+  }
+
+  private render(): void {
+    this.view.render();
+    this.connect();
   }
 
   private connect(): void {

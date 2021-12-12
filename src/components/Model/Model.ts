@@ -117,7 +117,7 @@ class Model extends Observer {
     return FilterObjectFromDataAtr;
   }
 
-  private setDataAtr() {
+  private setDataAtr(): void {
     const keys = Object.keys(this.getOptions());
     const values = Object.values(this.getOptions());
     const container = this.selector;
@@ -128,7 +128,7 @@ class Model extends Observer {
     );
   }
 
-  private observeAtr() {
+  private observeAtr(): void {
     this.observeValueStartAtr();
     this.observeValueEndAtr();
     this.observeMinValueAtr();
@@ -137,7 +137,7 @@ class Model extends Observer {
     this.observeRangeAtr();
   }
 
-  private observeValueStartAtr() {
+  private observeValueStartAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'valueStart';
       const val = this.selector.dataset[key];
@@ -167,7 +167,7 @@ class Model extends Observer {
     });
   }
 
-  private observeValueEndAtr() {
+  private observeValueEndAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'valueEnd';
       const val = this.selector.dataset[key];
@@ -194,7 +194,7 @@ class Model extends Observer {
     });
   }
 
-  private observeMinValueAtr() {
+  private observeMinValueAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'minValue';
       const val = this.selector.dataset[key];
@@ -221,7 +221,7 @@ class Model extends Observer {
     });
   }
 
-  private observeMaxValueAtr() {
+  private observeMaxValueAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'maxValue';
       const val = this.selector.dataset[key];
@@ -248,7 +248,7 @@ class Model extends Observer {
     });
   }
 
-  private observeRangeAtr() {
+  private observeRangeAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'range';
       const val = this.selector.dataset[key];
@@ -275,7 +275,7 @@ class Model extends Observer {
     });
   }
 
-  private observeStepAtr() {
+  private observeStepAtr(): void {
     const callback: MutationCallback = (mutationRecords) => {
       const key = 'step';
       const val = this.selector.dataset[key];
