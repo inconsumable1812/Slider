@@ -181,11 +181,9 @@ class Handle extends Observer {
     const valueInPercentRoundTo4: number =
       Math.round(valueInPercent * 10000) / 10000;
 
-    const delta: number = track.getMaxValue() - track.getMinValue();
+    const delta: number = Math.abs(track.getMaxValue() - track.getMinValue());
 
-    const valueCorrectInStepSize: number =
-      delta * valueInPercentRoundTo4 -
-      ((delta * valueInPercentRoundTo4) % step);
+    const valueCorrectInStepSize: number = delta * valueInPercentRoundTo4;
 
     let newValue: number =
       roundToRequiredNumber(track.getMinValue()) +
