@@ -56,10 +56,25 @@ describe('View', () => {
   let view4: View;
   beforeEach(() => {
     container = getExampleDOM();
-    viewDefault = new View(container, modelOptions1);
-    viewAllTrue = new View(container, modelOptions2, viewOptions2);
-    viewAllFalse = new View(container, modelOptions1, viewOptions3);
-    view4 = new View(container, modelOptions1, viewOptions4);
+    viewDefault = new View({
+      selector: container,
+      modelOptions: modelOptions1
+    });
+    viewAllTrue = new View({
+      selector: container,
+      modelOptions: modelOptions2,
+      viewOptions: viewOptions2
+    });
+    viewAllFalse = new View({
+      selector: container,
+      modelOptions: modelOptions1,
+      viewOptions: viewOptions3
+    });
+    view4 = new View({
+      selector: container,
+      modelOptions: modelOptions1,
+      viewOptions: viewOptions4
+    });
   });
 
   test('root is HTMLElement', () => {
@@ -269,7 +284,10 @@ describe('check change data attribute, view', () => {
 
   test('check data-scale-point-count', () => {
     container = getExampleDOM();
-    viewDefault = new View(container, modelOptions1);
+    viewDefault = new View({
+      selector: container,
+      modelOptions: modelOptions1
+    });
     viewDefault.render();
     container.setAttribute('data-scale-point-count', 'error');
     expect(viewDefault.getOptions().scalePointCount).toBe(11);
@@ -277,7 +295,10 @@ describe('check change data attribute, view', () => {
 
   test('check data-show-tooltip', () => {
     container = getExampleDOM();
-    viewDefault = new View(container, modelOptions1);
+    viewDefault = new View({
+      selector: container,
+      modelOptions: modelOptions1
+    });
     viewDefault.render();
     container.setAttribute('data-show-tooltip', 'error');
     expect(viewDefault.getOptions().showTooltip).toBeTruthy();
@@ -285,7 +306,10 @@ describe('check change data attribute, view', () => {
 
   test('check data-is-vertical', () => {
     container = getExampleDOM();
-    viewDefault = new View(container, modelOptions1);
+    viewDefault = new View({
+      selector: container,
+      modelOptions: modelOptions1
+    });
     viewDefault.render();
     container.setAttribute('data-is-vertical', 'error');
     expect(viewDefault.getOptions().isVertical).toBeFalsy();
@@ -293,7 +317,10 @@ describe('check change data attribute, view', () => {
 
   test('check data-show-progress', () => {
     container = getExampleDOM();
-    viewDefault = new View(container, modelOptions1);
+    viewDefault = new View({
+      selector: container,
+      modelOptions: modelOptions1
+    });
     viewDefault.render();
     container.setAttribute('data-show-progress', 'error');
     expect(viewDefault.getOptions().showProgress).toBeFalsy();
@@ -301,7 +328,10 @@ describe('check change data attribute, view', () => {
 
   test('check data-show-scale', () => {
     container = getExampleDOM();
-    viewDefault = new View(container, modelOptions1);
+    viewDefault = new View({
+      selector: container,
+      modelOptions: modelOptions1
+    });
     viewDefault.render();
     container.setAttribute('data-show-scale', 'error');
     expect(viewDefault.getOptions().showScale).toBeTruthy();

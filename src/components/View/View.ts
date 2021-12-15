@@ -17,7 +17,8 @@ import {
   ModelOptions,
   ViewComponents,
   ViewOptions,
-  ListenersName
+  ListenersName,
+  viewProps
 } from '../type';
 import { DEFAULT_VIEW_OPTIONS } from '../default';
 import Observer from '../Observer/Observer';
@@ -42,12 +43,19 @@ import {
 class View extends Observer {
   private components!: ViewComponents;
   root!: HTMLElement;
-  constructor(
-    private selector: HTMLElement,
-    private modelOptions: ModelOptions,
-    private viewOptions: ViewOptions = DEFAULT_VIEW_OPTIONS
-  ) {
+  private selector: HTMLElement;
+  private modelOptions: ModelOptions;
+  private viewOptions: ViewOptions;
+
+  constructor({
+    selector,
+    modelOptions,
+    viewOptions = DEFAULT_VIEW_OPTIONS
+  }: viewProps) {
     super();
+    this.selector = selector;
+    this.modelOptions = modelOptions;
+    this.viewOptions = viewOptions;
     this.initViewOptions();
     this.checkScalePointCount();
     this.observeAtr();
@@ -199,28 +207,39 @@ class View extends Observer {
     <div class="range-slider ${isVerticalRender}">
     `);
 
-    const trackInstance = new Track(minValue, maxValue, isVertical!, step);
+    const trackInstance = new Track({
+      minValue,
+      maxValue,
+      isVertical: isVertical!,
+      step
+    });
 
     this.components = {
       track: trackInstance,
-      firstHandle: new Handle(
-        1,
-        valueStart,
+      firstHandle: new Handle({
+        handleNumber: 1,
+        value: valueStart,
         showTooltip,
         isVertical,
-        trackInstance,
+        track: trackInstance,
         step
-      ),
-      secondHandle: new Handle(
-        2,
-        valueEnd,
+      }),
+      secondHandle: new Handle({
+        handleNumber: 2,
+        value: valueEnd,
         showTooltip,
         isVertical,
-        trackInstance,
+        track: trackInstance,
         step
-      ),
+      }),
       progress: new Progress(isVertical!),
-      scale: new Scale(minValue, maxValue, scalePointCount!, step, isVertical!)
+      scale: new Scale({
+        minValue,
+        maxValue,
+        scalePointCount: scalePointCount!,
+        step,
+        isVertical
+      })
     };
 
     const { track, firstHandle, secondHandle, scale, progress } =

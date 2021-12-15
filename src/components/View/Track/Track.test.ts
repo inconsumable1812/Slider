@@ -18,19 +18,19 @@ describe('Track', () => {
   let track: Track;
   let trackVertical: Track;
   beforeEach(() => {
-    track = new Track(
-      options.minValue,
-      options.maxValue,
-      options.isVertical,
-      options.step
-    );
+    track = new Track({
+      minValue: options.minValue,
+      maxValue: options.maxValue,
+      isVertical: options.isVertical,
+      step: options.step
+    });
 
-    trackVertical = new Track(
-      optionsVertical.minValue,
-      optionsVertical.maxValue,
-      optionsVertical.isVertical,
-      optionsVertical.step
-    );
+    trackVertical = new Track({
+      minValue: optionsVertical.minValue,
+      maxValue: optionsVertical.maxValue,
+      isVertical: optionsVertical.isVertical,
+      step: optionsVertical.step
+    });
   });
 
   test('element is type of HTMLElement', () => {

@@ -21,20 +21,20 @@ describe('Scale', () => {
   let scale: Scale;
   let scaleVertical: Scale;
   beforeEach(() => {
-    scale = new Scale(
-      options.minValue,
-      options.maxValue,
-      options.scalePointCount,
-      options.step,
-      options.isVertical
-    );
-    scaleVertical = new Scale(
-      optionsVertical.minValue,
-      optionsVertical.maxValue,
-      optionsVertical.scalePointCount,
-      optionsVertical.step,
-      optionsVertical.isVertical
-    );
+    scale = new Scale({
+      minValue: options.minValue,
+      maxValue: options.maxValue,
+      scalePointCount: options.scalePointCount,
+      step: options.step,
+      isVertical: options.isVertical
+    });
+    scaleVertical = new Scale({
+      minValue: optionsVertical.minValue,
+      maxValue: optionsVertical.maxValue,
+      scalePointCount: optionsVertical.scalePointCount,
+      step: optionsVertical.step,
+      isVertical: optionsVertical.isVertical
+    });
   });
 
   test('element is type of HTMLElement', () => {
@@ -47,11 +47,18 @@ describe('Scale', () => {
 
   test('correct delete scale point', () => {
     scale.deleteScalePoint();
-    expect(scale.element.querySelector('.range-slider__scale_point')).toBe(null);
+    expect(scale.element.querySelector('.range-slider__scale_point')).toBe(
+      null
+    );
   });
 
   test('check set scale options is correct', () => {
-    const newOptions = { maxValue: 200, minValue: 20, step: 30, scalePointCount: 3 };
+    const newOptions = {
+      maxValue: 200,
+      minValue: 20,
+      step: 30,
+      scalePointCount: 3
+    };
     scale.setScaleOptions(
       newOptions.maxValue,
       newOptions.minValue,
@@ -69,7 +76,12 @@ describe('Scale', () => {
 
   test('check correct change orientation to vertical', () => {
     scale.setOrientation(true);
-    const newOptions = { maxValue: 180, minValue: 33, step: 35, scalePointCount: 4 };
+    const newOptions = {
+      maxValue: 180,
+      minValue: 33,
+      step: 35,
+      scalePointCount: 4
+    };
     scale.setScaleOptions(
       newOptions.maxValue,
       newOptions.minValue,
@@ -81,7 +93,12 @@ describe('Scale', () => {
 
   test('check correct change orientation to horizontal', () => {
     scaleVertical.setOrientation(false);
-    const newOptions = { maxValue: 333, minValue: 25, step: 18, scalePointCount: 4 };
+    const newOptions = {
+      maxValue: 333,
+      minValue: 25,
+      step: 18,
+      scalePointCount: 4
+    };
     scaleVertical.setScaleOptions(
       newOptions.maxValue,
       newOptions.minValue,

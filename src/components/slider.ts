@@ -34,11 +34,11 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
   const model = new Model(updateModelOptions, selector);
   const modelOptionsInit = model.getOptions();
 
-  const view = new View(
+  const view = new View({
     selector,
-    modelOptionsInit,
-    updateViewOptions as ViewOptions
-  );
+    modelOptions: modelOptionsInit,
+    viewOptions: updateViewOptions as ViewOptions
+  });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const presenter = new Presenter(model, view);
 
@@ -101,7 +101,7 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
       return model.getSecondValue();
     },
     addControlPanel(): Panel {
-      panel = new Panel(selector, slider, model, view);
+      panel = new Panel({ selector, slider, model, view });
       panel.init();
       return panel;
     },

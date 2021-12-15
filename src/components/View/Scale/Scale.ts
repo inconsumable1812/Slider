@@ -5,20 +5,30 @@ import {
 } from '../../../constants';
 import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
-import { ListenersName } from '../../type';
+import { ListenersName, scaleProps } from '../../type';
 
 class Scale extends Observer {
   element!: HTMLElement;
   subElement!: HTMLElement;
+  private minValue: number;
+  private maxValue: number;
+  private scalePointCount: number;
+  private step: number;
+  private isVertical: boolean;
 
-  constructor(
-    private minValue: number,
-    private maxValue: number,
-    private scalePointCount: number,
-    private step: number,
-    private isVertical: boolean
-  ) {
+  constructor({
+    minValue,
+    maxValue,
+    scalePointCount,
+    step,
+    isVertical
+  }: scaleProps) {
     super();
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+    this.scalePointCount = scalePointCount;
+    this.step = step;
+    this.isVertical = isVertical;
     this.init();
   }
 

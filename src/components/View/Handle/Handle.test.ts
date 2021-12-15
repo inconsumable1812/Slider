@@ -27,23 +27,23 @@ describe('Handle', () => {
   let handel: Handle;
   let handelVertical: Handle;
   beforeEach(() => {
-    handel = new Handle(
-      firstHandleNumber,
-      valueStart!,
-      showTooltip!,
-      isVerticalFalse,
-      firstTrack,
-      step!
-    );
+    handel = new Handle({
+      handleNumber: firstHandleNumber,
+      value: valueStart!,
+      showTooltip: showTooltip!,
+      isVertical: isVerticalFalse,
+      track: firstTrack,
+      step: step!
+    });
 
-    handelVertical = new Handle(
-      secondHandleNumber,
-      valueStart!,
-      showTooltip!,
-      isVertical!,
-      secondTrack,
-      step!
-    );
+    handelVertical = new Handle({
+      handleNumber: secondHandleNumber,
+      value: valueStart!,
+      showTooltip: showTooltip!,
+      isVertical: isVertical!,
+      track: secondTrack,
+      step: step!
+    });
   });
 
   test('element must be as HTMLelement', () => {

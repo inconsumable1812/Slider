@@ -6,22 +6,34 @@ import {
 import { roundToRequiredNumber } from '../../../utils/utils';
 import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
-import { ListenersName } from '../../type';
+import { ListenersName, handleProps } from '../../type';
 import Track from '../Track/Track';
 
 class Handle extends Observer {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };
   element!: HTMLElement;
+  private handleNumber: number;
+  private value: number;
+  private showTooltip: boolean;
+  private isVertical: boolean;
+  private track: Track;
+  private step: number;
 
-  constructor(
-    private handleNumber: number,
-    private value: number,
-    private showTooltip: boolean,
-    private isVertical: boolean,
-    private track: Track,
-    private step: number
-  ) {
+  constructor({
+    handleNumber,
+    value,
+    showTooltip,
+    isVertical,
+    track,
+    step
+  }: handleProps) {
     super();
+    this.handleNumber = handleNumber;
+    this.value = value;
+    this.showTooltip = showTooltip;
+    this.isVertical = isVertical;
+    this.track = track;
+    this.step = step;
     this.toHtml();
   }
 

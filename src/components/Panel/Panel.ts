@@ -5,7 +5,8 @@ import {
   panelInputs,
   Slider,
   ViewOptions,
-  ListenersName
+  ListenersName,
+  panelProps
 } from '../type';
 import Model from '../Model/Model';
 import View from '../View/View';
@@ -14,13 +15,17 @@ class Panel {
   private root!: HTMLElement;
   private elements!: panelElements;
   private inputs!: panelInputs;
+  private selector: HTMLElement;
+  private slider: Slider;
+  private model: Model;
+  private view: View;
 
-  constructor(
-    private selector: HTMLElement,
-    private slider: Slider,
-    private model: Model,
-    private view: View
-  ) {}
+  constructor({ selector, slider, model, view }: panelProps) {
+    this.selector = selector;
+    this.slider = slider;
+    this.model = model;
+    this.view = view;
+  }
 
   public init(): void {
     this.render();

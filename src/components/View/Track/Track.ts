@@ -1,18 +1,21 @@
-import Observer from '../../Observer/Observer';
-import { ListenersName } from '../../type';
-import findClosestCorrectValue from '../../../utils/findClosestCorrectValue';
 import { render } from '../../../utils/utils';
+import findClosestCorrectValue from '../../../utils/findClosestCorrectValue';
+import Observer from '../../Observer/Observer';
+import { ListenersName, trackProps } from '../../type';
 
 class Track extends Observer {
   element!: HTMLElement;
+  minValue: number;
+  maxValue: number;
+  isVertical: boolean;
+  step: number;
 
-  constructor(
-    private minValue: number,
-    private maxValue: number,
-    private isVertical: boolean,
-    private step: number
-  ) {
+  constructor({ minValue, maxValue, isVertical, step }: trackProps) {
     super();
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+    this.isVertical = isVertical;
+    this.step = step;
     this.toHtml();
   }
 

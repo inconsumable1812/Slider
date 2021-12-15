@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-shadow */
 import Model from './Model/Model';
 import Panel from './Panel/Panel';
 import Handle from './View/Handle/Handle';
@@ -88,8 +86,47 @@ type panelInputs = {
   isVertical: HTMLInputElement;
 };
 
+type handleProps = {
+  handleNumber: number;
+  value: number;
+  showTooltip: boolean;
+  isVertical: boolean;
+  track: Track;
+  step: number;
+};
+
+type scaleProps = {
+  minValue: number;
+  maxValue: number;
+  scalePointCount: number;
+  step: number;
+  isVertical: boolean;
+};
+
+type trackProps = {
+  minValue: number;
+  maxValue: number;
+  isVertical: boolean;
+  step: number;
+};
+
+type viewProps = {
+  selector: HTMLElement;
+  modelOptions: ModelOptions;
+  viewOptions?: ViewOptions;
+};
+
+type panelProps = {
+  selector: HTMLElement;
+  slider: Slider;
+  model: Model;
+  view: View;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ListenersFunction = (...args: any) => void;
 
+// eslint-disable-next-line no-shadow
 enum ListenersName {
   check = 'check',
   check1 = 'check1',
@@ -119,5 +156,10 @@ export {
   Listeners,
   ListenersFunction,
   ListenersName,
-  PrepareModelOptionsFromDataFtr
+  PrepareModelOptionsFromDataFtr,
+  handleProps,
+  scaleProps,
+  trackProps,
+  viewProps,
+  panelProps
 };
