@@ -327,7 +327,7 @@ class View extends Observer {
     const firstHandleRightSide = firstHandle.getRectangleTooltip().right;
     const secondHandleLeftSide = secondHandle.getRectangleTooltip().left;
 
-    if (firstHandleRightSide > secondHandleLeftSide) {
+    if (firstHandleRightSide >= secondHandleLeftSide) {
       firstHandle.setTooltipContent(
         `${firstHandleTooltip}...${secondHandleTooltip}`
       );

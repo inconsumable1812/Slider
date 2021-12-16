@@ -107,7 +107,7 @@ class Handle extends Observer {
     this.elements.tooltip.textContent = '';
   }
 
-  hideTooltipContent() {
+  hideTooltipContent(): void {
     this.elements.tooltip.classList.add(TOOLTIP_HIDE_CLASS);
   }
 

@@ -252,7 +252,40 @@ describe('View', () => {
     const firstTooltip: string = viewAllTrue
       .getComponents()
       .firstHandle.getTooltipContent()!;
+
+    const firstHandle = viewAllTrue.getComponents().firstHandle;
+    const secondHandle = viewAllTrue.getComponents().secondHandle;
+    firstHandle.getRectangleTooltip = jest.fn().mockReturnValue({
+      bottom: 84.48,
+      height: 21.99,
+      left: 544.1,
+      right: 602.7,
+      top: 62.49,
+      width: 58.55,
+      x: 544.1,
+      y: 62.49
+    });
+    secondHandle.getRectangleTooltip = jest.fn().mockReturnValue({
+      bottom: 84.48,
+      height: 21.99,
+      left: 544.1,
+      right: 602.7,
+      top: 62.49,
+      width: 58.55,
+      x: 544.1,
+      y: 62.49
+    });
     expect(firstTooltip).toBe('97...99');
+    firstHandle.getRectangleTooltip = jest.fn().mockReturnValue({
+      bottom: 8.48,
+      height: 2.99,
+      left: 54.1,
+      right: 60.7,
+      top: 6.49,
+      width: 5.55,
+      x: 54.1,
+      y: 6.49
+    });
     viewAllTrue.changeModelOptions({ valueStart: 5 });
     viewAllTrue.updateView();
     const newFirstTooltip: string = viewAllTrue
