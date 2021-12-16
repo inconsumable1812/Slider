@@ -2,53 +2,64 @@
   "name": "slider",
   "version": "1.0.0",
   "description": "Metalamp, task 4",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest",
-    "test-cov": "npm run test -- --coverage",
-    "start": "cross-env NODE_ENV=development webpack serve",
-    "build": "cross-env NODE_ENV=production webpack --mode production",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
-    "deploy": "gh-pages -d dist"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/inconsumable1812/Slider.git"
-  },
   "keywords": [
     "MetaLamp",
     "js",
     "slider"
   ],
-  "author": "Kirill Lanskikh",
-  "license": "ISC",
+  "homepage": "https://github.com/inconsumable1812/Slider#readme",
   "bugs": {
     "url": "https://github.com/inconsumable1812/Slider/issues"
   },
-  "homepage": "https://github.com/inconsumable1812/Slider#readme",
-  "browserslist": "> 0.25%, not dead",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inconsumable1812/Slider.git"
+  },
+  "license": "ISC",
+  "author": "Kirill Lanskikh",
+  "main": "index.js",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack --mode production",
+    "deploy": "gh-pages -d dist",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
+    "start": "cross-env NODE_ENV=development webpack serve",
+    "test": "jest",
+    "test-cov": "npm run test -- --coverage"
+  },
   "babel": {
     "presets": [
       "@babel/preset-env"
     ]
   },
-  "devDependencies": {
+  "browserslist": "> 0.25%, not dead",
+  "dependencies": {
     "@babel/core": "^7.15.5",
-    "@babel/eslint-parser": "^7.15.4",
+    "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.15.0",
-    "@types/jest": "^27.0.2",
-    "@types/jquery": "^3.5.6",
-    "@types/jsdom": "^16.2.13",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^9.0.1",
     "cross-env": "^7.0.3",
     "css-loader": "^6.2.0",
     "eslint": "^7.32.0",
+    "eslint-webpack-plugin": "^3.0.1",
+    "html-webpack-plugin": "^5.3.2",
+    "jquery": "^3.6.0",
+    "mini-css-extract-plugin": "^2.3.0",
+    "sass": "^1.40.0",
+    "sass-loader": "^12.1.0",
+    "webpack": "^5.52.1",
+    "webpack-cli": "^4.8.0"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.15.4",
+    "@types/jest": "^27.0.2",
+    "@types/jquery": "^3.5.6",
+    "@types/jsdom": "^16.2.13",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "babel-eslint": "^10.1.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-airbnb-typescript": "^14.0.1",
     "eslint-config-prettier": "^8.3.0",
@@ -57,23 +68,11 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jest": "^25.2.2",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-webpack-plugin": "^3.0.1",
     "gh-pages": "^3.2.3",
-    "html-webpack-plugin": "^5.3.2",
     "jest": "^27.2.5",
-    "mini-css-extract-plugin": "^2.3.0",
     "prettier": "2.4.1",
-    "sass": "^1.40.0",
-    "sass-loader": "^12.1.0",
-    "terser-webpack-plugin": "^5.2.4",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "typescript": "^4.4.4",
-    "webpack": "^5.52.1",
-    "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.2.1"
-  },
-  "dependencies": {
-    "@babel/polyfill": "^7.12.1",
-    "jquery": "^3.6.0"
   }
 }
