@@ -105,7 +105,14 @@ class Handle extends Observer {
 
   clearTooltipContent(): void {
     this.elements.tooltip.textContent = '';
+  }
+
+  hideTooltipContent() {
     this.elements.tooltip.classList.add(TOOLTIP_HIDE_CLASS);
+  }
+
+  getRectangleTooltip(): DOMRect {
+    return this.elements.tooltip.getBoundingClientRect();
   }
 
   setTooltipContent(value?: string): void {
@@ -167,7 +174,7 @@ class Handle extends Observer {
   }
 
   private handleMouseMove(event: MouseEvent): void {
-    const { track, isVertical, step } = this;
+    const { track, isVertical } = this;
 
     const valueInPx: number = isVertical
       ? event.clientY - track.element.getBoundingClientRect().top

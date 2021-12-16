@@ -283,6 +283,10 @@ class View extends Observer {
 
     this.selector.append(this.root);
 
+    if (range) {
+      this.mergeTooltip();
+    }
+
     this.bindEventListeners();
   }
 
@@ -316,15 +320,19 @@ class View extends Observer {
 
   private mergeTooltip(): void {
     const { firstHandle, secondHandle } = this.components;
-    const deltaStyle =
-      secondHandle!.getStyleValue() - firstHandle.getStyleValue();
+
     const firstHandleTooltip = firstHandle.getValue();
     const secondHandleTooltip = secondHandle?.getValue();
-    if (deltaStyle <= 5) {
+
+    const firstHandleRightSide = firstHandle.getRectangleTooltip().right;
+    const secondHandleLeftSide = secondHandle.getRectangleTooltip().left;
+
+    if (firstHandleRightSide > secondHandleLeftSide) {
       firstHandle.setTooltipContent(
         `${firstHandleTooltip}...${secondHandleTooltip}`
       );
-      secondHandle?.clearTooltipContent();
+      secondHandle.clearTooltipContent();
+      secondHandle.hideTooltipContent();
     } else if (firstHandle.getTooltipContent()?.includes('...')) {
       firstHandle.setTooltipContent();
       secondHandle?.setTooltipContent();
@@ -335,7 +343,7 @@ class View extends Observer {
     const { track, progress, firstHandle, secondHandle } = this.components;
 
     const setNewValueOnHandle = (newValue: number, handle: Handle) => {
-      const { range } = this.modelOptions;
+      const { range } = this.getModel();
       const { showProgress } = this.viewOptions;
 
       const styleValue: number = searchStyleValue(
@@ -367,8 +375,47 @@ class View extends Observer {
       }
     };
 
+    let whichHandle = 1;
+
+    const tooltipClickCallback = (event: MouseEvent) => {
+      const { range } = this.getModel();
+      if (!range) {
+        whichHandle = 1;
+        return;
+      }
+
+      if (!firstHandle.getTooltipContent()?.includes('...')) {
+        whichHandle = 1;
+        return;
+      }
+      const firstHandleTooltipContent = firstHandle.getTooltipContent();
+      const allLength = firstHandleTooltipContent!.length - 3;
+      const firstValueLength = firstHandleTooltipContent!.indexOf('...');
+      const secondValueLength = allLength - firstValueLength;
+
+      const rectangle = firstHandle.getRectangleTooltip();
+      const widthTooltip = rectangle.width;
+      const secondValuePercent = secondValueLength / allLength;
+      const clickCoord = event.pageX - rectangle.x;
+      const clickPercentOfWidth = clickCoord / widthTooltip;
+
+      if (clickPercentOfWidth > secondValuePercent) {
+        whichHandle = 2;
+      } else {
+        whichHandle = 1;
+      }
+    };
+
+    firstHandle
+      .getTooltip()
+      .addEventListener('pointerdown', tooltipClickCallback);
+
     firstHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
-      setNewValueOnHandle(newValue, firstHandle);
+      if (whichHandle === 1) {
+        setNewValueOnHandle(newValue, firstHandle);
+      } else if (whichHandle === 2) {
+        setNewValueOnHandle(newValue, secondHandle);
+      }
     });
 
     secondHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
