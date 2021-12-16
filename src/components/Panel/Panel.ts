@@ -81,57 +81,57 @@ class Panel {
     this.elements = {
       maxValueEl: render(`
         <div class="panel__input-max panel__option">Max value
-        <input type="number">
+        <input class="panel__input" type="number">
         </div>
         `),
       minValueEl: render(`
         <div class="panel__input-min panel__option">Min value
-        <input type="number">
+        <input class="panel__input" type="number">
         </div>
       `),
       firstValueEl: render(`
         <div class="panel__value-first panel__option">First value
-        <input type="number">
+        <input class="panel__input" type="number">
         </div>
       `),
       secondValueEl: render(`
         <div class="panel__value-second panel__option">Second value
-        <input type="number">
+        <input class="panel__input" type="number">
         </div>
       `),
       showTooltipEL: render(`
         <div class="panel__tooltip panel__option">Show tooltip
-        <input type="checkbox">
+        <input class="panel__input" type="checkbox">
         </div>
       `),
       rangeEl: render(`
         <div class="panel__range panel__option">Range
-        <input type="checkbox">
+        <input class="panel__input" type="checkbox">
         </div>
       `),
       stepEl: render(`
       <div class="panel__step panel__option">Step
-      <input type="number" >
+      <input class="panel__input" type="number" >
       </div>
       `),
       showScaleEl: render(`
         <div class="panel__scale-show panel__option">Show scale
-        <input type="checkbox">
+        <input class="panel__input" type="checkbox">
         </div>
       `),
       scalePointEl: render(`
         <div class="panel__scale-point panel__option">Scale point
-        <input type="number" >
+        <input class="panel__input" type="number" >
         </div>
       `),
       progressEl: render(`
         <div class="panel__progress panel__option">Show progress
-        <input type="checkbox">
+        <input class="panel__input" type="checkbox">
         </div>
       `),
       verticalEl: render(`
         <div class="panel__vertical panel__option">Is vertical
-        <input type="checkbox">
+        <input class="panel__input" type="checkbox">
         </div>
         `)
     };
