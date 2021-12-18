@@ -19,7 +19,7 @@ module.exports = {
   mode: 'development',
   entry: {
     index: ['@babel/polyfill', './index.ts'],
-    plugin: ['./components/JQplugin.ts']
+    plugin: './components/JQplugin.ts'
   },
   output: {
     filename: filename('js'),
@@ -48,8 +48,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, 'src/favicon.ico'),
-          to: path.resolve(__dirname, 'dist')
+          from: 'assets/favicons',
+          to: 'favicons'
         }
       ]
     }),
