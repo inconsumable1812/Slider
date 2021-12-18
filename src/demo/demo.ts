@@ -8,10 +8,17 @@ import '../components/JQplugin';
 const slider = $('#app').JQSlider() as JQuery;
 slider.JQSlider('addControlPanel');
 
+// const sliderSecondConfig: Partial<sliderOptions> = {
+//   minValue: 100,
+//   maxValue: 33,
+//   range: false
+// };
+
 const sliderSecondConfig: Partial<sliderOptions> = {
-  minValue: 100,
-  maxValue: 33,
-  range: false
+  minValue: -0.11,
+  maxValue: 0.1,
+  step: 0.1,
+  range: true
 };
 
 const sliderThirdConfig: Partial<sliderOptions> = {

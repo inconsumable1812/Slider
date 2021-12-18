@@ -127,14 +127,13 @@ class Handle extends Observer {
   }
 
   setStyle(value: number): void {
-    if (this.getStyleValue() !== value) {
-      // eslint-disable-next-line no-unused-expressions
-      this.isVertical
-        ? (this.elements.handle.style.top = value + '%')
-        : (this.elements.handle.style.left = value + '%');
-      if (this.handleNumber === 1) {
-        this.setZIndex(this.getStyleValue());
-      }
+    // eslint-disable-next-line no-unused-expressions
+    this.isVertical
+      ? (this.elements.handle.style.top = value + '%')
+      : (this.elements.handle.style.left = value + '%');
+
+    if (this.handleNumber === 1) {
+      this.setZIndex(this.getStyleValue());
     }
   }
 
@@ -192,9 +191,10 @@ class Handle extends Observer {
 
     const valueCorrectInStepSize: number = delta * valueInPercentRoundTo4;
 
-    let newValue: number =
+    let newValue: number = roundToRequiredNumber(
       roundToRequiredNumber(track.getMinValue()) +
-      roundToRequiredNumber(valueCorrectInStepSize);
+        roundToRequiredNumber(valueCorrectInStepSize)
+    );
 
     if (valueInPercent <= 0) {
       newValue = track.getMinValue();

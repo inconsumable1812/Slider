@@ -270,6 +270,7 @@ class View extends Observer {
       maxValue: track.getMaxValue(),
       progress: valueStart
     });
+
     const secondHandleStyleValue = searchStyleValue({
       minValue: track.getMinValue(),
       maxValue: track.getMaxValue(),
@@ -328,14 +329,19 @@ class View extends Observer {
 
   private mergeTooltip(): void {
     const { firstHandle, secondHandle } = this.components;
+    const { isVertical } = this.getOptions();
 
     const firstHandleTooltip = firstHandle.getValue();
     const secondHandleTooltip = secondHandle?.getValue();
 
-    const firstHandleRightSide = firstHandle.getRectangleTooltip().right;
-    const secondHandleLeftSide = secondHandle.getRectangleTooltip().left;
+    const firstHandleRightSideOrBottom = isVertical
+      ? firstHandle.getRectangleTooltip().bottom
+      : firstHandle.getRectangleTooltip().right;
+    const secondHandleLeftSideOrTop = isVertical
+      ? secondHandle.getRectangleTooltip().top
+      : secondHandle.getRectangleTooltip().left;
 
-    if (firstHandleRightSide >= secondHandleLeftSide) {
+    if (firstHandleRightSideOrBottom >= secondHandleLeftSideOrTop) {
       firstHandle.setTooltipContent(
         `${firstHandleTooltip}...${secondHandleTooltip}`
       );
@@ -389,6 +395,11 @@ class View extends Observer {
 
     let whichHandle = 1;
 
+    const callbackMouseUp = () => {
+      whichHandle = 1;
+      document.removeEventListener('pointerup', callbackMouseUp);
+    };
+
     const tooltipClickCallback = (event: MouseEvent) => {
       const { range } = this.getModel();
       if (!range) {
@@ -416,27 +427,37 @@ class View extends Observer {
       } else {
         whichHandle = 1;
       }
-    };
 
-    const callbackMouseUp = () => {
-      whichHandle = 1;
+      if (whichHandle !== 1) {
+        document.addEventListener('pointerup', callbackMouseUp);
+      }
     };
 
     firstHandle
       .getTooltip()
       .addEventListener('pointerdown', tooltipClickCallback);
 
-    firstHandle.getTooltip().addEventListener('pointerup', callbackMouseUp);
-
     firstHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
+      const { step, range } = this.getModel();
       if (whichHandle === 1) {
+        if (newValue >= secondHandle.getValue() - step && range) {
+          return;
+        }
         setNewValueOnHandle(newValue, firstHandle);
       } else if (whichHandle === 2) {
+        if (newValue <= firstHandle.getValue() + step) {
+          return;
+        }
         setNewValueOnHandle(newValue, secondHandle);
       }
     });
 
     secondHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
+      const { step } = this.getModel();
+
+      if (newValue <= firstHandle.getValue() + step) {
+        return;
+      }
       setNewValueOnHandle(newValue, secondHandle);
     });
   }

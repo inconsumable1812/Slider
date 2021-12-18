@@ -84,6 +84,14 @@ function objectFilter(
   return Object.fromEntries(Object.entries(obj).filter(predicate));
 }
 
+function findDecimalPart(value: number) {
+  let numberOfDecimal = 0;
+  if (value.toString().includes('.')) {
+    numberOfDecimal = value.toString().split('.').pop()!.length;
+  }
+  return numberOfDecimal;
+}
+
 export {
   roundToRequiredNumber,
   render,
@@ -95,5 +103,6 @@ export {
   isNeedToChangeIfValueBoolean,
   filterModelOptions,
   objectFilter,
-  filterViewOptions
+  filterViewOptions,
+  findDecimalPart
 };

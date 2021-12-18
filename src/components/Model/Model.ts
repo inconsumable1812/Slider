@@ -28,7 +28,8 @@ import {
   isMinValueEqualMaxValueAndMinValueBiggerPrevValue,
   isMinValueEqualMaxValueAndMaxValueLessPrevValue,
   isMinValueBiggerMaxValueAndMinValueBiggerPrevValue,
-  isMinValueBiggerMaxValueAndMaxValueLessPrevValue
+  isMinValueBiggerMaxValueAndMaxValueLessPrevValue,
+  isNeedRound
 } from './Model.function';
 
 class Model extends Observer {
@@ -309,7 +310,7 @@ class Model extends Observer {
     minValue?: number,
     maxValue?: number
   ): void {
-    this.checkStep(step!);
+    this.checkStep();
     this.checkMinValueLessMax(minValue!, maxValue!);
     this.checkRangeLessThanStepSize();
     this.checkValueStartInRange();
@@ -321,14 +322,17 @@ class Model extends Observer {
     this.setDataAtr();
   }
 
-  private checkStep(prevStep: number): void {
+  private checkStep(): void {
     const { step } = this.options;
 
     if (step! < MIN_STEP) {
       return this.setOptions({ step: MIN_STEP });
     }
-    if (step !== prevStep) {
-      return this.setOptions({ step: roundToRequiredNumber(step!) });
+
+    if (isNeedRound(step!)) {
+      return this.setOptions({
+        step: roundToRequiredNumber(step!)
+      });
     }
   }
 
@@ -420,6 +424,7 @@ class Model extends Observer {
     if (valueStart! < minValue!) {
       return this.setOptions({ valueStart: minValue });
     }
+
     if (valueStart! > maxValue! && range) {
       return this.setOptions({ valueStart: maxValue! - step! });
     }
@@ -549,6 +554,12 @@ class Model extends Observer {
   private checkValueStartCorrectStep(): void | Partial<ModelOptions> {
     const { minValue, step, valueStart, maxValue } = this.options;
 
+    if (isNeedRound(valueStart!)) {
+      return this.setOptions({
+        valueStart: roundToRequiredNumber(valueStart!)
+      });
+    }
+
     if (
       isIncorrectStepInValueStart({
         minValue: minValue!,
@@ -572,6 +583,13 @@ class Model extends Observer {
 
   private checkValueEndCorrectStep(): void | Partial<ModelOptions> {
     const { maxValue, minValue, step, valueEnd } = this.options;
+
+    if (isNeedRound(valueEnd!)) {
+      return this.setOptions({
+        valueStart: roundToRequiredNumber(valueEnd!)
+      });
+    }
+
     if (
       isIncorrectStepInValueEnd({
         maxValue: maxValue!,
@@ -586,6 +604,12 @@ class Model extends Observer {
         maxValue!,
         minValue!
       );
+
+      if (newValue === minValue) {
+        return this.setOptions({
+          valueEnd: roundToRequiredNumber(minValue + step!)
+        });
+      }
 
       return this.setOptions({
         valueEnd: newValue
