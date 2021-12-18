@@ -86,7 +86,9 @@ class View extends Observer {
       this.components;
 
     firstHandle.setValue(valueStart);
-    firstHandle.setStyle(searchStyleValue(minValue, maxValue, valueStart));
+    firstHandle.setStyle(
+      searchStyleValue({ minValue, maxValue, progress: valueStart })
+    );
 
     if (showProgress) {
       track.element.append(progress.element);
@@ -106,7 +108,9 @@ class View extends Observer {
       this.root.append(secondHandle!.element);
 
       secondHandle.setValue(valueEnd);
-      secondHandle.setStyle(searchStyleValue(minValue, maxValue, valueEnd));
+      secondHandle.setStyle(
+        searchStyleValue({ minValue, maxValue, progress: valueEnd })
+      );
       this.mergeTooltip();
     } else {
       secondHandle.element.remove();
@@ -118,13 +122,16 @@ class View extends Observer {
 
     if (isRangeAndShowProgress(range, showProgress)) {
       progress.setStyle(
-        searchStyleValue(minValue, maxValue, valueStart),
-        searchStyleValue(minValue, maxValue, valueEnd)
+        searchStyleValue({ minValue, maxValue, progress: valueStart }),
+        searchStyleValue({ minValue, maxValue, progress: valueEnd })
       );
     }
 
     if (isNotRangeAndShowProgress(range, showProgress)) {
-      progress.setStyle(0, searchStyleValue(minValue, maxValue, valueStart));
+      progress.setStyle(
+        0,
+        searchStyleValue({ minValue, maxValue, progress: valueStart })
+      );
     }
 
     if (showTooltip) {
@@ -145,19 +152,19 @@ class View extends Observer {
     firstHandle.updateStep(step);
     secondHandle.updateStep(step);
 
-    const styleValueFirst = searchStyleValue(
-      track.getMinValue(),
-      track.getMaxValue(),
-      valueStart
-    );
+    const styleValueFirst = searchStyleValue({
+      minValue: track.getMinValue(),
+      maxValue: track.getMaxValue(),
+      progress: valueStart
+    });
 
     // when change orientation
     if (range) {
-      const styleValueSecond = searchStyleValue(
-        track.getMinValue(),
-        track.getMaxValue(),
-        valueEnd
-      );
+      const styleValueSecond = searchStyleValue({
+        minValue: track.getMinValue(),
+        maxValue: track.getMaxValue(),
+        progress: valueEnd
+      });
       secondHandle.setOrientation(isVertical);
       secondHandle.clearStyle();
       secondHandle.setStyle(styleValueSecond);
@@ -257,16 +264,16 @@ class View extends Observer {
       this.root.append(scale!.element);
     }
 
-    const firstHandleStyleValue = searchStyleValue(
-      track.getMinValue(),
-      track.getMaxValue(),
-      valueStart
-    );
-    const secondHandleStyleValue = searchStyleValue(
-      track.getMinValue(),
-      track.getMaxValue(),
-      valueEnd
-    );
+    const firstHandleStyleValue = searchStyleValue({
+      minValue: track.getMinValue(),
+      maxValue: track.getMaxValue(),
+      progress: valueStart
+    });
+    const secondHandleStyleValue = searchStyleValue({
+      minValue: track.getMinValue(),
+      maxValue: track.getMaxValue(),
+      progress: valueEnd
+    });
 
     firstHandle.setStyle(firstHandleStyleValue);
     if (range) {
@@ -346,14 +353,16 @@ class View extends Observer {
       const { range } = this.getModel();
       const { showProgress } = this.viewOptions;
 
-      const styleValue: number = searchStyleValue(
-        track.getMinValue(),
-        track.getMaxValue(),
-        newValue
-      );
+      const styleValue: number = searchStyleValue({
+        minValue: track.getMinValue(),
+        maxValue: track.getMaxValue(),
+        progress: newValue
+      });
 
       if (range) {
-        if (isNewValueCorrect(handle, newValue, firstHandle, secondHandle)) {
+        if (
+          isNewValueCorrect({ handle, newValue, firstHandle, secondHandle })
+        ) {
           handle.setValue(newValue);
           handle.setStyle(styleValue);
         }
@@ -436,39 +445,43 @@ class View extends Observer {
     scale.subscribe(ListenersName.clickOnScale, (value) => {
       const { range } = this.modelOptions;
       const { showProgress } = this.viewOptions;
-      let closetHandle: Handle = firstHandle;
+      let closestHandle: Handle = firstHandle;
       if (range) {
         this.mergeTooltip();
-        closetHandle = findClosestHandle(firstHandle, secondHandle!, value);
+        closestHandle = findClosestHandle({
+          firstHandle,
+          secondHandle: secondHandle!,
+          clickValue: value
+        });
       }
 
-      closetHandle.setValue(value);
+      closestHandle.setValue(value);
 
-      const styleValue: number = searchStyleValue(
-        track.getMinValue(),
-        track.getMaxValue(),
-        value
-      );
+      const styleValue: number = searchStyleValue({
+        minValue: track.getMinValue(),
+        maxValue: track.getMaxValue(),
+        progress: value
+      });
 
-      closetHandle.setStyle(styleValue);
+      closestHandle.setStyle(styleValue);
 
       if (
-        isFirstHandleRangeAndShowProgress(
+        isFirstHandleRangeAndShowProgress({
           firstHandle,
-          closetHandle,
+          closestHandle,
           range,
           showProgress
-        )
+        })
       ) {
         progress!.setStart(styleValue);
       }
       if (
-        isSecondHandleRangeAndShowProgress(
+        isSecondHandleRangeAndShowProgress({
           secondHandle,
-          closetHandle,
+          closestHandle,
           range,
           showProgress
-        )
+        })
       ) {
         progress!.setEnd(styleValue);
       }
@@ -478,13 +491,13 @@ class View extends Observer {
         progress!.setEnd(styleValue);
       }
 
-      if (closetHandle === firstHandle) {
+      if (closestHandle === firstHandle) {
         this.emit(ListenersName.viewChanged, {
-          valueStart: closetHandle.getValue()
+          valueStart: closestHandle.getValue()
         });
-      } else if (closetHandle === secondHandle) {
+      } else if (closestHandle === secondHandle) {
         this.emit(ListenersName.viewChanged, {
-          valueEnd: closetHandle.getValue()
+          valueEnd: closestHandle.getValue()
         });
       }
     });
@@ -507,49 +520,53 @@ class View extends Observer {
         const { showProgress } = this.viewOptions;
         const { range } = this.modelOptions;
 
-        let closetHandle = firstHandle;
-        const styleValue = searchStyleValue(
-          track.getMinValue(),
-          track.getMaxValue(),
-          value
-        );
+        let closestHandle = firstHandle;
+        const styleValue = searchStyleValue({
+          minValue: track.getMinValue(),
+          maxValue: track.getMaxValue(),
+          progress: value
+        });
 
         if (range) {
-          closetHandle = findClosestHandle(firstHandle, secondHandle!, value);
+          closestHandle = findClosestHandle({
+            firstHandle,
+            secondHandle: secondHandle!,
+            clickValue: value
+          });
           this.mergeTooltip();
 
           if (
-            isClickFromSecondHandlePosition(
+            isClickFromSecondHandlePosition({
               click,
               styleValue,
               firstHandle,
-              secondHandle!
-            )
+              secondHandle: secondHandle!
+            })
           ) {
-            closetHandle = secondHandle!;
+            closestHandle = secondHandle!;
           }
         }
 
-        closetHandle.setValue(value);
-        closetHandle.setStyle(styleValue);
+        closestHandle.setValue(value);
+        closestHandle.setStyle(styleValue);
 
         if (
-          isFirstHandleRangeAndShowProgress(
+          isFirstHandleRangeAndShowProgress({
             firstHandle,
-            closetHandle,
+            closestHandle,
             range,
             showProgress
-          )
+          })
         ) {
           progress!.setStart(styleValue);
         }
         if (
-          isSecondHandleRangeAndShowProgress(
+          isSecondHandleRangeAndShowProgress({
             secondHandle,
-            closetHandle,
+            closestHandle,
             range,
             showProgress
-          )
+          })
         ) {
           progress!.setEnd(styleValue);
         }
@@ -557,17 +574,17 @@ class View extends Observer {
           progress!.setStart(0);
           progress!.setEnd(styleValue);
         }
-        if (closetHandle === firstHandle) {
+        if (closestHandle === firstHandle) {
           this.emit(ListenersName.viewChanged, {
-            valueStart: closetHandle.getValue()
+            valueStart: closestHandle.getValue()
           });
-        } else if (closetHandle === secondHandle) {
+        } else if (closestHandle === secondHandle) {
           this.emit(ListenersName.viewChanged, {
-            valueEnd: closetHandle.getValue()
+            valueEnd: closestHandle.getValue()
           });
         }
 
-        closetHandle.handleMouseDown(event);
+        closestHandle.handleMouseDown(event);
       }
     );
   }
