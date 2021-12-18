@@ -6,10 +6,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-if (isDev) {
-  // eslint-disable-next-line
-  const ESLintPlugin = require('eslint-webpack-plugin');
-}
 
 // prettier-ignore
 const filename = (ext) => isDev ? `[name].${ext}` : `[name]/[name][hash].${ext}`;
@@ -34,7 +30,8 @@ function plugins() {
   ];
 
   if (isDev) {
-    // eslint-disable-next-line no-undef
+    // eslint-disable-next-line global-require
+    const ESLintPlugin = require('eslint-webpack-plugin');
     pluginsArray.push(new ESLintPlugin());
   }
 
