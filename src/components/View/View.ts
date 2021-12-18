@@ -406,9 +406,15 @@ class View extends Observer {
       }
     };
 
+    const callbackMouseUp = () => {
+      whichHandle = 1;
+    };
+
     firstHandle
       .getTooltip()
       .addEventListener('pointerdown', tooltipClickCallback);
+
+    firstHandle.getTooltip().addEventListener('pointerup', callbackMouseUp);
 
     firstHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
       if (whichHandle === 1) {
