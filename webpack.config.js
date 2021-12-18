@@ -1,15 +1,45 @@
+const isProd = process.env.NODE_ENV === 'production';
+const isDev = !isProd;
+
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
-
-const isProd = process.env.NODE_ENV === 'production';
-const isDev = !isProd;
+if (isDev) {
+  // eslint-disable-next-line
+  const ESLintPlugin = require('eslint-webpack-plugin');
+}
 
 // prettier-ignore
 const filename = (ext) => isDev ? `[name].${ext}` : `[name]/[name][hash].${ext}`;
+
+function plugins() {
+  const pluginsArray = [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: 'index.html'
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'assets/favicons',
+          to: 'favicons'
+        }
+      ]
+    }),
+    new MiniCssExtractPlugin({
+      filename: filename('css')
+    })
+  ];
+
+  if (isDev) {
+    // eslint-disable-next-line no-undef
+    pluginsArray.push(new ESLintPlugin());
+  }
+
+  return pluginsArray;
+}
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -40,24 +70,7 @@ module.exports = {
     hot: isDev,
     open: true
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      template: 'index.html'
-    }),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: 'assets/favicons',
-          to: 'favicons'
-        }
-      ]
-    }),
-    new MiniCssExtractPlugin({
-      filename: filename('css')
-    }),
-    new ESLintPlugin()
-  ],
+  plugins: plugins(),
   module: {
     rules: [
       {
