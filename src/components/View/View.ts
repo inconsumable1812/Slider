@@ -1,7 +1,8 @@
 import {
   MIN_SCALE_POINT_COUNT,
   MAX_SCALE_POINT_COUNT,
-  VERTICAL_CLASS
+  VERTICAL_CLASS,
+  MERGED_TOOLTIP_CLASS
 } from '../../constants';
 import {
   render,
@@ -338,10 +339,12 @@ class View extends Observer {
       firstHandle.setTooltipContent(
         `${firstHandleTooltip}...${secondHandleTooltip}`
       );
+      firstHandle.getTooltip().classList.add(MERGED_TOOLTIP_CLASS);
       secondHandle.clearTooltipContent();
       secondHandle.hideTooltipContent();
     } else if (firstHandle.getTooltipContent()?.includes('...')) {
       firstHandle.setTooltipContent();
+      firstHandle.getTooltip().classList.remove(MERGED_TOOLTIP_CLASS);
       secondHandle?.setTooltipContent();
     }
   }
