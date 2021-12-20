@@ -131,15 +131,19 @@ function isNewValueStartBiggerValueEnd({
   newValue,
   secondHandle,
   step,
-  range
+  range,
+  maxValue
 }: {
   newValue: number;
   secondHandle: Handle;
   step: number;
   range: boolean;
+  maxValue: number;
 }): boolean {
   return (
-    newValue >= roundToRequiredNumber(secondHandle.getValue() - step) && range
+    newValue >= roundToRequiredNumber(secondHandle.getValue() - step) &&
+    range &&
+    secondHandle.getValue() !== maxValue
   );
 }
 

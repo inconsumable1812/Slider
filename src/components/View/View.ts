@@ -451,10 +451,16 @@ class View extends Observer {
       .addEventListener('pointerdown', tooltipClickCallback);
 
     firstHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
-      const { step, range, valueEnd, valueStart } = this.getModel();
+      const { step, range, valueEnd, valueStart, maxValue } = this.getModel();
       if (whichHandle === 1) {
         if (
-          isNewValueStartBiggerValueEnd({ newValue, secondHandle, step, range })
+          isNewValueStartBiggerValueEnd({
+            newValue,
+            secondHandle,
+            step,
+            range,
+            maxValue
+          })
         ) {
           setNewValueOnHandle(
             roundToRequiredNumber(valueEnd - step),
@@ -464,7 +470,13 @@ class View extends Observer {
         }
         setNewValueOnHandle(newValue, firstHandle);
       } else if (whichHandle === 2) {
-        if (isNewValueEndLessValueStart({ newValue, firstHandle, step })) {
+        if (
+          isNewValueEndLessValueStart({
+            newValue,
+            firstHandle,
+            step
+          })
+        ) {
           setNewValueOnHandle(
             roundToRequiredNumber(valueStart + step),
             secondHandle
@@ -478,7 +490,13 @@ class View extends Observer {
     secondHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
       const { step, valueStart } = this.getModel();
 
-      if (isNewValueEndLessValueStart({ newValue, firstHandle, step })) {
+      if (
+        isNewValueEndLessValueStart({
+          newValue,
+          firstHandle,
+          step
+        })
+      ) {
         setNewValueOnHandle(
           roundToRequiredNumber(valueStart + step),
           secondHandle
