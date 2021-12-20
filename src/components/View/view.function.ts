@@ -50,26 +50,6 @@ function isClickFromSecondHandlePosition({
   );
 }
 
-function isNewValueCorrect({
-  handle,
-  newValue,
-  firstHandle,
-  secondHandle
-}: {
-  handle: Handle;
-  newValue: number;
-  firstHandle: Handle;
-  secondHandle: Handle;
-}): boolean {
-  if (handle === secondHandle) {
-    return newValue > firstHandle.getValue();
-  }
-  if (handle === firstHandle) {
-    return newValue < secondHandle!.getValue();
-  }
-  return false;
-}
-
 function isRangeAndShowProgress(
   range: boolean,
   showProgress: boolean
@@ -177,7 +157,6 @@ export {
   isNotRangeAndStayMergeTooltip,
   isShowTooltipAndRange,
   isHideTooltipAndRange,
-  isNewValueCorrect,
   isFirstHandleRangeAndShowProgress,
   isSecondHandleRangeAndShowProgress,
   isNewValueStartBiggerValueEnd,

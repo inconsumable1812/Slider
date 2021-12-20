@@ -1,5 +1,5 @@
 import { STEP_DECIMAL_PART, MIN_STEP } from '../../constants';
-import { findDecimalPart } from '../../utils/utils';
+import { findDecimalPart, roundToRequiredNumber } from '../../utils/utils';
 
 function isValueStartBiggerValueEnd({
   valueStart,
@@ -203,6 +203,24 @@ function isNeedRound(value: number) {
   return false;
 }
 
+function calculateValueStartBeforeMax({
+  minValue,
+  maxValue,
+  step
+}: {
+  minValue: number;
+  maxValue: number;
+  step: number;
+}): number {
+  const delta = Math.abs(minValue - maxValue);
+  let newValue = minValue + Math.floor(delta / step) * step;
+  if (newValue === maxValue) {
+    newValue -= step;
+  }
+
+  return roundToRequiredNumber(newValue);
+}
+
 export {
   isValueStartBiggerValueEnd,
   isValueStartBiggerMaxValue,
@@ -218,5 +236,6 @@ export {
   isMinValueEqualMaxValueAndMaxValueLessPrevValue,
   isMinValueBiggerMaxValueAndMinValueBiggerPrevValue,
   isMinValueBiggerMaxValueAndMaxValueLessPrevValue,
-  isNeedRound
+  isNeedRound,
+  calculateValueStartBeforeMax
 };

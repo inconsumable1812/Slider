@@ -37,7 +37,6 @@ import {
   isNotRangeAndStayMergeTooltip,
   isShowTooltipAndRange,
   isHideTooltipAndRange,
-  isNewValueCorrect,
   isFirstHandleRangeAndShowProgress,
   isSecondHandleRangeAndShowProgress,
   isNewValueStartBiggerValueEnd,
@@ -344,6 +343,10 @@ class View extends Observer {
       return;
     }
 
+    if (!range) {
+      return;
+    }
+
     const firstHandleTooltip = firstHandle.getValue();
     const secondHandleTooltip = secondHandle?.getValue();
 
@@ -382,12 +385,9 @@ class View extends Observer {
       });
 
       if (range) {
-        if (
-          isNewValueCorrect({ handle, newValue, firstHandle, secondHandle })
-        ) {
-          handle.setValue(newValue);
-          handle.setStyle(styleValue);
-        }
+        handle.setValue(newValue);
+        handle.setStyle(styleValue);
+
         this.mergeTooltip();
       } else {
         handle.setValue(newValue);
@@ -466,8 +466,10 @@ class View extends Observer {
             roundToRequiredNumber(valueEnd - step),
             firstHandle
           );
+
           return;
         }
+
         setNewValueOnHandle(newValue, firstHandle);
       } else if (whichHandle === 2) {
         if (

@@ -29,7 +29,8 @@ import {
   isMinValueEqualMaxValueAndMaxValueLessPrevValue,
   isMinValueBiggerMaxValueAndMinValueBiggerPrevValue,
   isMinValueBiggerMaxValueAndMaxValueLessPrevValue,
-  isNeedRound
+  isNeedRound,
+  calculateValueStartBeforeMax
 } from './Model.function';
 
 class Model extends Observer {
@@ -461,7 +462,13 @@ class Model extends Observer {
         maxValue: maxValue!
       })
     ) {
-      return this.setOptions({ valueStart: valueStart! - step! });
+      return this.setOptions({
+        valueStart: calculateValueStartBeforeMax({
+          minValue: minValue!,
+          maxValue: maxValue!,
+          step: step!
+        })
+      });
     }
 
     if (
