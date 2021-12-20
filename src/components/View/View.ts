@@ -112,7 +112,7 @@ class View extends Observer {
       secondHandle.setStyle(
         searchStyleValue({ minValue, maxValue, progress: valueEnd })
       );
-      this.mergeTooltip();
+      // this.mergeTooltip();
     } else {
       secondHandle.element.remove();
     }
@@ -292,11 +292,13 @@ class View extends Observer {
 
     this.selector.append(this.root);
 
-    if (range) {
-      this.mergeTooltip();
-    }
-
     this.bindEventListeners();
+
+    setTimeout(() => {
+      if (range) {
+        this.mergeTooltip();
+      }
+    }, 80);
   }
 
   private initViewOptions(): void {
