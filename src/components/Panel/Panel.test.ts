@@ -1,6 +1,7 @@
 import { create } from '../slider';
 import { Slider, sliderOptions } from '../type';
 import Panel from './Panel';
+import { MAX_SCALE_POINT_COUNT } from '../../constants';
 
 function getExampleDOM() {
   const div = document.createElement('div');
@@ -317,7 +318,7 @@ describe('Panel', () => {
       const scalePointCount = panel.getInputs().scalePointCount;
       scalePointCount.value = newScalePoint.toString();
       scalePointCount.dispatchEvent(changeEvent);
-      expect(slider.getOptions().scalePointCount).toBe(11);
+      expect(slider.getOptions().scalePointCount).toBe(MAX_SCALE_POINT_COUNT);
     });
   });
 
