@@ -12,7 +12,8 @@ import {
   toBoolean,
   isNeedToChangeIfValueBoolean,
   objectFilter,
-  filterViewOptions
+  filterViewOptions,
+  roundToRequiredNumber
 } from '../../utils/utils';
 import {
   ModelOptions,
@@ -38,7 +39,10 @@ import {
   isHideTooltipAndRange,
   isNewValueCorrect,
   isFirstHandleRangeAndShowProgress,
-  isSecondHandleRangeAndShowProgress
+  isSecondHandleRangeAndShowProgress,
+  isNewValueStartBiggerValueEnd,
+  isNotRangeAndContainsClassListMerged,
+  isNewValueEndLessValueStart
 } from './view.function';
 
 class View extends Observer {
@@ -105,6 +109,8 @@ class View extends Observer {
       scale.deleteScalePoint();
     }
 
+    this.mergeTooltip();
+
     if (range) {
       this.root.append(secondHandle!.element);
 
@@ -112,7 +118,6 @@ class View extends Observer {
       secondHandle.setStyle(
         searchStyleValue({ minValue, maxValue, progress: valueEnd })
       );
-      // this.mergeTooltip();
     } else {
       secondHandle.element.remove();
     }
@@ -332,6 +337,12 @@ class View extends Observer {
   private mergeTooltip(): void {
     const { firstHandle, secondHandle } = this.components;
     const { isVertical } = this.getOptions();
+    const { range } = this.getModel();
+
+    if (isNotRangeAndContainsClassListMerged(range, firstHandle)) {
+      firstHandle.getTooltip().classList.remove(MERGED_TOOLTIP_CLASS);
+      return;
+    }
 
     const firstHandleTooltip = firstHandle.getValue();
     const secondHandleTooltip = secondHandle?.getValue();
@@ -440,14 +451,24 @@ class View extends Observer {
       .addEventListener('pointerdown', tooltipClickCallback);
 
     firstHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
-      const { step, range } = this.getModel();
+      const { step, range, valueEnd, valueStart } = this.getModel();
       if (whichHandle === 1) {
-        if (newValue >= secondHandle.getValue() - step && range) {
+        if (
+          isNewValueStartBiggerValueEnd({ newValue, secondHandle, step, range })
+        ) {
+          setNewValueOnHandle(
+            roundToRequiredNumber(valueEnd - step),
+            firstHandle
+          );
           return;
         }
         setNewValueOnHandle(newValue, firstHandle);
       } else if (whichHandle === 2) {
-        if (newValue <= firstHandle.getValue() + step) {
+        if (isNewValueEndLessValueStart({ newValue, firstHandle, step })) {
+          setNewValueOnHandle(
+            roundToRequiredNumber(valueStart + step),
+            secondHandle
+          );
           return;
         }
         setNewValueOnHandle(newValue, secondHandle);
@@ -455,9 +476,13 @@ class View extends Observer {
     });
 
     secondHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
-      const { step } = this.getModel();
+      const { step, valueStart } = this.getModel();
 
-      if (newValue <= firstHandle.getValue() + step) {
+      if (isNewValueEndLessValueStart({ newValue, firstHandle, step })) {
+        setNewValueOnHandle(
+          roundToRequiredNumber(valueStart + step),
+          secondHandle
+        );
         return;
       }
       setNewValueOnHandle(newValue, secondHandle);

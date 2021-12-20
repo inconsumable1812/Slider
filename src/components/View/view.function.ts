@@ -1,4 +1,6 @@
 import Handle from './handle/Handle';
+import { MERGED_TOOLTIP_CLASS } from '../../constants';
+import { roundToRequiredNumber } from '../../utils/utils';
 
 function findClosestHandle({
   firstHandle,
@@ -125,6 +127,43 @@ function isSecondHandleRangeAndShowProgress({
   return range && showProgress && closestHandle === secondHandle;
 }
 
+function isNewValueStartBiggerValueEnd({
+  newValue,
+  secondHandle,
+  step,
+  range
+}: {
+  newValue: number;
+  secondHandle: Handle;
+  step: number;
+  range: boolean;
+}): boolean {
+  return (
+    newValue >= roundToRequiredNumber(secondHandle.getValue() - step) && range
+  );
+}
+
+function isNewValueEndLessValueStart({
+  newValue,
+  firstHandle,
+  step
+}: {
+  newValue: number;
+  firstHandle: Handle;
+  step: number;
+}): boolean {
+  return newValue <= roundToRequiredNumber(firstHandle.getValue() + step);
+}
+
+function isNotRangeAndContainsClassListMerged(
+  range: boolean,
+  firstHandle: Handle
+) {
+  return (
+    !range && firstHandle.getTooltip().classList.contains(MERGED_TOOLTIP_CLASS)
+  );
+}
+
 export {
   findClosestHandle,
   searchStyleValue,
@@ -136,5 +175,8 @@ export {
   isHideTooltipAndRange,
   isNewValueCorrect,
   isFirstHandleRangeAndShowProgress,
-  isSecondHandleRangeAndShowProgress
+  isSecondHandleRangeAndShowProgress,
+  isNewValueStartBiggerValueEnd,
+  isNewValueEndLessValueStart,
+  isNotRangeAndContainsClassListMerged
 };
