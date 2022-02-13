@@ -37,7 +37,7 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
   const view = new View({
     selector,
     modelOptions: modelOptionsInit,
-    viewOptions: updateViewOptions as ViewOptions
+    options: updateViewOptions
   });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const presenter = new Presenter(model, view);

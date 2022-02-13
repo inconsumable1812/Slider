@@ -63,17 +63,17 @@ describe('View', () => {
     viewAllTrue = new View({
       selector: container,
       modelOptions: modelOptions2,
-      viewOptions: viewOptions2
+      options: viewOptions2
     });
     viewAllFalse = new View({
       selector: container,
       modelOptions: modelOptions1,
-      viewOptions: viewOptions3
+      options: viewOptions3
     });
     view4 = new View({
       selector: container,
       modelOptions: modelOptions1,
-      viewOptions: viewOptions4
+      options: viewOptions4
     });
   });
 

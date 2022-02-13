@@ -52,17 +52,14 @@ class View extends Observer<{
   root!: HTMLElement;
   private selector: HTMLElement;
   private modelOptions: ModelOptions;
-  private viewOptions: ViewOptions;
+  private viewOptions: ViewOptions = DEFAULT_VIEW_OPTIONS;
+  private options: Partial<ViewOptions> | undefined;
 
-  constructor({
-    selector,
-    modelOptions,
-    viewOptions = DEFAULT_VIEW_OPTIONS
-  }: viewProps) {
+  constructor({ selector, modelOptions, options }: viewProps) {
     super();
     this.selector = selector;
     this.modelOptions = modelOptions;
-    this.viewOptions = viewOptions;
+    this.options = options;
     this.initViewOptions();
     this.checkScalePointCount();
     this.observeAtr();
@@ -312,8 +309,8 @@ class View extends Observer<{
     const optionsFromDataAtr = this.initOptionsFromDataAtr();
 
     this.viewOptions = {
-      ...DEFAULT_VIEW_OPTIONS,
       ...this.viewOptions,
+      ...this.options,
       ...optionsFromDataAtr
     };
     this.setDataAtr();

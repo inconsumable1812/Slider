@@ -113,7 +113,7 @@ type trackProps = {
 type viewProps = {
   selector: HTMLElement;
   modelOptions: ModelOptions;
-  viewOptions?: ViewOptions;
+  options?: Partial<ViewOptions>;
 };
 
 type panelProps = {
