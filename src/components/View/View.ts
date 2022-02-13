@@ -20,7 +20,8 @@ import {
   ViewComponents,
   ViewOptions,
   ListenersName,
-  viewProps
+  viewProps,
+  sliderOptions
 } from '../type';
 import { DEFAULT_VIEW_OPTIONS } from '../default';
 import Observer from '../Observer/Observer';
@@ -44,7 +45,9 @@ import {
   isNewValueEndLessValueStart
 } from './view.function';
 
-class View extends Observer {
+class View extends Observer<{
+  viewChanged: Partial<sliderOptions>;
+}> {
   private components!: ViewComponents;
   root!: HTMLElement;
   private selector: HTMLElement;
@@ -450,7 +453,7 @@ class View extends Observer {
       .getTooltip()
       .addEventListener('pointerdown', tooltipClickCallback);
 
-    firstHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
+    firstHandle.subscribe(ListenersName.clickOnHandle, (newValue: number) => {
       const { step, range, valueEnd, valueStart, maxValue } = this.getModel();
       if (whichHandle === 1) {
         if (

@@ -123,8 +123,8 @@ type panelProps = {
   view: View;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ListenersFunction = (...args: any) => void;
+type ListenersFunction<T> = <K extends keyof T>(args: T[K]) => void;
+type ListenersFunctionUnsub = () => void;
 
 // eslint-disable-next-line no-shadow
 enum ListenersName {
@@ -137,9 +137,7 @@ enum ListenersName {
   clickOnHandle = 'clickOnHandle'
 }
 
-type Listeners = {
-  [key in ListenersName]?: ListenersFunction[];
-};
+type Listeners<T> = Record<keyof T, ListenersFunction<T>[]>;
 
 type PrepareModelOptionsFromDataFtr = {
   minValue: string;
@@ -161,5 +159,6 @@ export {
   scaleProps,
   trackProps,
   viewProps,
-  panelProps
+  panelProps,
+  ListenersFunctionUnsub
 };

@@ -9,7 +9,7 @@ import Observer from '../../Observer/Observer';
 import { ListenersName, handleProps } from '../../type';
 import Track from '../Track/Track';
 
-class Handle extends Observer {
+class Handle extends Observer<{ clickOnHandle: number }> {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };
   element!: HTMLElement;
   private handleNumber: number;

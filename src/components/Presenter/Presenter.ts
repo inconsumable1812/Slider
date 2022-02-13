@@ -1,8 +1,10 @@
-import { ModelOptions, ListenersName } from '../type';
+import { ModelOptions, ListenersName, ListenersFunctionUnsub } from '../type';
 import Model from '../Model/Model';
 import View from '../View/View';
 
 class Presenter {
+  unsubView!: ListenersFunctionUnsub;
+  unsubModel!: ListenersFunctionUnsub;
   constructor(private model: Model, private view: View) {
     this.render();
   }
@@ -20,17 +22,22 @@ class Presenter {
     this.view.updateView();
   }
 
+  public unsubscribe() {
+    this.unsubView();
+    this.unsubModel();
+  }
+
   private render(): void {
     this.view.render();
     this.connect();
   }
 
   private connect(): void {
-    this.view.subscribe(
+    this.unsubView = this.view.subscribe(
       ListenersName.viewChanged,
       this.setModelOptions.bind(this)
     );
-    this.model.subscribe(
+    this.unsubModel = this.model.subscribe(
       ListenersName.modelValueChange,
       this.updateView.bind(this)
     );

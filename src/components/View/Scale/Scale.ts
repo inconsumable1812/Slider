@@ -7,7 +7,7 @@ import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
 import { ListenersName, scaleProps } from '../../type';
 
-class Scale extends Observer {
+class Scale extends Observer<{ clickOnScale: number }> {
   element!: HTMLElement;
   subElement!: HTMLElement;
   private minValue: number;

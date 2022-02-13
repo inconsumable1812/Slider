@@ -1,34 +1,33 @@
-/* eslint-disable fsd/hof-name-prefix */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Listeners, ListenersFunction, ListenersName } from 'components/type';
+import {
+  Listeners,
+  ListenersFunction,
+  ListenersFunctionUnsub
+} from 'components/type';
 
-class Observer {
-  constructor(public listeners: Listeners = {}) {}
+abstract class Observer<T extends Record<string, unknown>> {
+  constructor(private listeners: Listeners<T> = {} as Listeners<T>) {}
 
-  // dispatch, fire, trigger
-  // Уведомляем слушателей если они есть
-  emit(event: keyof typeof ListenersName, ...args: any): boolean {
+  protected emit<K extends keyof T>(event: K, args: T[K]): boolean {
     if (!Array.isArray(this.listeners[event])) {
       return false;
     }
-    this.listeners[event]!.forEach((listener: ListenersFunction) => {
-      listener(...args);
+    this.listeners[event]!.forEach((listener: ListenersFunction<T>) => {
+      listener(args);
     });
     return true;
   }
 
-  // on, listen
-  // Подписываемся на уведомления
-  // добавляем нового слушателя
-  subscribe(
-    event: keyof typeof ListenersName,
-    fn: ListenersFunction
-  ): ListenersFunction {
+  // eslint-disable-next-line fsd/hof-name-prefix
+  subscribe<K extends keyof T>(
+    event: K,
+    fn: ListenersFunction<T>
+  ): ListenersFunctionUnsub {
     this.listeners[event] = this.listeners[event] || [];
     this.listeners[event]!.push(fn);
+
     return () => {
       this.listeners[event] = this.listeners[event]!.filter(
-        (listener: ListenersFunction) => listener !== fn
+        (listener: ListenersFunction<T>) => listener !== fn
       );
     };
   }

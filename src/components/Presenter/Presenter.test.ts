@@ -53,8 +53,13 @@ describe('Presenter', () => {
 
   test('check correct update view', () => {
     model.setOptions({ valueStart: 40 });
-    presenter.updateView();
     expect(view.getComponents().firstHandle.getValue()).toBe(40);
     expect(view.getComponents().firstHandle.getStyleValue()).toBe(40);
+  });
+  test('check unsubscribe', () => {
+    presenter.unsubscribe();
+    model.setOptions({ valueStart: 40 });
+    expect(view.getComponents().firstHandle.getValue()).toBe(10);
+    expect(view.getComponents().firstHandle.getStyleValue()).toBe(10);
   });
 });

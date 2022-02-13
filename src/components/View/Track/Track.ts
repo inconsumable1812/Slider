@@ -3,7 +3,9 @@ import findClosestCorrectValue from '../../../utils/findClosestCorrectValue';
 import Observer from '../../Observer/Observer';
 import { ListenersName, trackProps } from '../../type';
 
-class Track extends Observer {
+class Track extends Observer<{
+  clickOnTrack: { event: MouseEvent; value: number; click: number };
+}> {
   element!: HTMLElement;
   minValue: number;
   maxValue: number;
