@@ -34,41 +34,42 @@ import {
 } from './Model.function';
 
 class Model extends Observer<{ modelValueChange: null }> {
+  modelOptions: ModelOptions = DEFAULT_MODEL_OPTIONS;
   constructor(
-    private options: Partial<ModelOptions> = DEFAULT_MODEL_OPTIONS,
+    private options: Partial<ModelOptions>,
     private selector: HTMLElement
   ) {
     super();
     this.init();
-    this.checkOptions();
+    this.checkOptions(this.modelOptions);
     this.observeAtr();
   }
 
   getOptions(): ModelOptions {
-    return { ...this.options } as ModelOptions;
+    return { ...this.modelOptions };
   }
 
   getFirstValue(): number {
-    return this.options.valueStart!;
+    return this.modelOptions.valueStart;
   }
 
   getSecondValue(): number {
-    return this.options.valueEnd!;
+    return this.modelOptions.valueEnd;
   }
 
   setOptions(modelOptions: Partial<ModelOptions>): void {
-    const { valueEnd, valueStart, step, minValue, maxValue } = this.options;
+    const { valueEnd, valueStart, minValue, maxValue } = this.modelOptions;
 
-    this.options = { ...this.options, ...modelOptions };
-    this.checkOptions(valueStart!, valueEnd!, step!, minValue!, maxValue!);
+    this.modelOptions = { ...this.modelOptions, ...modelOptions };
+    this.checkOptions({ valueStart, valueEnd, minValue, maxValue });
     this.emit(ListenersName.modelValueChange, null);
   }
 
   private init(): void {
     const optionsFromDataAtr = this.initOptionsFromDataAtr();
 
-    this.options = {
-      ...DEFAULT_MODEL_OPTIONS,
+    this.modelOptions = {
+      ...this.modelOptions,
       ...this.options,
       ...optionsFromDataAtr
     };
@@ -304,35 +305,34 @@ class Model extends Observer<{ modelValueChange: null }> {
     });
   }
 
-  private checkOptions(
-    valueStart?: number,
-    valueEnd?: number,
-    step?: number,
-    minValue?: number,
-    maxValue?: number
-  ): void {
+  private checkOptions({
+    valueStart,
+    valueEnd,
+    minValue,
+    maxValue
+  }: Omit<ModelOptions, 'step' | 'range'>): void {
     this.checkStep();
-    this.checkMinValueLessMax(minValue!, maxValue!);
+    this.checkMinValueLessMax(minValue, maxValue);
     this.checkRangeLessThanStepSize();
     this.checkValueStartInRange();
     this.checkValueEndInRange();
     this.checkValueStartCorrectStep();
     this.checkValueEndCorrectStep();
-    this.checkValueStartLessValueEnd(valueStart!, valueEnd!);
+    this.checkValueStartLessValueEnd(valueStart, valueEnd);
 
     this.setDataAtr();
   }
 
   private checkStep(): void {
-    const { step } = this.options;
+    const { step } = this.modelOptions;
 
-    if (step! < MIN_STEP) {
+    if (step < MIN_STEP) {
       return this.setOptions({ step: MIN_STEP });
     }
 
-    if (isNeedRound(step!)) {
+    if (isNeedRound(step)) {
       return this.setOptions({
-        step: roundToRequiredNumber(step!)
+        step: roundToRequiredNumber(step)
       });
     }
   }
@@ -341,108 +341,108 @@ class Model extends Observer<{ modelValueChange: null }> {
     prevMinValue: number,
     prevMaxValue: number
   ): void | Partial<ModelOptions> {
-    const { minValue, maxValue, step } = this.options;
+    const { minValue, maxValue, step } = this.modelOptions;
 
     if (
       isMinValueEqualMaxValueAndMinValueBiggerPrevValue({
-        minValue: minValue!,
-        maxValue: maxValue!,
+        minValue,
+        maxValue,
         prevMinValue
       })
     ) {
       return this.setOptions({
-        maxValue: roundToRequiredNumber(minValue!) + step!,
-        minValue: roundToRequiredNumber(minValue!)
+        maxValue: roundToRequiredNumber(minValue) + step,
+        minValue: roundToRequiredNumber(minValue)
       });
     }
 
     if (
       isMinValueEqualMaxValueAndMaxValueLessPrevValue({
-        minValue: minValue!,
-        maxValue: maxValue!,
+        minValue,
+        maxValue,
         prevMaxValue
       })
     ) {
       return this.setOptions({
-        maxValue: roundToRequiredNumber(maxValue!),
-        minValue: roundToRequiredNumber(maxValue!) - step!
+        maxValue: roundToRequiredNumber(maxValue),
+        minValue: roundToRequiredNumber(maxValue) - step
       });
     }
 
     if (
       isMinValueBiggerMaxValueAndMinValueBiggerPrevValue({
-        minValue: minValue!,
-        maxValue: maxValue!,
+        minValue,
+        maxValue,
         prevMinValue
       })
     ) {
       return this.setOptions({
-        maxValue: roundToRequiredNumber(minValue!) + step!,
-        minValue: roundToRequiredNumber(minValue!)
+        maxValue: roundToRequiredNumber(minValue) + step,
+        minValue: roundToRequiredNumber(minValue)
       });
     }
 
     if (
       isMinValueBiggerMaxValueAndMaxValueLessPrevValue({
-        minValue: minValue!,
-        maxValue: maxValue!,
+        minValue,
+        maxValue,
         prevMaxValue
       })
     ) {
       return this.setOptions({
-        maxValue: roundToRequiredNumber(maxValue!),
-        minValue: roundToRequiredNumber(maxValue!) - step!
+        maxValue: roundToRequiredNumber(maxValue),
+        minValue: roundToRequiredNumber(maxValue) - step
       });
     }
 
     if (minValue !== prevMinValue) {
-      return this.setOptions({ minValue: roundToRequiredNumber(minValue!) });
+      return this.setOptions({ minValue: roundToRequiredNumber(minValue) });
     }
     if (minValue >= maxValue!) {
       return this.setOptions({
-        maxValue: roundToRequiredNumber(minValue! + step!),
-        minValue: roundToRequiredNumber(minValue!)
+        maxValue: roundToRequiredNumber(minValue + step),
+        minValue: roundToRequiredNumber(minValue)
       });
     }
 
     if (maxValue !== prevMaxValue) {
-      return this.setOptions({ maxValue: roundToRequiredNumber(maxValue!) });
+      return this.setOptions({ maxValue: roundToRequiredNumber(maxValue) });
     }
   }
 
   private checkRangeLessThanStepSize(): void | Partial<ModelOptions> {
-    const { minValue, maxValue, step } = this.options;
-    const range = Math.abs(maxValue! - minValue!);
-    const rangeLess: boolean = range < step!;
+    const { minValue, maxValue, step } = this.modelOptions;
+    const range = Math.abs(maxValue - minValue);
+    const rangeLess: boolean = range < step;
     if (rangeLess) {
       return this.setOptions({ step: range });
     }
   }
 
   private checkValueStartInRange(): void | Partial<ModelOptions> {
-    const { minValue, maxValue, step, valueStart, range } = this.options;
+    const { minValue, maxValue, step, valueStart, range } = this.modelOptions;
 
-    if (valueStart! < minValue!) {
+    if (valueStart < minValue) {
       return this.setOptions({ valueStart: minValue });
     }
 
-    if (valueStart! > maxValue! && range) {
-      return this.setOptions({ valueStart: maxValue! - step! });
+    if (valueStart > maxValue && range) {
+      return this.setOptions({ valueStart: maxValue - step });
     }
-    if (valueStart! > maxValue!) {
+    if (valueStart > maxValue) {
       return this.setOptions({ valueStart: maxValue });
     }
   }
 
   private checkValueEndInRange(): void | Partial<ModelOptions> {
-    const { minValue, maxValue, step, valueEnd } = this.options;
-    if (valueEnd! < minValue!) {
+    const { minValue, maxValue, step, valueEnd } = this.modelOptions;
+    if (valueEnd < minValue) {
       return this.setOptions({
-        valueEnd: minValue! + step!,
+        valueEnd: minValue + step,
         valueStart: minValue
       });
     }
-    if (valueEnd! > maxValue!) {
+    if (valueEnd > maxValue) {
       return this.setOptions({ valueEnd: maxValue });
     }
   }
@@ -452,106 +452,106 @@ class Model extends Observer<{ modelValueChange: null }> {
     prevValueEnd: number
   ): void | Partial<ModelOptions> {
     const { minValue, maxValue, step, valueEnd, valueStart, range } =
-      this.options;
+      this.modelOptions;
 
     if (
       isRangeAndValueStartEqualValueEndAndValueEndEqualMaxValue({
-        range: range!,
-        valueStart: valueStart!,
-        valueEnd: valueEnd!,
-        maxValue: maxValue!
+        range,
+        valueStart,
+        valueEnd,
+        maxValue
       })
     ) {
       return this.setOptions({
         valueStart: calculateValueStartBeforeMax({
-          minValue: minValue!,
-          maxValue: maxValue!,
-          step: step!
+          minValue,
+          maxValue,
+          step
         })
       });
     }
 
     if (
       isRangeAndValueStartEqualValueEndAndValueStartEqualMinValue({
-        range: range!,
-        valueStart: valueStart!,
-        valueEnd: valueEnd!,
-        minValue: minValue!
+        range,
+        valueStart,
+        valueEnd,
+        minValue
       })
     ) {
-      return this.setOptions({ valueEnd: valueEnd! + step! });
+      return this.setOptions({ valueEnd: valueEnd + step });
     }
 
     if (
       isRangeAndValueStartEqualValueEndAndValueStartBiggerPrevValue({
-        range: range!,
-        valueStart: valueStart!,
-        valueEnd: valueEnd!,
+        range,
+        valueStart,
+        valueEnd,
         prevValueStart
       })
     ) {
       return this.setOptions({
-        valueEnd: valueStart! + step!,
-        valueStart: valueStart!
+        valueEnd: valueStart + step,
+        valueStart
       });
     }
 
     if (
       isRangeAndValueStartEqualValueEndAndValueEndLessPrevValue({
-        range: range!,
-        valueStart: valueStart!,
-        valueEnd: valueEnd!,
+        range,
+        valueStart,
+        valueEnd,
         prevValueEnd
       })
     ) {
       return this.setOptions({
-        valueEnd: valueEnd!,
-        valueStart: valueEnd! - step!
+        valueEnd,
+        valueStart: valueEnd - step
       });
     }
 
     if (
       isRangeAndValueStartBiggerValueEndAndValueStartBiggerPrevValue({
-        range: range!,
-        valueStart: valueStart!,
-        valueEnd: valueEnd!,
+        range,
+        valueStart,
+        valueEnd,
         prevValueStart
       })
     ) {
       return this.setOptions({
-        valueEnd: valueStart! + step!,
-        valueStart: valueStart!
+        valueEnd: valueStart + step,
+        valueStart
       });
     }
 
     if (
       isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue({
-        range: range!,
-        valueStart: valueStart!,
-        valueEnd: valueEnd!,
+        range,
+        valueStart,
+        valueEnd,
         prevValueEnd
       })
     ) {
       return this.setOptions({
-        valueEnd: valueEnd!,
-        valueStart: valueEnd! - step!
+        valueEnd,
+        valueStart: valueEnd - step
       });
     }
 
     if (
       isValueStartBiggerValueEnd({
-        valueStart: valueStart!,
-        valueEnd: valueEnd!,
-        maxValue: maxValue!
+        valueStart,
+        valueEnd,
+        maxValue
       })
     ) {
       return this.setOptions({ valueEnd: maxValue });
     }
     if (
       isValueStartBiggerMaxValue({
-        valueStart: valueStart!,
-        valueEnd: valueEnd!,
-        maxValue: maxValue!
+        valueStart,
+        valueEnd,
+        maxValue
       })
     ) {
       return this.setOptions({ valueEnd: maxValue });
@@ -559,27 +559,27 @@ class Model extends Observer<{ modelValueChange: null }> {
   }
 
   private checkValueStartCorrectStep(): void | Partial<ModelOptions> {
-    const { minValue, step, valueStart, maxValue } = this.options;
+    const { minValue, step, valueStart, maxValue } = this.modelOptions;
 
-    if (isNeedRound(valueStart!)) {
+    if (isNeedRound(valueStart)) {
       return this.setOptions({
-        valueStart: roundToRequiredNumber(valueStart!)
+        valueStart: roundToRequiredNumber(valueStart)
       });
     }
 
     if (
       isIncorrectStepInValueStart({
-        minValue: minValue!,
-        step: step!,
-        valueStart: valueStart!,
-        maxValue: maxValue!
+        minValue,
+        step,
+        valueStart,
+        maxValue
       })
     ) {
       const newValue = findClosestCorrectValue(
-        step!,
-        valueStart!,
-        maxValue!,
-        minValue!
+        step,
+        valueStart,
+        maxValue,
+        minValue
       );
 
       return this.setOptions({
@@ -589,32 +589,32 @@ class Model extends Observer<{ modelValueChange: null }> {
   }
 
   private checkValueEndCorrectStep(): void | Partial<ModelOptions> {
-    const { maxValue, minValue, step, valueEnd } = this.options;
+    const { maxValue, minValue, step, valueEnd } = this.modelOptions;
 
-    if (isNeedRound(valueEnd!)) {
+    if (isNeedRound(valueEnd)) {
       return this.setOptions({
-        valueStart: roundToRequiredNumber(valueEnd!)
+        valueStart: roundToRequiredNumber(valueEnd)
       });
     }
 
     if (
       isIncorrectStepInValueEnd({
-        maxValue: maxValue!,
-        minValue: minValue!,
-        step: step!,
-        valueEnd: valueEnd!
+        maxValue,
+        minValue,
+        step,
+        valueEnd
       })
     ) {
       const newValue = findClosestCorrectValue(
-        step!,
-        valueEnd!,
-        maxValue!,
-        minValue!
+        step,
+        valueEnd,
+        maxValue,
+        minValue
       );
 
       if (newValue === minValue) {
         return this.setOptions({
-          valueEnd: roundToRequiredNumber(minValue + step!)
+          valueEnd: roundToRequiredNumber(minValue + step)
         });
       }
 
