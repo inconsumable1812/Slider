@@ -166,8 +166,13 @@ const create = (
         if (
           newValues[currentAtrName] !== oldValues[currentAtrName].toString()
         ) {
-          const value = camelCase(currentAtrName.slice(5));
-          this.setOptions({ [value]: newValues[currentAtrName] });
+          if (atrOldValueIsNumber(currentAtrName)) {
+            const value = camelCase(currentAtrName.slice(5));
+            this.setOptions({ [value]: newValues[currentAtrName] });
+          } else if (atrOldValueIsBoolean(currentAtrName)) {
+            const value = camelCase(currentAtrName.slice(5));
+            this.setOptions({ [value]: toBoolean(newValues[currentAtrName]) });
+          }
         }
       };
       const observer = new MutationObserver(callback);
