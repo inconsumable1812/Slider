@@ -6,7 +6,7 @@ import {
 import { roundToRequiredNumber } from '../../../utils/utils';
 import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
-import { ListenersName, handleProps } from '../../type';
+import { ListenersName, HandleProps } from '../../type';
 import Track from '../Track/Track';
 
 class Handle extends Observer<{ clickOnHandle: number }> {
@@ -26,7 +26,7 @@ class Handle extends Observer<{ clickOnHandle: number }> {
     isVertical,
     track,
     step
-  }: handleProps) {
+  }: HandleProps) {
     super();
     this.handleNumber = handleNumber;
     this.value = value;

@@ -1,26 +1,26 @@
 import { render } from '../../utils/utils';
 import {
   ModelOptions,
-  panelElements,
-  panelInputs,
+  PanelElements,
+  PanelInputs,
   Slider,
   ViewOptions,
   ListenersName,
-  panelProps
+  PanelProps
 } from '../type';
 import Model from '../Model/Model';
 import View from '../View/View';
 
 class Panel {
   private root!: HTMLElement;
-  private elements!: panelElements;
-  private inputs!: panelInputs;
+  private elements!: PanelElements;
+  private inputs!: PanelInputs;
   private selector: HTMLElement;
   private slider: Slider;
   private model: Model;
   private view: View;
 
-  constructor({ selector, slider, model, view }: panelProps) {
+  constructor({ selector, slider, model, view }: PanelProps) {
     this.selector = selector;
     this.slider = slider;
     this.model = model;
@@ -36,7 +36,7 @@ class Panel {
     return this.root;
   }
 
-  public getInputs(): panelInputs {
+  public getInputs(): PanelInputs {
     return this.inputs;
   }
 

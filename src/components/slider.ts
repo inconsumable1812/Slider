@@ -1,15 +1,18 @@
 /* eslint-disable no-shadow */
 import { camelCaseToDash } from '../utils/utils';
 import { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS } from './default';
-import { ModelOptions, sliderOptions, ViewOptions } from './type';
+import { ModelOptions, SliderOptions, ViewOptions } from './type';
 import Model from './Model/Model';
 import Panel from './Panel/Panel';
 import Presenter from './Presenter/Presenter';
 import View from './View/View';
 
-const create = (selector: HTMLElement, options: sliderOptions = {}) => {
+const create = (
+  selector: HTMLElement,
+  options: Partial<SliderOptions> = {}
+) => {
   function prepareOptions(
-    newOptions: sliderOptions,
+    newOptions: SliderOptions,
     target: ViewOptions | ModelOptions
   ): Partial<ModelOptions> | Partial<ViewOptions> {
     const state: Partial<ViewOptions | ModelOptions> = {};
@@ -31,7 +34,7 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     DEFAULT_VIEW_OPTIONS
   ) as Partial<ViewOptions>;
 
-  const model = new Model(updateModelOptions, selector);
+  const model = new Model(selector, updateModelOptions);
   const modelOptionsInit = model.getOptions();
 
   const view = new View({
@@ -51,7 +54,7 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
     getViewRoot(): HTMLElement {
       return view.root;
     },
-    getOptions(): sliderOptions {
+    getOptions(): SliderOptions {
       const modelOptions = model.getOptions();
       const viewOptions = view.getOptions();
 
@@ -73,7 +76,7 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
         container.setAttribute('data-' + el, values[i].toString())
       );
     },
-    setOptions(options: sliderOptions): void {
+    setOptions(options: SliderOptions): void {
       const updateModelOptions = prepareOptions(
         options,
         DEFAULT_MODEL_OPTIONS
@@ -106,7 +109,7 @@ const create = (selector: HTMLElement, options: sliderOptions = {}) => {
       return panel;
     },
 
-    JQSlider(method: string, newOptions?: Partial<sliderOptions>) {
+    JQSlider(method: string, newOptions?: Partial<SliderOptions>) {
       switch (method) {
         case 'getContainer':
           return this.getContainer();

@@ -31,7 +31,7 @@ type ViewComponents = {
   scale: Scale;
 };
 
-type sliderOptions = {
+type SliderOptions = {
   minValue?: number;
   maxValue?: number;
   step?: number;
@@ -48,8 +48,8 @@ type sliderOptions = {
 type Slider = {
   getContainer(): Element;
   getViewRoot(): HTMLElement;
-  getOptions(): sliderOptions;
-  setOptions(options: sliderOptions): void;
+  getOptions(): SliderOptions;
+  setOptions(options: SliderOptions): void;
   getFirstValue(): number;
   getSecondValue(): number;
   addControlPanel(): Panel;
@@ -58,7 +58,7 @@ type Slider = {
   setDataAtr(): void;
 };
 
-type panelElements = {
+type PanelElements = {
   maxValueEl: HTMLElement;
   minValueEl: HTMLElement;
   firstValueEl: HTMLElement;
@@ -72,7 +72,7 @@ type panelElements = {
   verticalEl: HTMLElement;
 };
 
-type panelInputs = {
+type PanelInputs = {
   maxValue: HTMLInputElement;
   minValue: HTMLInputElement;
   valueStart: HTMLInputElement;
@@ -86,7 +86,7 @@ type panelInputs = {
   isVertical: HTMLInputElement;
 };
 
-type handleProps = {
+type HandleProps = {
   handleNumber: number;
   value: number;
   showTooltip: boolean;
@@ -95,7 +95,7 @@ type handleProps = {
   step: number;
 };
 
-type scaleProps = {
+type ScaleProps = {
   minValue: number;
   maxValue: number;
   scalePointCount: number;
@@ -103,20 +103,20 @@ type scaleProps = {
   isVertical: boolean;
 };
 
-type trackProps = {
+type TrackProps = {
   minValue: number;
   maxValue: number;
   isVertical: boolean;
   step: number;
 };
 
-type viewProps = {
+type ViewProps = {
   selector: HTMLElement;
   modelOptions: ModelOptions;
   options?: Partial<ViewOptions>;
 };
 
-type panelProps = {
+type PanelProps = {
   selector: HTMLElement;
   slider: Slider;
   model: Model;
@@ -147,18 +147,18 @@ export {
   ModelOptions,
   ViewOptions,
   ViewComponents,
-  sliderOptions,
+  SliderOptions,
   Slider,
-  panelElements,
-  panelInputs,
+  PanelElements,
+  PanelInputs,
   Listeners,
   ListenersFunction,
   ListenersName,
   PrepareModelOptionsFromDataFtr,
-  handleProps,
-  scaleProps,
-  trackProps,
-  viewProps,
-  panelProps,
+  HandleProps,
+  ScaleProps,
+  TrackProps,
+  ViewProps,
+  PanelProps,
   ListenersFunctionUnsub
 };

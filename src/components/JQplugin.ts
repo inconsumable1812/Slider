@@ -2,19 +2,19 @@ import $ from 'jquery';
 
 import '../scss/slider.scss';
 import { create } from './slider';
-import { sliderOptions } from './type';
+import { SliderOptions } from './type';
 
 declare global {
   interface JQuery {
     JQSlider(
-      methodOrOptions?: string | sliderOptions,
-      newOptions?: sliderOptions
-    ): JQuery | sliderOptions;
+      methodOrOptions?: string | SliderOptions,
+      newOptions?: SliderOptions
+    ): JQuery | SliderOptions;
   }
 }
 
 $.fn.extend({
-  JQSlider(options: sliderOptions) {
+  JQSlider(options?: SliderOptions) {
     return create((<JQuery>this)[0], options);
   }
 });

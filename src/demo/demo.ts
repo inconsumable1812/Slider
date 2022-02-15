@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import $ from 'jquery';
 
-import { sliderOptions } from '../components/type';
+import { SliderOptions } from '../components/type';
 import '../components/slider';
 import '../components/JQplugin';
 
 const slider = $('#app').JQSlider() as JQuery;
 slider.JQSlider('addControlPanel');
 
-const sliderSecondConfig: Partial<sliderOptions> = {
+const sliderSecondConfig: Partial<SliderOptions> = {
   minValue: -0.11,
   maxValue: 0.1,
   step: 0.1,
@@ -16,7 +16,7 @@ const sliderSecondConfig: Partial<sliderOptions> = {
   range: true
 };
 
-const sliderThirdConfig: Partial<sliderOptions> = {
+const sliderThirdConfig: Partial<SliderOptions> = {
   minValue: -500,
   maxValue: -400,
   valueStart: -450,
@@ -25,7 +25,7 @@ const sliderThirdConfig: Partial<sliderOptions> = {
   scalePointCount: 5
 };
 
-const sliderFourthConfig: Partial<sliderOptions> = {
+const sliderFourthConfig: Partial<SliderOptions> = {
   isVertical: true,
   showProgress: true
 };

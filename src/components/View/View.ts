@@ -20,8 +20,8 @@ import {
   ViewComponents,
   ViewOptions,
   ListenersName,
-  viewProps,
-  sliderOptions
+  ViewProps,
+  SliderOptions
 } from '../type';
 import { DEFAULT_VIEW_OPTIONS } from '../default';
 import Observer from '../Observer/Observer';
@@ -46,16 +46,16 @@ import {
 } from './view.function';
 
 class View extends Observer<{
-  viewChanged: Partial<sliderOptions>;
+  viewChanged: Partial<SliderOptions>;
 }> {
   private components!: ViewComponents;
   root!: HTMLElement;
   private selector: HTMLElement;
   private modelOptions: ModelOptions;
   private viewOptions: ViewOptions = DEFAULT_VIEW_OPTIONS;
-  private options: Partial<ViewOptions> | undefined;
+  private options?: Partial<ViewOptions>;
 
-  constructor({ selector, modelOptions, options }: viewProps) {
+  constructor({ selector, modelOptions, options }: ViewProps) {
     super();
     this.selector = selector;
     this.modelOptions = modelOptions;

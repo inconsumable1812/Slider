@@ -33,11 +33,11 @@ describe('Presenter', () => {
 
   beforeEach(() => {
     container = getExampleDOM();
-    model = new Model(DEFAULT_MODEL_OPTIONS, container);
+    model = new Model(container, DEFAULT_MODEL_OPTIONS);
     view = new View({
       selector: container,
       modelOptions: DEFAULT_MODEL_OPTIONS,
-      viewOptions: DEFAULT_VIEW_OPTIONS
+      options: DEFAULT_VIEW_OPTIONS
     });
     presenter = new Presenter(model, view);
   });

@@ -2,14 +2,14 @@ import Handle from './Handle';
 import { ModelOptions, ViewOptions } from '../../type';
 import Track from '../Track/Track';
 
-const modelOptions: Partial<ModelOptions> = {
+const modelOptions: Omit<ModelOptions, 'valueEnd' | 'range'> = {
   minValue: 0,
   maxValue: 100,
   valueStart: 15,
   step: 1
 };
 
-const viewOptions: Partial<ViewOptions> = {
+const viewOptions: Pick<ViewOptions, 'showTooltip' | 'isVertical'> = {
   showTooltip: false,
   isVertical: true
 };
@@ -20,8 +20,13 @@ const isVerticalFalse = false;
 const firstHandleNumber = 1;
 const secondHandleNumber = 2;
 
-const firstTrack = new Track(minValue!, maxValue!, isVerticalFalse, step!);
-const secondTrack = new Track(minValue!, maxValue!, isVertical!, step!);
+const firstTrack = new Track({
+  minValue,
+  maxValue,
+  isVertical: isVerticalFalse,
+  step
+});
+const secondTrack = new Track({ minValue, maxValue, isVertical, step });
 
 describe('Handle', () => {
   let handel: Handle;

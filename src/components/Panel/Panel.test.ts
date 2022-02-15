@@ -1,5 +1,5 @@
 import { create } from '../slider';
-import { Slider, sliderOptions } from '../type';
+import { Slider, SliderOptions } from '../type';
 import Panel from './Panel';
 import { MAX_SCALE_POINT_COUNT } from '../../constants';
 
@@ -8,7 +8,7 @@ function getExampleDOM() {
   return div;
 }
 
-const options: sliderOptions = {
+const options: SliderOptions = {
   minValue: 0,
   maxValue: 100,
   step: 1,

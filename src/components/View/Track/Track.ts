@@ -1,7 +1,7 @@
 import { render } from '../../../utils/utils';
 import findClosestCorrectValue from '../../../utils/findClosestCorrectValue';
 import Observer from '../../Observer/Observer';
-import { ListenersName, trackProps } from '../../type';
+import { ListenersName, TrackProps } from '../../type';
 
 class Track extends Observer<{
   clickOnTrack: { event: MouseEvent; value: number; click: number };
@@ -12,7 +12,7 @@ class Track extends Observer<{
   isVertical: boolean;
   step: number;
 
-  constructor({ minValue, maxValue, isVertical, step }: trackProps) {
+  constructor({ minValue, maxValue, isVertical, step }: TrackProps) {
     super();
     this.minValue = minValue;
     this.maxValue = maxValue;

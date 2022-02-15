@@ -1,13 +1,13 @@
 import Panel from './Panel/Panel';
 import { create } from './slider';
-import { Slider, sliderOptions } from './type';
+import { Slider, SliderOptions } from './type';
 
 function getExampleDOM() {
   const div = document.createElement('div');
   return div;
 }
 
-const options: sliderOptions = {
+const options: SliderOptions = {
   minValue: 0,
   maxValue: 100,
   step: 1,

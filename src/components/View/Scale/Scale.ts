@@ -5,7 +5,7 @@ import {
 } from '../../../constants';
 import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
-import { ListenersName, scaleProps } from '../../type';
+import { ListenersName, ScaleProps } from '../../type';
 
 class Scale extends Observer<{ clickOnScale: number }> {
   element!: HTMLElement;
@@ -22,7 +22,7 @@ class Scale extends Observer<{ clickOnScale: number }> {
     scalePointCount,
     step,
     isVertical
-  }: scaleProps) {
+  }: ScaleProps) {
     super();
     this.minValue = minValue;
     this.maxValue = maxValue;

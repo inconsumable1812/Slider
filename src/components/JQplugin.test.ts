@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 import '../components/JQplugin';
 import '../components/slider';
-import { sliderOptions } from './type';
+import { SliderOptions } from './type';
 import Panel from './Panel/Panel';
 
 function getExampleDOM() {
@@ -20,7 +20,7 @@ describe('JQuery plugin', () => {
 
   test('check getOptions', () => {
     slider = $(container).JQSlider() as JQuery<HTMLElement>;
-    const options = slider.JQSlider('getOptions') as sliderOptions;
+    const options = slider.JQSlider('getOptions') as SliderOptions;
     expect(options.minValue).toBe(0);
   });
 
@@ -35,7 +35,7 @@ describe('JQuery plugin', () => {
     slider.JQSlider('setOptions', {
       maxValue: 155
     });
-    const options = slider.JQSlider('getOptions') as sliderOptions;
+    const options = slider.JQSlider('getOptions') as SliderOptions;
     expect(options.maxValue).toBe(155);
   });
 
