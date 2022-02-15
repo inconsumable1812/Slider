@@ -76,21 +76,21 @@ const create = (
         container.setAttribute('data-' + el, values[i].toString())
       );
     },
-    setOptions(options: SliderOptions): void {
-      const updateModelOptions = prepareOptions(
-        options,
+    setOptions(newOptions: SliderOptions): void {
+      const newModelOptions = prepareOptions(
+        newOptions,
         DEFAULT_MODEL_OPTIONS
       ) as Partial<ModelOptions>;
-      const updateViewOptions = prepareOptions(
-        options,
+      const newViewOptions = prepareOptions(
+        newOptions,
         DEFAULT_VIEW_OPTIONS
       ) as Partial<ViewOptions>;
 
-      if (updateModelOptions) {
-        model.setOptions(updateModelOptions);
+      if (newModelOptions) {
+        model.setOptions(newModelOptions);
       }
 
-      view.setOptions(updateViewOptions);
+      view.setOptions(newViewOptions);
       if (panel) {
         panel.setOptionsFromSlider();
       }

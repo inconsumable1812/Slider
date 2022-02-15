@@ -19,7 +19,7 @@ import {
   ModelOptions,
   ViewComponents,
   ViewOptions,
-  ListenersName,
+  ViewListeners,
   ViewProps,
   SliderOptions
 } from '../type';
@@ -69,7 +69,7 @@ class View extends Observer<{
     this.viewOptions = { ...this.viewOptions, ...viewOptions };
     this.checkScalePointCount();
     this.setDataAtr();
-    this.emit(ListenersName.viewChanged, this.viewOptions);
+    this.emit(ViewListeners.viewChanged, this.viewOptions);
   }
 
   changeModelOptions(modelOptions: Partial<ModelOptions>): void {
@@ -400,9 +400,9 @@ class View extends Observer<{
       }
 
       if (handle === firstHandle) {
-        this.emit(ListenersName.viewChanged, { valueStart: handle.getValue() });
+        this.emit(ViewListeners.viewChanged, { valueStart: handle.getValue() });
       } else if (handle === secondHandle) {
-        this.emit(ListenersName.viewChanged, { valueEnd: handle.getValue() });
+        this.emit(ViewListeners.viewChanged, { valueEnd: handle.getValue() });
       }
     };
 
@@ -450,7 +450,7 @@ class View extends Observer<{
       .getTooltip()
       .addEventListener('pointerdown', tooltipClickCallback);
 
-    firstHandle.subscribe(ListenersName.clickOnHandle, (newValue: number) => {
+    firstHandle.subscribe(ViewListeners.clickOnHandle, (newValue: number) => {
       const { step, range, valueEnd, valueStart, maxValue } = this.getModel();
       if (whichHandle === 1) {
         if (
@@ -489,7 +489,7 @@ class View extends Observer<{
       }
     });
 
-    secondHandle.subscribe(ListenersName.clickOnHandle, (newValue) => {
+    secondHandle.subscribe(ViewListeners.clickOnHandle, (newValue) => {
       const { step, valueStart } = this.getModel();
 
       if (
@@ -513,7 +513,7 @@ class View extends Observer<{
     const { track, progress, firstHandle, secondHandle, scale } =
       this.components;
 
-    scale.subscribe(ListenersName.clickOnScale, (value) => {
+    scale.subscribe(ViewListeners.clickOnScale, (value) => {
       const { range } = this.modelOptions;
       const { showProgress } = this.viewOptions;
       let closestHandle: Handle = firstHandle;
@@ -563,11 +563,11 @@ class View extends Observer<{
       }
 
       if (closestHandle === firstHandle) {
-        this.emit(ListenersName.viewChanged, {
+        this.emit(ViewListeners.viewChanged, {
           valueStart: closestHandle.getValue()
         });
       } else if (closestHandle === secondHandle) {
-        this.emit(ListenersName.viewChanged, {
+        this.emit(ViewListeners.viewChanged, {
           valueEnd: closestHandle.getValue()
         });
       }
@@ -578,7 +578,7 @@ class View extends Observer<{
     const { track, firstHandle, secondHandle, progress } = this.components;
 
     track.subscribe(
-      ListenersName.clickOnTrack,
+      ViewListeners.clickOnTrack,
       ({
         event,
         value,
@@ -646,11 +646,11 @@ class View extends Observer<{
           progress!.setEnd(styleValue);
         }
         if (closestHandle === firstHandle) {
-          this.emit(ListenersName.viewChanged, {
+          this.emit(ViewListeners.viewChanged, {
             valueStart: closestHandle.getValue()
           });
         } else if (closestHandle === secondHandle) {
-          this.emit(ListenersName.viewChanged, {
+          this.emit(ViewListeners.viewChanged, {
             valueEnd: closestHandle.getValue()
           });
         }

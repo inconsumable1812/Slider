@@ -1,7 +1,7 @@
 import { render } from '../../../utils/utils';
 import findClosestCorrectValue from '../../../utils/findClosestCorrectValue';
 import Observer from '../../Observer/Observer';
-import { ListenersName, TrackProps } from '../../type';
+import { ViewListeners, TrackProps } from '../../type';
 
 class Track extends Observer<{
   clickOnTrack: { event: MouseEvent; value: number; click: number };
@@ -78,7 +78,7 @@ class Track extends Observer<{
         minValue
       );
 
-      this.emit(ListenersName.clickOnTrack, {
+      this.emit(ViewListeners.clickOnTrack, {
         event,
         value: newValue,
         click: progress

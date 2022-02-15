@@ -1,4 +1,9 @@
-import { ModelOptions, ListenersName, ListenersFunctionUnsub } from '../type';
+import {
+  ModelOptions,
+  ModelListeners,
+  ViewListeners,
+  ListenersFunctionUnsub
+} from '../type';
 import Model from '../Model/Model';
 import View from '../View/View';
 
@@ -34,11 +39,11 @@ class Presenter {
 
   private connect(): void {
     this.unsubView = this.view.subscribe(
-      ListenersName.viewChanged,
+      ViewListeners.viewChanged,
       this.setModelOptions.bind(this)
     );
     this.unsubModel = this.model.subscribe(
-      ListenersName.modelValueChange,
+      ModelListeners.modelValueChange,
       this.updateView.bind(this)
     );
   }

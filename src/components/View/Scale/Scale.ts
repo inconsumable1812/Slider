@@ -5,7 +5,7 @@ import {
 } from '../../../constants';
 import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
-import { ListenersName, ScaleProps } from '../../type';
+import { ViewListeners, ScaleProps } from '../../type';
 
 class Scale extends Observer<{ clickOnScale: number }> {
   element!: HTMLElement;
@@ -70,7 +70,7 @@ class Scale extends Observer<{ clickOnScale: number }> {
 
     const clickOnScaleCallback = (e: Event): void => {
       const target = e.target as HTMLElement;
-      this.emit(ListenersName.clickOnScale, +target.textContent!);
+      this.emit(ViewListeners.clickOnScale, +target.textContent!);
     };
 
     this.element.addEventListener('click', clickOnScaleCallback);

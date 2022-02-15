@@ -5,7 +5,8 @@ import {
   PanelInputs,
   Slider,
   ViewOptions,
-  ListenersName,
+  ModelListeners,
+  ViewListeners,
   PanelProps
 } from '../type';
 import Model from '../Model/Model';
@@ -184,12 +185,12 @@ class Panel {
 
   private updateOptionsFromSlider(): void {
     this.model.subscribe(
-      ListenersName.modelValueChange,
+      ModelListeners.modelValueChange,
       this.setOptionsFromSlider.bind(this)
     );
 
     this.view.subscribe(
-      ListenersName.viewChanged,
+      ViewListeners.viewChanged,
       this.setOptionsFromSlider.bind(this)
     );
   }

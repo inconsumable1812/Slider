@@ -12,7 +12,7 @@ import {
   objectFilter
 } from '../../utils/utils';
 import { DEFAULT_MODEL_OPTIONS } from '../default';
-import { ModelOptions, ListenersName } from '../type';
+import { ModelOptions, ModelListeners } from '../type';
 import Observer from '../Observer/Observer';
 import {
   isIncorrectStepInValueEnd,
@@ -62,7 +62,7 @@ class Model extends Observer<{ modelValueChange: null }> {
 
     this.modelOptions = { ...this.modelOptions, ...modelOptions };
     this.checkOptions({ valueStart, valueEnd, minValue, maxValue });
-    this.emit(ListenersName.modelValueChange, null);
+    this.emit(ModelListeners.modelValueChange, null);
   }
 
   private init(): void {

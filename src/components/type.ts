@@ -126,11 +126,12 @@ type PanelProps = {
 type ListenersFunction<T> = <K extends keyof T>(args: T[K]) => void;
 type ListenersFunctionUnsub = () => void;
 
-enum ListenersName {
-  check = 'check',
-  check1 = 'check1',
+enum ModelListeners {
+  modelValueChange = 'modelValueChange'
+}
+
+enum ViewListeners {
   viewChanged = 'viewChanged',
-  modelValueChange = 'modelValueChange',
   clickOnTrack = 'clickOnTrack',
   clickOnScale = 'clickOnScale',
   clickOnHandle = 'clickOnHandle'
@@ -152,7 +153,8 @@ export {
   PanelInputs,
   Listeners,
   ListenersFunction,
-  ListenersName,
+  ModelListeners,
+  ViewListeners,
   PrepareModelOptionsFromDataFtr,
   HandleProps,
   ScaleProps,
