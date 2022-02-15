@@ -35,12 +35,9 @@ import {
 
 class Model extends Observer<{ modelValueChange: ModelOptions }> {
   modelOptions: ModelOptions = DEFAULT_MODEL_OPTIONS;
-  constructor(
-    private selector: HTMLElement,
-    private options?: Partial<ModelOptions>
-  ) {
+  constructor(private selector: HTMLElement, options?: Partial<ModelOptions>) {
     super();
-    this.init();
+    this.init(options);
     this.checkOptions(this.modelOptions);
     this.observeAtr();
   }
@@ -65,12 +62,12 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     this.emit(ModelListeners.modelValueChange, this.getOptions());
   }
 
-  private init(): void {
+  private init(options?: Partial<ModelOptions>): void {
     const optionsFromDataAtr = this.initOptionsFromDataAtr();
 
     this.modelOptions = {
       ...this.modelOptions,
-      ...this.options,
+      ...options,
       ...optionsFromDataAtr
     };
   }
