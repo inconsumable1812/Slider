@@ -32,24 +32,24 @@ type ViewComponents = {
 };
 
 type SliderOptions = {
-  minValue?: number;
-  maxValue?: number;
-  step?: number;
-  valueStart?: number;
-  valueEnd?: number;
-  range?: boolean;
-  scalePointCount?: number;
-  showTooltip?: boolean;
-  isVertical?: boolean;
-  showProgress?: boolean;
-  showScale?: boolean;
+  minValue: number;
+  maxValue: number;
+  step: number;
+  valueStart: number;
+  valueEnd: number;
+  range: boolean;
+  scalePointCount: number;
+  showTooltip: boolean;
+  isVertical: boolean;
+  showProgress: boolean;
+  showScale: boolean;
 };
 
 type Slider = {
   getContainer(): Element;
   getViewRoot(): HTMLElement;
   getOptions(): SliderOptions;
-  setOptions(options: SliderOptions): void;
+  setOptions(options: Partial<SliderOptions>): void;
   getFirstValue(): number;
   getSecondValue(): number;
   addControlPanel(): Panel;

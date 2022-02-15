@@ -5,9 +5,7 @@ import {
   roundToRequiredNumber,
   camelCaseToDash,
   toNumber,
-  isNeedToChangeValue,
   toBoolean,
-  isNeedToChangeIfValueBoolean,
   filterModelOptions,
   objectFilter
 } from '../../utils/utils';
@@ -39,7 +37,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     super();
     this.init(options);
     this.checkOptions(this.modelOptions);
-    this.observeAtr();
+    // this.observeAtr();
   }
 
   getOptions(): ModelOptions {
@@ -126,180 +124,6 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     keysDash.forEach((el, i) =>
       container.setAttribute('data-' + el, values[i].toString())
     );
-  }
-
-  private observeAtr(): void {
-    this.observeValueStartAtr();
-    this.observeValueEndAtr();
-    this.observeMinValueAtr();
-    this.observeMaxValueAtr();
-    this.observeStepAtr();
-    this.observeRangeAtr();
-  }
-
-  private observeValueStartAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'valueStart';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().valueStart;
-      const oldValueNumber = toNumber(oldValue!, valFromOptions);
-      const valNumber = toNumber(val!, valFromOptions);
-
-      if (isNeedToChangeValue(val!)) {
-        this.selector.setAttribute(
-          'data-value-start',
-          valFromOptions.toString()
-        );
-      }
-
-      if (valNumber !== oldValueNumber) {
-        this.setOptions({ valueStart: valNumber });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-value-start']
-    });
-  }
-
-  private observeValueEndAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'valueEnd';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().valueEnd;
-      const oldValueNumber = toNumber(oldValue!, valFromOptions);
-      const valNumber = toNumber(val!, valFromOptions);
-
-      if (isNeedToChangeValue(val!)) {
-        this.selector.setAttribute('data-value-end', valFromOptions.toString());
-      }
-
-      if (valNumber !== oldValueNumber) {
-        this.setOptions({ valueEnd: valNumber });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-value-end']
-    });
-  }
-
-  private observeMinValueAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'minValue';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().minValue;
-      const oldValueNumber = toNumber(oldValue!, valFromOptions);
-      const valNumber = toNumber(val!, valFromOptions);
-
-      if (isNeedToChangeValue(val!)) {
-        this.selector.setAttribute('data-min-value', valFromOptions.toString());
-      }
-
-      if (valNumber !== oldValueNumber) {
-        this.setOptions({ minValue: valNumber });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-min-value']
-    });
-  }
-
-  private observeMaxValueAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'maxValue';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().maxValue;
-      const oldValueNumber = toNumber(oldValue!, valFromOptions);
-      const valNumber = toNumber(val!, valFromOptions);
-
-      if (isNeedToChangeValue(val!)) {
-        this.selector.setAttribute('data-max-value', valFromOptions.toString());
-      }
-
-      if (valNumber !== oldValueNumber) {
-        this.setOptions({ maxValue: valNumber });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-max-value']
-    });
-  }
-
-  private observeRangeAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'range';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().range;
-      const oldValueBoolean = toBoolean(oldValue!);
-      const valBoolean = toBoolean(val!);
-
-      if (isNeedToChangeIfValueBoolean(val!)) {
-        this.selector.setAttribute('data-range', valFromOptions.toString());
-      }
-
-      if (valBoolean !== oldValueBoolean) {
-        this.setOptions({ range: valBoolean });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-range']
-    });
-  }
-
-  private observeStepAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'step';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().step;
-      const oldValueNumber = toNumber(oldValue!, valFromOptions);
-      const valNumber = toNumber(val!, valFromOptions);
-
-      if (isNeedToChangeValue(val!)) {
-        this.selector.setAttribute('data-step', valFromOptions.toString());
-      }
-
-      if (valNumber !== oldValueNumber) {
-        this.setOptions({ step: valNumber });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-step']
-    });
   }
 
   private checkOptions({

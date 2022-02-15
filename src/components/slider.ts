@@ -1,5 +1,13 @@
 /* eslint-disable no-shadow */
-import { camelCaseToDash } from '../utils/utils';
+import {
+  atrOldValueIsBoolean,
+  atrOldValueIsNumber,
+  camelCase,
+  camelCaseToDash,
+  isNeedToChangeNewVal,
+  toBoolean,
+  toNumber
+} from '../utils/utils';
 import { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS } from './default';
 import { JQResult, ModelOptions, SliderOptions, ViewOptions } from './type';
 import Model from './Model/Model';
@@ -12,7 +20,7 @@ const create = (
   options: Partial<SliderOptions> = {}
 ) => {
   function prepareOptions(
-    newOptions: SliderOptions,
+    newOptions: Partial<SliderOptions>,
     target: ViewOptions | ModelOptions
   ): Partial<ModelOptions> | Partial<ViewOptions> {
     const state: Partial<ViewOptions | ModelOptions> = {};
@@ -46,6 +54,9 @@ const create = (
   const presenter = new Presenter(model, view);
 
   let panel: Panel;
+  const oldValues: Record<string, number | boolean> = {};
+  const newValues: Record<string, string> = {};
+  const currentValues: Record<string, number | boolean> = {};
 
   const slider = {
     getContainer(): Element {
@@ -76,7 +87,7 @@ const create = (
         container.setAttribute('data-' + el, values[i].toString())
       );
     },
-    setOptions(newOptions: SliderOptions): void {
+    setOptions(newOptions: Partial<SliderOptions>): void {
       const newModelOptions = prepareOptions(
         newOptions,
         DEFAULT_MODEL_OPTIONS
@@ -108,6 +119,55 @@ const create = (
       panel.init();
       return panel;
     },
+    observeDataAtr(): void {
+      const callback: MutationCallback = (mutationRecords) => {
+        let currentAtrName = '';
+        mutationRecords.forEach((el) => {
+          const atrName = el.attributeName as string;
+          currentAtrName = atrName;
+          const atrOldValue = el.oldValue as string;
+          let oldValue: number | boolean;
+
+          const camelCaseName: keyof SliderOptions = camelCase(
+            atrName.slice(5)
+          ) as keyof SliderOptions;
+          const valFromOptions = this.getOptions()[camelCaseName];
+          const newValueString = selector.dataset[camelCaseName] as string;
+
+          if (atrOldValueIsNumber(atrName)) {
+            oldValue = toNumber(atrOldValue, valFromOptions as number);
+            oldValues[atrName] = oldValue;
+          } else if (atrOldValueIsBoolean(atrName)) {
+            oldValue = toBoolean(atrOldValue);
+            oldValues[atrName] = oldValue;
+          }
+
+          newValues[atrName] = newValueString;
+          currentValues[atrName] = valFromOptions;
+          return { oldValues, newValues, currentValues };
+        });
+
+        if (isNeedToChangeNewVal(currentAtrName, newValues)) {
+          selector.setAttribute(
+            currentAtrName,
+            currentValues[currentAtrName].toString()
+          );
+          newValues[currentAtrName] = currentValues[currentAtrName].toString();
+        }
+
+        if (
+          newValues[currentAtrName] !== oldValues[currentAtrName].toString()
+        ) {
+          const value = camelCase(currentAtrName.slice(5));
+          this.setOptions({ [value]: newValues[currentAtrName] });
+        }
+      };
+      const observer = new MutationObserver(callback);
+      observer.observe(selector, {
+        attributes: true,
+        attributeOldValue: true
+      });
+    },
 
     JQSlider(method: string, newOptions?: Partial<SliderOptions>): JQResult {
       switch (method) {
@@ -134,7 +194,7 @@ const create = (
       }
     }
   };
-
+  slider.observeDataAtr();
   return slider;
 };
 

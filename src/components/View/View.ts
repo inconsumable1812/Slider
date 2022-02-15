@@ -8,9 +8,7 @@ import {
   render,
   camelCaseToDash,
   toNumber,
-  isNeedToChangeValue,
   toBoolean,
-  isNeedToChangeIfValueBoolean,
   objectFilter,
   filterViewOptions,
   roundToRequiredNumber
@@ -62,7 +60,7 @@ class View extends Observer<{
     this.options = options;
     this.initViewOptions();
     this.checkScalePointCount();
-    this.observeAtr();
+    // this.observeAtr();
   }
 
   setOptions(viewOptions: Partial<ViewOptions>): void {
@@ -669,164 +667,6 @@ class View extends Observer<{
     keysDash.forEach((el, i) =>
       container.setAttribute('data-' + el, values[i].toString())
     );
-  }
-
-  private observeAtr(): void {
-    this.observeScalePointCountAtr();
-    this.observeShowTooltipAtr();
-    this.observeIsVerticalAtr();
-    this.observeShowProgressAtr();
-    this.observeShowScaleAtr();
-  }
-
-  private observeScalePointCountAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'scalePointCount';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().scalePointCount;
-      const oldValueNumber = toNumber(oldValue!, valFromOptions);
-      const valNumber = toNumber(val!, valFromOptions);
-
-      if (isNeedToChangeValue(val!)) {
-        this.selector.setAttribute(
-          'data-scale-point-count',
-          valFromOptions.toString()
-        );
-      }
-
-      if (valNumber !== oldValueNumber) {
-        this.setOptions({ scalePointCount: valNumber });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-scale-point-count']
-    });
-  }
-
-  private observeShowTooltipAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'showTooltip';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().showTooltip;
-      const oldValueBoolean = toBoolean(oldValue!);
-      const valBoolean = toBoolean(val!);
-
-      if (isNeedToChangeIfValueBoolean(val!)) {
-        this.selector.setAttribute(
-          'data-show-tooltip',
-          valFromOptions.toString()
-        );
-      }
-
-      if (valBoolean !== oldValueBoolean) {
-        this.setOptions({ showTooltip: valBoolean });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-show-tooltip']
-    });
-  }
-
-  private observeIsVerticalAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'isVertical';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().isVertical;
-      const oldValueBoolean = toBoolean(oldValue!);
-      const valBoolean = toBoolean(val!);
-
-      if (isNeedToChangeIfValueBoolean(val!)) {
-        this.selector.setAttribute(
-          'data-is-vertical',
-          valFromOptions.toString()
-        );
-      }
-
-      if (valBoolean !== oldValueBoolean) {
-        this.setOptions({ isVertical: valBoolean });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-is-vertical']
-    });
-  }
-
-  private observeShowProgressAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'showProgress';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().showProgress;
-      const oldValueBoolean = toBoolean(oldValue!);
-      const valBoolean = toBoolean(val!);
-
-      if (isNeedToChangeIfValueBoolean(val!)) {
-        this.selector.setAttribute(
-          'data-show-progress',
-          valFromOptions.toString()
-        );
-      }
-
-      if (valBoolean !== oldValueBoolean) {
-        this.setOptions({ showProgress: valBoolean });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-show-progress']
-    });
-  }
-
-  private observeShowScaleAtr(): void {
-    const callback: MutationCallback = (mutationRecords) => {
-      const key = 'showScale';
-      const val = this.selector.dataset[key];
-      const oldValue = mutationRecords[0].oldValue;
-
-      const valFromOptions = this.getOptions().showScale;
-      const oldValueBoolean = toBoolean(oldValue!);
-      const valBoolean = toBoolean(val!);
-
-      if (isNeedToChangeIfValueBoolean(val!)) {
-        this.selector.setAttribute(
-          'data-show-scale',
-          valFromOptions.toString()
-        );
-      }
-
-      if (valBoolean !== oldValueBoolean) {
-        this.setOptions({ showScale: valBoolean });
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.selector, {
-      attributes: true,
-      attributeOldValue: true,
-      attributeFilter: ['data-show-scale']
-    });
   }
 
   private initOptionsFromDataAtr(): Partial<ViewOptions> {

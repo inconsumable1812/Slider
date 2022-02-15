@@ -92,6 +92,40 @@ function findDecimalPart(value: number) {
   return numberOfDecimal;
 }
 
+function atrOldValueIsNumber(atrOldValue: string): boolean {
+  return (
+    atrOldValue === 'data-min-value' ||
+    atrOldValue === 'data-max-value' ||
+    atrOldValue === 'data-step' ||
+    atrOldValue === 'data-value-start' ||
+    atrOldValue === 'data-value-end' ||
+    atrOldValue === 'data-scale-point-count'
+  );
+}
+
+function atrOldValueIsBoolean(atrOldValue: string): boolean {
+  return (
+    atrOldValue === 'data-range' ||
+    atrOldValue === 'data-show-tooltip' ||
+    atrOldValue === 'data-is-vertical' ||
+    atrOldValue === 'data-show-progress' ||
+    atrOldValue === 'data-show-scale'
+  );
+}
+
+function isNeedToChangeNewVal(
+  AtrName: string,
+  newValues: Record<string, string>
+): boolean {
+  if (atrOldValueIsNumber(AtrName)) {
+    return isNeedToChangeValue(newValues[AtrName]);
+  }
+  if (atrOldValueIsBoolean(AtrName)) {
+    return isNeedToChangeIfValueBoolean(newValues[AtrName]);
+  }
+  return false;
+}
+
 export {
   roundToRequiredNumber,
   render,
@@ -104,5 +138,8 @@ export {
   filterModelOptions,
   objectFilter,
   filterViewOptions,
-  findDecimalPart
+  findDecimalPart,
+  atrOldValueIsNumber,
+  atrOldValueIsBoolean,
+  isNeedToChangeNewVal
 };
