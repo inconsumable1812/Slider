@@ -26,7 +26,9 @@
       "rules": {
         "linebreak-style": "off",
         "lines-between-class-members": "off",
-        "@typescript-eslint/no-non-null-assertion": "off"
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error"
       }
     }
   ]

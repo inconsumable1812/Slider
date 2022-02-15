@@ -126,7 +126,6 @@ type PanelProps = {
 type ListenersFunction<T> = <K extends keyof T>(args: T[K]) => void;
 type ListenersFunctionUnsub = () => void;
 
-// eslint-disable-next-line no-shadow
 enum ListenersName {
   check = 'check',
   check1 = 'check1',
