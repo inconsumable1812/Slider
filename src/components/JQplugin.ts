@@ -2,14 +2,12 @@ import $ from 'jquery';
 
 import '../scss/slider.scss';
 import { create } from './slider';
-import { SliderOptions } from './type';
+import { JQResult, JQueryMethod, SliderOptions } from './type';
 
 declare global {
   interface JQuery {
-    JQSlider(
-      methodOrOptions?: string | SliderOptions,
-      newOptions?: SliderOptions
-    ): JQuery | SliderOptions;
+    JQSlider(options?: Partial<SliderOptions>): JQuery;
+    JQSlider(method: JQueryMethod, newOptions?: SliderOptions): JQResult;
   }
 }
 

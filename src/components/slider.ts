@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import { camelCaseToDash } from '../utils/utils';
 import { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS } from './default';
-import { ModelOptions, SliderOptions, ViewOptions } from './type';
+import { JQResult, ModelOptions, SliderOptions, ViewOptions } from './type';
 import Model from './Model/Model';
 import Panel from './Panel/Panel';
 import Presenter from './Presenter/Presenter';
@@ -109,7 +109,7 @@ const create = (
       return panel;
     },
 
-    JQSlider(method: string, newOptions?: Partial<SliderOptions>) {
+    JQSlider(method: string, newOptions?: Partial<SliderOptions>): JQResult {
       switch (method) {
         case 'getContainer':
           return this.getContainer();

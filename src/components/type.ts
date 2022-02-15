@@ -139,9 +139,15 @@ enum ViewListeners {
 
 type Listeners<T> = Record<keyof T, ListenersFunction<T>[]>;
 
-type PrepareModelOptionsFromDataFtr = {
-  minValue: string;
-};
+type JQueryMethod =
+  | 'getContainer'
+  | 'getOptions'
+  | 'setOptions'
+  | 'getFirstValue'
+  | 'getSecondValue'
+  | 'addControlPanel';
+
+type JQResult = number | void | Element | SliderOptions | Panel | null;
 
 export {
   ModelOptions,
@@ -155,11 +161,12 @@ export {
   ListenersFunction,
   ModelListeners,
   ViewListeners,
-  PrepareModelOptionsFromDataFtr,
   HandleProps,
   ScaleProps,
   TrackProps,
   ViewProps,
   PanelProps,
-  ListenersFunctionUnsub
+  ListenersFunctionUnsub,
+  JQueryMethod,
+  JQResult
 };
