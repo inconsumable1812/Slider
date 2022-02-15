@@ -37,12 +37,7 @@ describe('Panel', () => {
   beforeEach(() => {
     container = getExampleDOM();
     slider = create(container, options);
-    panel = new Panel({
-      selector: container,
-      slider,
-      model: slider.getModel(),
-      view: slider.getView()
-    });
+    panel = new Panel(container, slider);
     panel.init();
   });
 

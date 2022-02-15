@@ -9,7 +9,15 @@ import {
   toNumber
 } from '../utils/utils';
 import { DEFAULT_MODEL_OPTIONS, DEFAULT_VIEW_OPTIONS } from './default';
-import { JQResult, ModelOptions, SliderOptions, ViewOptions } from './type';
+import {
+  JQResult,
+  ListenersFunction,
+  ModelListeners,
+  ModelOptions,
+  SliderOptions,
+  ViewListeners,
+  ViewOptions
+} from './type';
 import Model from './Model/Model';
 import Panel from './Panel/Panel';
 import Presenter from './Presenter/Presenter';
@@ -115,7 +123,7 @@ const create = (
       return model.getSecondValue();
     },
     addControlPanel(): Panel {
-      panel = new Panel({ selector, slider, model, view });
+      panel = new Panel(selector, slider);
       panel.init();
       return panel;
     },
@@ -167,6 +175,16 @@ const create = (
         attributes: true,
         attributeOldValue: true
       });
+    },
+    updateModelOptions(
+      fn: ListenersFunction<{ modelValueChange: Partial<ModelOptions> }>
+    ) {
+      model.subscribe(ModelListeners.modelValueChange, fn);
+    },
+    updateViewOptions(
+      fn: ListenersFunction<{ viewChanged: Partial<ViewOptions> }>
+    ) {
+      view.subscribe(ViewListeners.viewChanged, fn);
     },
 
     JQSlider(method: string, newOptions?: Partial<SliderOptions>): JQResult {

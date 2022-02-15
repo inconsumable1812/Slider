@@ -45,6 +45,9 @@ type SliderOptions = {
   showScale: boolean;
 };
 
+type ListenersFunction<T> = <K extends keyof T>(args: T[K]) => void;
+type ListenersFunctionUnsub = () => void;
+
 type Slider = {
   getContainer(): Element;
   getViewRoot(): HTMLElement;
@@ -56,6 +59,13 @@ type Slider = {
   getModel(): Model;
   getView(): View;
   setDataAtr(): void;
+  observeDataAtr(): void;
+  updateModelOptions(
+    fn: ListenersFunction<{ modelValueChange: Partial<ModelOptions> }>
+  ): void;
+  updateViewOptions(
+    fn: ListenersFunction<{ viewChanged: Partial<ViewOptions> }>
+  ): void;
 };
 
 type PanelElements = {
@@ -122,9 +132,6 @@ type PanelProps = {
   model: Model;
   view: View;
 };
-
-type ListenersFunction<T> = <K extends keyof T>(args: T[K]) => void;
-type ListenersFunctionUnsub = () => void;
 
 enum ModelListeners {
   modelValueChange = 'modelValueChange'

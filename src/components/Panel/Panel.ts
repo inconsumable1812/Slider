@@ -4,13 +4,8 @@ import {
   PanelElements,
   PanelInputs,
   Slider,
-  ViewOptions,
-  ModelListeners,
-  ViewListeners,
-  PanelProps
+  ViewOptions
 } from '../type';
-import Model from '../Model/Model';
-import View from '../View/View';
 
 class Panel {
   private root!: HTMLElement;
@@ -18,14 +13,10 @@ class Panel {
   private inputs!: PanelInputs;
   private selector: HTMLElement;
   private slider: Slider;
-  private model: Model;
-  private view: View;
 
-  constructor({ selector, slider, model, view }: PanelProps) {
+  constructor(selector: HTMLElement, slider: Slider) {
     this.selector = selector;
     this.slider = slider;
-    this.model = model;
-    this.view = view;
   }
 
   public init(): void {
@@ -184,15 +175,8 @@ class Panel {
   }
 
   private updateOptionsFromSlider(): void {
-    this.model.subscribe(
-      ModelListeners.modelValueChange,
-      this.setOptionsFromSlider.bind(this)
-    );
-
-    this.view.subscribe(
-      ViewListeners.viewChanged,
-      this.setOptionsFromSlider.bind(this)
-    );
+    this.slider.updateModelOptions(this.setOptionsFromSlider.bind(this));
+    this.slider.updateViewOptions(this.setOptionsFromSlider.bind(this));
   }
 
   private getMaxValue(): Partial<ModelOptions> {
