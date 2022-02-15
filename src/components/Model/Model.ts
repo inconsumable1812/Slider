@@ -33,7 +33,7 @@ import {
   calculateValueStartBeforeMax
 } from './Model.function';
 
-class Model extends Observer<{ modelValueChange: null }> {
+class Model extends Observer<{ modelValueChange: ModelOptions }> {
   modelOptions: ModelOptions = DEFAULT_MODEL_OPTIONS;
   constructor(
     private selector: HTMLElement,
@@ -62,7 +62,7 @@ class Model extends Observer<{ modelValueChange: null }> {
 
     this.modelOptions = { ...this.modelOptions, ...modelOptions };
     this.checkOptions({ valueStart, valueEnd, minValue, maxValue });
-    this.emit(ModelListeners.modelValueChange, null);
+    this.emit(ModelListeners.modelValueChange, this.getOptions());
   }
 
   private init(): void {
