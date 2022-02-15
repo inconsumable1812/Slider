@@ -37,7 +37,6 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     super();
     this.init(options);
     this.checkOptions(this.modelOptions);
-    // this.observeAtr();
   }
 
   getOptions(): ModelOptions {

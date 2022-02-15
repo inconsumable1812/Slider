@@ -60,7 +60,6 @@ class View extends Observer<{
     this.options = options;
     this.initViewOptions();
     this.checkScalePointCount();
-    // this.observeAtr();
   }
 
   setOptions(viewOptions: Partial<ViewOptions>): void {
