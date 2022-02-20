@@ -62,9 +62,6 @@ const create = (
   const presenter = new Presenter(model, view);
 
   let panel: Panel;
-  const oldValues: Record<string, number | boolean> = {};
-  const newValues: Record<string, string> = {};
-  const currentValues: Record<string, number | boolean> = {};
 
   const slider = {
     getContainer(): Element {
@@ -128,19 +125,35 @@ const create = (
       return panel;
     },
     observeDataAtr(): void {
+      const oldValues: Record<string, number | boolean> = {};
+      const newValues: Record<string, string> = {};
+      const currentValues: Record<string, number | boolean> = {};
+
       const callback: MutationCallback = (mutationRecords) => {
         let currentAtrName = '';
         mutationRecords.forEach((el) => {
-          const atrName = el.attributeName as string;
+          const isShouldUpdateAtr =
+            el.attributeName !== null && el.oldValue !== null;
+
+          if (!isShouldUpdateAtr) {
+            return false;
+          }
+
+          const atrName = el.attributeName;
+
           currentAtrName = atrName;
-          const atrOldValue = el.oldValue as string;
+          const atrOldValue = el.oldValue;
           let oldValue: number | boolean;
 
           const camelCaseName: keyof SliderOptions = camelCase(
             atrName.slice(5)
           ) as keyof SliderOptions;
           const valFromOptions = this.getOptions()[camelCaseName];
-          const newValueString = selector.dataset[camelCaseName] as string;
+          const newValueString = selector.dataset[camelCaseName];
+
+          if (newValueString === undefined) {
+            return false;
+          }
 
           if (atrOldValueIsNumber(atrName)) {
             oldValue = toNumber(atrOldValue, valFromOptions as number);
