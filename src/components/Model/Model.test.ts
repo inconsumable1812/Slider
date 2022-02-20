@@ -1,7 +1,13 @@
 import { MIN_STEP } from '../../constants';
 import { ModelOptions } from '../type';
-import Model from './Model';
 import { DEFAULT_MODEL_OPTIONS } from '../default';
+import {
+  NEW_VAL_BIGGER_VALUE_END,
+  NEW_VAL_LESS_VALUE_START,
+  VALUE_END,
+  VALUE_START
+} from '../constants';
+import Model from './Model';
 
 function getExampleDOM() {
   const div = document.createElement('div');
@@ -309,5 +315,29 @@ describe('Model', () => {
       optionsCorrectValueEndInStep
     );
     expect(ModelCorrectValueEndInStep.getOptions().valueEnd).toBe(100);
+  });
+
+  test('check correct calculate value start', () => {
+    const defaultModel = new Model(container);
+    defaultModel.calculateValueFromView([VALUE_START, 0.5]);
+    expect(defaultModel.getOptions().valueStart).toBe(50);
+  });
+
+  test('check correct calculate value end', () => {
+    const defaultModel = new Model(container, { range: true });
+    defaultModel.calculateValueFromView([VALUE_END, 0.77]);
+    expect(defaultModel.getOptions().valueEnd).toBe(77);
+  });
+
+  test('check correct calculate value start, when new value bigger than value end', () => {
+    const defaultModel = new Model(container, { range: true });
+    defaultModel.calculateValueFromView([NEW_VAL_BIGGER_VALUE_END, 0.5]);
+    expect(defaultModel.getOptions().valueStart).toBe(49);
+  });
+
+  test('check correct calculate value end, when new value less than value start', () => {
+    const defaultModel = new Model(container, { range: true });
+    defaultModel.calculateValueFromView([NEW_VAL_LESS_VALUE_START, 0.5]);
+    expect(defaultModel.getOptions().valueEnd).toBe(41);
   });
 });

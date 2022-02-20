@@ -1,6 +1,8 @@
+import Model from './Model/Model';
 import Panel from './Panel/Panel';
 import { create } from './slider';
 import { Slider, SliderOptions } from './type';
+import View from './View/View';
 
 function getExampleDOM() {
   const div = document.createElement('div');
@@ -58,5 +60,15 @@ describe('Slider', () => {
     slider.addControlPanel();
     slider.setOptions({ minValue: 10 });
     expect(slider.getOptions().minValue).toBe(10);
+  });
+
+  test('check get Model', () => {
+    const model = slider.getModel();
+    expect(model).toBeInstanceOf(Model);
+  });
+
+  test('check get View', () => {
+    const view = slider.getView();
+    expect(view).toBeInstanceOf(View);
   });
 });

@@ -1,5 +1,11 @@
-import { ModelOptions, ViewOptions } from '../type';
+import { ModelOptions, ViewListeners, ViewOptions } from '../type';
+import Handle from './Handle/Handle';
+import Track from './Track/Track';
 import View from './View';
+import {
+  findClosestHandle,
+  findClosestHandleFromPercent
+} from './view.function';
 
 function getExampleDOM() {
   const div = document.createElement('div');
@@ -179,7 +185,7 @@ describe('View', () => {
   test('check click on track', () => {
     viewDefault.render();
     const fn = jest.fn();
-    viewDefault.subscribe('viewChanged', fn);
+    viewDefault.subscribe(ViewListeners.viewChangeModel, fn);
     const track = viewDefault.getComponents().track;
     track.element.dispatchEvent(new Event('pointerdown'));
     expect(fn).toBeCalled();
@@ -188,7 +194,7 @@ describe('View', () => {
   test('check click on track with range true', () => {
     viewAllTrue.render();
     const fn = jest.fn();
-    viewAllTrue.subscribe('viewChanged', fn);
+    viewAllTrue.subscribe(ViewListeners.viewChangeModel, fn);
     const track = viewAllTrue.getComponents().track;
     track.element.dispatchEvent(new Event('pointerdown'));
     expect(fn).toBeCalled();
@@ -197,7 +203,7 @@ describe('View', () => {
   test('check click on handle', () => {
     viewDefault.render();
     const fn = jest.fn();
-    viewDefault.subscribe('viewChanged', fn);
+    viewDefault.subscribe(ViewListeners.viewChangeModel, fn);
     const firstHandle = viewDefault.getComponents().firstHandle;
     firstHandle.element.dispatchEvent(new Event('pointerdown'));
     document.dispatchEvent(new Event('pointermove'));
@@ -208,7 +214,7 @@ describe('View', () => {
   test('check click on handle with range true', () => {
     viewAllTrue.render();
     const fn = jest.fn();
-    viewAllTrue.subscribe('viewChanged', fn);
+    viewAllTrue.subscribe(ViewListeners.viewChangeModel, fn);
     const secondHandle = viewAllTrue.getComponents().secondHandle;
     secondHandle.element.dispatchEvent(new Event('pointerdown'));
     document.dispatchEvent(new Event('pointermove'));
@@ -219,7 +225,7 @@ describe('View', () => {
   test('check click on handle with options 4', () => {
     view4.render();
     const fn = jest.fn();
-    view4.subscribe('viewChanged', fn);
+    view4.subscribe(ViewListeners.viewChangeModel, fn);
     const firstHandle = view4.getComponents().firstHandle;
     firstHandle.element.dispatchEvent(new Event('pointerdown'));
     document.dispatchEvent(new Event('pointermove'));
@@ -230,18 +236,18 @@ describe('View', () => {
   test('check click on scale with range true', () => {
     viewAllTrue.render();
     const fn = jest.fn();
-    viewAllTrue.subscribe('viewChanged', fn);
+    viewAllTrue.subscribe(ViewListeners.viewChanged, fn);
     const scale = viewAllTrue.getComponents().scale;
-    scale!.element.dispatchEvent(new Event('click'));
+    scale.element.dispatchEvent(new Event('click'));
     expect(fn).toBeCalled();
   });
 
   test('check click on scale with range false', () => {
     view4.render();
     const fn = jest.fn();
-    view4.subscribe('viewChanged', fn);
+    view4.subscribe(ViewListeners.viewChanged, fn);
     const scale = view4.getComponents().scale;
-    scale!.element.dispatchEvent(new Event('click'));
+    scale.element.dispatchEvent(new Event('click'));
     expect(fn).toBeCalled();
   });
 
@@ -368,5 +374,67 @@ describe('check change data attribute, view', () => {
     viewDefault.render();
     container.setAttribute('data-show-scale', 'error');
     expect(viewDefault.getOptions().showScale).toBeTruthy();
+  });
+
+  test('check find closest Handle', () => {
+    const track = new Track({
+      minValue: 0,
+      maxValue: 100,
+      isVertical: false,
+      step: 1
+    });
+    const firstHandle = new Handle({
+      handleNumber: 1,
+      isVertical: false,
+      showTooltip: false,
+      step: 1,
+      track,
+      value: 40
+    });
+    const secondHandle = new Handle({
+      handleNumber: 2,
+      isVertical: false,
+      showTooltip: false,
+      step: 1,
+      track,
+      value: 50
+    });
+    const closestHandle = findClosestHandle({
+      firstHandle,
+      secondHandle,
+      clickValue: 49
+    });
+    expect(closestHandle).toBe(secondHandle);
+  });
+
+  test('check find closest Handle from percent', () => {
+    const track = new Track({
+      minValue: 0,
+      maxValue: 100,
+      isVertical: false,
+      step: 1
+    });
+    const firstHandle = new Handle({
+      handleNumber: 1,
+      isVertical: false,
+      showTooltip: false,
+      step: 1,
+      track,
+      value: 40
+    });
+    const secondHandle = new Handle({
+      handleNumber: 2,
+      isVertical: false,
+      showTooltip: false,
+      step: 1,
+      track,
+      value: 50
+    });
+    const closestHandle = findClosestHandleFromPercent({
+      firstHandle,
+      secondHandle,
+      percent: 0.41
+    });
+    expect(closestHandle).toBe(firstHandle);
   });
 });

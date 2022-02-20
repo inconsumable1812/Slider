@@ -96,34 +96,6 @@ function isHideTooltipAndRange(showTooltip: boolean, range: boolean): boolean {
   return !showTooltip && range;
 }
 
-function isFirstHandleRangeAndShowProgress({
-  firstHandle,
-  closestHandle,
-  range,
-  showProgress
-}: {
-  firstHandle: Handle;
-  closestHandle: Handle;
-  range: boolean;
-  showProgress: boolean;
-}): boolean {
-  return range && showProgress && closestHandle === firstHandle;
-}
-
-function isSecondHandleRangeAndShowProgress({
-  secondHandle,
-  closestHandle,
-  range,
-  showProgress
-}: {
-  secondHandle: Handle;
-  closestHandle: Handle;
-  range: boolean;
-  showProgress: boolean;
-}): boolean {
-  return range && showProgress && closestHandle === secondHandle;
-}
-
 function isNewValueStartBiggerValueEnd({
   percent,
   secondHandle,
@@ -182,8 +154,6 @@ export {
   isNotRangeAndStayMergeTooltip,
   isShowTooltipAndRange,
   isHideTooltipAndRange,
-  isFirstHandleRangeAndShowProgress,
-  isSecondHandleRangeAndShowProgress,
   isNewValueStartBiggerValueEnd,
   isNewValueEndLessValueStart,
   isNotRangeAndContainsClassListMerged,
