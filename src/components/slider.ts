@@ -151,9 +151,7 @@ const create = (
           const valFromOptions = this.getOptions()[camelCaseName];
           const newValueString = selector.dataset[camelCaseName];
 
-          if (newValueString === undefined) {
-            return false;
-          }
+          currentValues[atrName] = valFromOptions;
 
           if (atrOldValueIsNumber(atrName)) {
             oldValue = toNumber(atrOldValue, valFromOptions as number);
@@ -163,8 +161,13 @@ const create = (
             oldValues[atrName] = oldValue;
           }
 
+          if (newValueString === undefined) {
+            newValues[atrName] = valFromOptions.toString();
+            return false;
+          }
+
           newValues[atrName] = newValueString;
-          currentValues[atrName] = valFromOptions;
+
           return { oldValues, newValues, currentValues };
         });
 
