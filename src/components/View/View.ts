@@ -10,8 +10,7 @@ import {
   toNumber,
   toBoolean,
   objectFilter,
-  filterViewOptions,
-  roundToRequiredNumber
+  filterViewOptions
 } from '../../utils/utils';
 import {
   ModelOptions,
@@ -21,6 +20,12 @@ import {
   ViewProps,
   SliderOptions
 } from '../type';
+import {
+  NEW_VAL_BIGGER_VALUE_END,
+  NEW_VAL_LESS_VALUE_START,
+  VALUE_END,
+  VALUE_START
+} from '../constants';
 import { DEFAULT_VIEW_OPTIONS } from '../default';
 import Observer from '../Observer/Observer';
 import Handle from './Handle/Handle';
@@ -36,15 +41,15 @@ import {
   isNotRangeAndStayMergeTooltip,
   isShowTooltipAndRange,
   isHideTooltipAndRange,
-  isFirstHandleRangeAndShowProgress,
-  isSecondHandleRangeAndShowProgress,
   isNewValueStartBiggerValueEnd,
   isNotRangeAndContainsClassListMerged,
-  isNewValueEndLessValueStart
+  isNewValueEndLessValueStart,
+  findClosestHandleFromPercent
 } from './view.function';
 
 class View extends Observer<{
   viewChanged: Partial<SliderOptions>;
+  viewChangeModel: [string, number];
 }> {
   private components!: ViewComponents;
   root!: HTMLElement;
@@ -313,8 +318,7 @@ class View extends Observer<{
     this.setDataAtr();
   }
 
-  // eslint-disable-next-line consistent-return
-  private checkScalePointCount(): void | Partial<ViewOptions> {
+  private checkScalePointCount(): void | null {
     const { scalePointCount } = this.viewOptions;
     if (scalePointCount! < MIN_SCALE_POINT_COUNT) {
       return this.setOptions({ scalePointCount: MIN_SCALE_POINT_COUNT });
@@ -322,6 +326,7 @@ class View extends Observer<{
     if (scalePointCount! > MAX_SCALE_POINT_COUNT) {
       return this.setOptions({ scalePointCount: MAX_SCALE_POINT_COUNT });
     }
+    return null;
   }
 
   private bindEventListeners(): void {
@@ -369,39 +374,7 @@ class View extends Observer<{
   }
 
   private clickOnHandle(): void {
-    const { track, progress, firstHandle, secondHandle } = this.components;
-
-    const setNewValueOnHandle = (newValue: number, handle: Handle) => {
-      const { range } = this.getModel();
-      const { showProgress } = this.viewOptions;
-
-      const styleValue: number = searchStyleValue({
-        minValue: track.getMinValue(),
-        maxValue: track.getMaxValue(),
-        progress: newValue
-      });
-
-      if (range) {
-        handle.setValue(newValue);
-        handle.setStyle(styleValue);
-
-        this.mergeTooltip();
-      } else {
-        handle.setValue(newValue);
-        handle.setStyle(styleValue);
-      }
-
-      if (isNotRangeAndShowProgress(range, showProgress)) {
-        progress.setStart(0);
-        progress.setEnd(styleValue);
-      }
-
-      if (handle === firstHandle) {
-        this.emit(ViewListeners.viewChanged, { valueStart: handle.getValue() });
-      } else if (handle === secondHandle) {
-        this.emit(ViewListeners.viewChanged, { valueEnd: handle.getValue() });
-      }
-    };
+    const { firstHandle, secondHandle } = this.components;
 
     let whichHandle = 1;
 
@@ -447,211 +420,143 @@ class View extends Observer<{
       .getTooltip()
       .addEventListener('pointerdown', tooltipClickCallback);
 
-    firstHandle.subscribe(ViewListeners.clickOnHandle, (newValue: number) => {
-      const { step, range, valueEnd, valueStart, maxValue } = this.getModel();
+    firstHandle.subscribe(ViewListeners.clickOnHandle, (percent: number) => {
+      const { step, range, maxValue, minValue } = this.getModel();
       if (whichHandle === 1) {
         if (
           isNewValueStartBiggerValueEnd({
-            newValue,
+            percent,
             secondHandle,
-            step,
             range,
-            maxValue
+            step,
+            maxValue,
+            minValue
           })
         ) {
-          setNewValueOnHandle(
-            roundToRequiredNumber(valueEnd - step),
-            firstHandle
-          );
-
+          this.emit(ViewListeners.viewChangeModel, [
+            NEW_VAL_BIGGER_VALUE_END,
+            percent
+          ]);
           return;
         }
 
-        setNewValueOnHandle(newValue, firstHandle);
+        this.emit(ViewListeners.viewChangeModel, [VALUE_START, percent]);
       } else if (whichHandle === 2) {
         if (
           isNewValueEndLessValueStart({
-            newValue,
+            percent,
             firstHandle,
-            step
+            step,
+            maxValue,
+            minValue
           })
         ) {
-          setNewValueOnHandle(
-            roundToRequiredNumber(valueStart + step),
-            secondHandle
-          );
+          this.emit(ViewListeners.viewChangeModel, [
+            NEW_VAL_LESS_VALUE_START,
+            percent
+          ]);
           return;
         }
-        setNewValueOnHandle(newValue, secondHandle);
+        this.emit(ViewListeners.viewChangeModel, [VALUE_END, percent]);
       }
     });
 
-    secondHandle.subscribe(ViewListeners.clickOnHandle, (newValue) => {
-      const { step, valueStart } = this.getModel();
+    secondHandle.subscribe(ViewListeners.clickOnHandle, (percent) => {
+      const { step, maxValue, minValue } = this.getModel();
 
       if (
         isNewValueEndLessValueStart({
-          newValue,
+          percent,
           firstHandle,
-          step
+          step,
+          maxValue,
+          minValue
         })
       ) {
-        setNewValueOnHandle(
-          roundToRequiredNumber(valueStart + step),
-          secondHandle
-        );
+        this.emit(ViewListeners.viewChangeModel, [
+          NEW_VAL_LESS_VALUE_START,
+          percent
+        ]);
+
         return;
       }
-      setNewValueOnHandle(newValue, secondHandle);
+      this.emit(ViewListeners.viewChangeModel, [VALUE_END, percent]);
     });
   }
 
   private clickOnScale(): void {
-    const { track, progress, firstHandle, secondHandle, scale } =
-      this.components;
+    const { firstHandle, secondHandle, scale } = this.components;
 
     scale.subscribe(ViewListeners.clickOnScale, (value) => {
       const { range } = this.modelOptions;
-      const { showProgress } = this.viewOptions;
+
       let closestHandle: Handle = firstHandle;
       if (range) {
         this.mergeTooltip();
         closestHandle = findClosestHandle({
           firstHandle,
-          secondHandle: secondHandle!,
+          secondHandle,
           clickValue: value
         });
       }
 
-      closestHandle.setValue(value);
-
-      const styleValue: number = searchStyleValue({
-        minValue: track.getMinValue(),
-        maxValue: track.getMaxValue(),
-        progress: value
-      });
-
-      closestHandle.setStyle(styleValue);
-
-      if (
-        isFirstHandleRangeAndShowProgress({
-          firstHandle,
-          closestHandle,
-          range,
-          showProgress
-        })
-      ) {
-        progress!.setStart(styleValue);
-      }
-      if (
-        isSecondHandleRangeAndShowProgress({
-          secondHandle,
-          closestHandle,
-          range,
-          showProgress
-        })
-      ) {
-        progress!.setEnd(styleValue);
-      }
-
-      if (isNotRangeAndShowProgress(range, showProgress)) {
-        progress!.setStart(0);
-        progress!.setEnd(styleValue);
-      }
-
       if (closestHandle === firstHandle) {
         this.emit(ViewListeners.viewChanged, {
-          valueStart: closestHandle.getValue()
+          valueStart: value
         });
       } else if (closestHandle === secondHandle) {
         this.emit(ViewListeners.viewChanged, {
-          valueEnd: closestHandle.getValue()
+          valueEnd: value
         });
       }
     });
   }
 
   private clickOnTrack(): void {
-    const { track, firstHandle, secondHandle, progress } = this.components;
+    const { track, firstHandle, secondHandle } = this.components;
 
     track.subscribe(
       ViewListeners.clickOnTrack,
       ({
         event,
-        value,
-        click
+        progressPercent
       }: {
         event: MouseEvent;
-        value: number;
-        click: number;
+        progressPercent: number;
       }) => {
-        const { showProgress } = this.viewOptions;
         const { range } = this.modelOptions;
-
         let closestHandle = firstHandle;
-        const styleValue = searchStyleValue({
-          minValue: track.getMinValue(),
-          maxValue: track.getMaxValue(),
-          progress: value
-        });
 
         if (range) {
-          closestHandle = findClosestHandle({
+          closestHandle = findClosestHandleFromPercent({
             firstHandle,
-            secondHandle: secondHandle!,
-            clickValue: value
+            secondHandle,
+            percent: progressPercent
           });
           this.mergeTooltip();
 
           if (
             isClickFromSecondHandlePosition({
-              click,
-              styleValue,
+              percent: progressPercent,
               firstHandle,
-              secondHandle: secondHandle!
+              secondHandle
             })
           ) {
-            closestHandle = secondHandle!;
+            closestHandle = secondHandle;
           }
         }
 
-        closestHandle.setValue(value);
-        closestHandle.setStyle(styleValue);
-
-        if (
-          isFirstHandleRangeAndShowProgress({
-            firstHandle,
-            closestHandle,
-            range,
-            showProgress
-          })
-        ) {
-          progress!.setStart(styleValue);
-        }
-        if (
-          isSecondHandleRangeAndShowProgress({
-            secondHandle,
-            closestHandle,
-            range,
-            showProgress
-          })
-        ) {
-          progress!.setEnd(styleValue);
-        }
-        if (isNotRangeAndShowProgress(range, showProgress)) {
-          progress!.setStart(0);
-          progress!.setEnd(styleValue);
-        }
         if (closestHandle === firstHandle) {
-          this.emit(ViewListeners.viewChanged, {
-            valueStart: closestHandle.getValue()
-          });
+          this.emit(ViewListeners.viewChangeModel, [
+            VALUE_START,
+            progressPercent
+          ]);
         } else if (closestHandle === secondHandle) {
-          this.emit(ViewListeners.viewChanged, {
-            valueEnd: closestHandle.getValue()
-          });
+          this.emit(ViewListeners.viewChangeModel, [
+            VALUE_END,
+            progressPercent
+          ]);
         }
-
         closestHandle.handleMouseDown(event);
       }
     );

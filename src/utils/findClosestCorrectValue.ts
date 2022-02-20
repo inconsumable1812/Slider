@@ -33,7 +33,11 @@ function findClosestCorrectValue(
   maxValue: number,
   minValue: number
 ) {
-  const delta = roundToRequiredNumber(value, minValue, step);
+  const delta = roundToRequiredNumber(
+    roundToRequiredNumber(value),
+    minValue,
+    step
+  );
 
   const deltaOfMaxValue = roundToRequiredNumber(
     Math.abs(maxValue - minValue) % step

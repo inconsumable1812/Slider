@@ -1,10 +1,9 @@
 import { render } from '../../../utils/utils';
-import findClosestCorrectValue from '../../../utils/findClosestCorrectValue';
 import Observer from '../../Observer/Observer';
 import { ViewListeners, TrackProps } from '../../type';
 
 class Track extends Observer<{
-  clickOnTrack: { event: MouseEvent; value: number; click: number };
+  clickOnTrack: { event: MouseEvent; progressPercent: number };
 }> {
   element!: HTMLElement;
   minValue: number;
@@ -57,7 +56,7 @@ class Track extends Observer<{
     const clickEvent = (event: MouseEvent) => {
       event.preventDefault();
       const target = event.target as HTMLElement;
-      const { minValue, maxValue, isVertical, step } = this;
+      const { isVertical } = this;
       const widthOrHeight = isVertical
         ? target.getBoundingClientRect().height
         : target.getBoundingClientRect().width;
@@ -68,20 +67,11 @@ class Track extends Observer<{
         ? event.offsetY + borderWidth
         : event.offsetX + borderWidth;
 
-      const progress = offset / widthOrHeight;
-      const clickValue = (maxValue - minValue) * progress + minValue;
-
-      const newValue = findClosestCorrectValue(
-        step,
-        clickValue,
-        maxValue,
-        minValue
-      );
+      const progressPercent = offset / widthOrHeight;
 
       this.emit(ViewListeners.clickOnTrack, {
         event,
-        value: newValue,
-        click: progress
+        progressPercent
       });
     };
 

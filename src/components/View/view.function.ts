@@ -1,6 +1,5 @@
 import Handle from './handle/Handle';
 import { MERGED_TOOLTIP_CLASS } from '../../constants';
-import { roundToRequiredNumber } from '../../utils/utils';
 
 function findClosestHandle({
   firstHandle,
@@ -19,6 +18,24 @@ function findClosestHandle({
   return secondHandle;
 }
 
+function findClosestHandleFromPercent({
+  firstHandle,
+  secondHandle,
+  percent
+}: {
+  firstHandle: Handle;
+  secondHandle: Handle;
+  percent: number;
+}): Handle {
+  const actualPercent = percent * 100;
+  const firstStyleValue = firstHandle.getStyleValue();
+  const secondStyleValue = secondHandle.getStyleValue();
+  if (firstStyleValue - actualPercent <= secondStyleValue - actualPercent) {
+    return firstHandle;
+  }
+  return secondHandle;
+}
+
 function searchStyleValue({
   minValue,
   maxValue,
@@ -32,21 +49,21 @@ function searchStyleValue({
 }
 
 function isClickFromSecondHandlePosition({
-  click,
-  styleValue,
+  percent,
   firstHandle,
   secondHandle
 }: {
-  click: number;
-  styleValue: number;
+  percent: number;
   firstHandle: Handle;
   secondHandle: Handle;
 }): boolean {
+  const actualPercent = percent * 100;
+  const firstStyleValue = firstHandle.getStyleValue();
+  const secondStyleValue = secondHandle.getStyleValue();
+
   return (
-    click > styleValue / 100 &&
-    firstHandle.getStyleValue() < styleValue &&
-    Math.abs(firstHandle.getStyleValue() / 100 - click) >
-      Math.abs(secondHandle!.getStyleValue() / 100 - click)
+    Math.abs(firstStyleValue - actualPercent) >
+    Math.abs(secondStyleValue - actualPercent)
   );
 }
 
@@ -108,35 +125,43 @@ function isSecondHandleRangeAndShowProgress({
 }
 
 function isNewValueStartBiggerValueEnd({
-  newValue,
+  percent,
   secondHandle,
-  step,
   range,
-  maxValue
+  step,
+  maxValue,
+  minValue
 }: {
-  newValue: number;
+  percent: number;
   secondHandle: Handle;
-  step: number;
   range: boolean;
+  step: number;
   maxValue: number;
+  minValue: number;
 }): boolean {
+  const styleSize = (step / Math.abs(minValue - maxValue)) * 100;
   return (
-    newValue >= roundToRequiredNumber(secondHandle.getValue() - step) &&
+    percent * 100 >= secondHandle.getStyleValue() - styleSize &&
     range &&
-    secondHandle.getValue() !== maxValue
+    secondHandle.getStyleValue() !== 100
   );
 }
 
 function isNewValueEndLessValueStart({
-  newValue,
+  percent,
   firstHandle,
-  step
+  step,
+  maxValue,
+  minValue
 }: {
-  newValue: number;
+  percent: number;
   firstHandle: Handle;
   step: number;
+  maxValue: number;
+  minValue: number;
 }): boolean {
-  return newValue <= roundToRequiredNumber(firstHandle.getValue() + step);
+  const styleSize = (step / Math.abs(minValue - maxValue)) * 100;
+  return percent * 100 <= firstHandle.getStyleValue() + styleSize;
 }
 
 function isNotRangeAndContainsClassListMerged(
@@ -161,5 +186,6 @@ export {
   isSecondHandleRangeAndShowProgress,
   isNewValueStartBiggerValueEnd,
   isNewValueEndLessValueStart,
-  isNotRangeAndContainsClassListMerged
+  isNotRangeAndContainsClassListMerged,
+  findClosestHandleFromPercent
 };

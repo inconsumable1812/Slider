@@ -2,13 +2,16 @@ import {
   ModelOptions,
   ModelListeners,
   ViewListeners,
-  ListenersFunctionUnsub
+  ListenersFunctionUnsub,
+  ListenersFunction,
+  SliderOptions
 } from '../type';
 import Model from '../Model/Model';
 import View from '../View/View';
 
 class Presenter {
   unsubView!: ListenersFunctionUnsub;
+  unsubViewChangeModel!: ListenersFunctionUnsub;
   unsubModel!: ListenersFunctionUnsub;
   constructor(private model: Model, private view: View) {
     this.render();
@@ -20,6 +23,13 @@ class Presenter {
 
   public setModelOptions(modelOptions: Partial<ModelOptions>): void {
     this.model.setOptions(modelOptions);
+  }
+
+  public calculateValueFromView([valueStartOrEnd, percent]: [
+    string,
+    number
+  ]): void {
+    this.model.calculateValueFromView([valueStartOrEnd, percent]);
   }
 
   public updateView(modelOptions: Partial<ModelOptions>): void {
@@ -40,7 +50,15 @@ class Presenter {
   private connect(): void {
     this.unsubView = this.view.subscribe(
       ViewListeners.viewChanged,
-      this.setModelOptions.bind(this)
+      this.setModelOptions.bind(this) as ListenersFunction<{
+        viewChanged: Partial<SliderOptions>;
+      }>
+    );
+    this.unsubViewChangeModel = this.view.subscribe(
+      ViewListeners.viewChangeModel,
+      this.calculateValueFromView.bind(this) as ListenersFunction<{
+        viewChangeModel: [string, number];
+      }>
     );
     this.unsubModel = this.model.subscribe(
       ModelListeners.modelValueChange,

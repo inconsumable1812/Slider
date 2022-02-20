@@ -3,7 +3,6 @@ import {
   Z_INDEX_DEFAULT,
   Z_INDEX_BIG
 } from '../../../constants';
-import { roundToRequiredNumber } from '../../../utils/utils';
 import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
 import { ViewListeners, HandleProps } from '../../type';
@@ -187,22 +186,7 @@ class Handle extends Observer<{ clickOnHandle: number }> {
     const valueInPercentRoundTo4: number =
       Math.round(valueInPercent * 10000) / 10000;
 
-    const delta: number = Math.abs(track.getMaxValue() - track.getMinValue());
-
-    const valueCorrectInStepSize: number = delta * valueInPercentRoundTo4;
-
-    let newValue: number = roundToRequiredNumber(
-      roundToRequiredNumber(track.getMinValue()) +
-        roundToRequiredNumber(valueCorrectInStepSize)
-    );
-
-    if (valueInPercent <= 0) {
-      newValue = track.getMinValue();
-    } else if (valueInPercent >= 1) {
-      newValue = track.getMaxValue();
-    }
-
-    this.emit(ViewListeners.clickOnHandle, roundToRequiredNumber(newValue));
+    this.emit(ViewListeners.clickOnHandle, valueInPercentRoundTo4);
   }
 }
 

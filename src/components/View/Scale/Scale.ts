@@ -1,9 +1,8 @@
-import { roundToRequiredNumber } from '../../../utils/utils';
+import { roundToRequiredNumber, render } from '../../../utils/utils';
 import {
   JS_SCALE_POINT_CLASS,
   MIN_SCALE_POINT_COUNT
 } from '../../../constants';
-import { render } from '../../../utils/utils';
 import Observer from '../../Observer/Observer';
 import { ViewListeners, ScaleProps } from '../../type';
 
@@ -70,7 +69,8 @@ class Scale extends Observer<{ clickOnScale: number }> {
 
     const clickOnScaleCallback = (e: Event): void => {
       const target = e.target as HTMLElement;
-      this.emit(ViewListeners.clickOnScale, +target.textContent!);
+      if (target.textContent === null) return;
+      this.emit(ViewListeners.clickOnScale, +target.textContent);
     };
 
     this.element.addEventListener('click', clickOnScaleCallback);

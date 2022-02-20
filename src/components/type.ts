@@ -140,6 +140,7 @@ enum ModelListeners {
 enum ViewListeners {
   viewChanged = 'viewChanged',
   clickOnTrack = 'clickOnTrack',
+  viewChangeModel = 'viewChangeModel',
   clickOnScale = 'clickOnScale',
   clickOnHandle = 'clickOnHandle'
 }

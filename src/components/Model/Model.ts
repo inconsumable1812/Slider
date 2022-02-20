@@ -13,6 +13,12 @@ import { DEFAULT_MODEL_OPTIONS } from '../default';
 import { ModelOptions, ModelListeners } from '../type';
 import Observer from '../Observer/Observer';
 import {
+  NEW_VAL_BIGGER_VALUE_END,
+  NEW_VAL_LESS_VALUE_START,
+  VALUE_END,
+  VALUE_START
+} from '../constants';
+import {
   isIncorrectStepInValueEnd,
   isIncorrectStepInValueStart,
   isValueStartBiggerMaxValue,
@@ -57,6 +63,34 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     this.modelOptions = { ...this.modelOptions, ...modelOptions };
     this.checkOptions({ valueStart, valueEnd, minValue, maxValue });
     this.emit(ModelListeners.modelValueChange, this.getOptions());
+  }
+
+  calculateValueFromView([valueStartOrEnd, percent]: [string, number]) {
+    const { minValue, maxValue, step, valueStart, valueEnd } =
+      this.modelOptions;
+    const clickValue = (maxValue - minValue) * percent + minValue;
+
+    if (valueStartOrEnd === NEW_VAL_BIGGER_VALUE_END) {
+      this.setOptions({ valueStart: valueEnd - step });
+      return;
+    }
+
+    if (valueStartOrEnd === NEW_VAL_LESS_VALUE_START) {
+      this.setOptions({ valueEnd: valueStart + step });
+      return;
+    }
+
+    const newValue = findClosestCorrectValue(
+      step,
+      clickValue,
+      maxValue,
+      minValue
+    );
+    if (valueStartOrEnd === VALUE_START) {
+      this.setOptions({ valueStart: newValue });
+    } else if (valueStartOrEnd === VALUE_END) {
+      this.setOptions({ valueEnd: newValue });
+    }
   }
 
   private init(options?: Partial<ModelOptions>): void {
@@ -413,7 +447,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
 
     if (isNeedRound(valueEnd)) {
       return this.setOptions({
-        valueStart: roundToRequiredNumber(valueEnd)
+        valueEnd: roundToRequiredNumber(valueEnd)
       });
     }
 
