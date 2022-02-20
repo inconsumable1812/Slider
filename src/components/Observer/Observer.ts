@@ -11,7 +11,7 @@ abstract class Observer<T extends Record<string, unknown>> {
     if (!Array.isArray(this.listeners[event])) {
       return false;
     }
-    this.listeners[event]!.forEach((listener: ListenersFunction<T>) => {
+    this.listeners[event].forEach((listener: ListenersFunction<T>) => {
       listener(args);
     });
     return true;
@@ -23,10 +23,10 @@ abstract class Observer<T extends Record<string, unknown>> {
     fn: ListenersFunction<T>
   ): ListenersFunctionUnsub {
     this.listeners[event] = this.listeners[event] || [];
-    this.listeners[event]!.push(fn);
+    this.listeners[event].push(fn);
 
     return () => {
-      this.listeners[event] = this.listeners[event]!.filter(
+      this.listeners[event] = this.listeners[event].filter(
         (listener: ListenersFunction<T>) => listener !== fn
       );
     };
