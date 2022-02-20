@@ -22,8 +22,8 @@ class Presenter {
     this.model.setOptions(modelOptions);
   }
 
-  public updateView(): void {
-    this.view.changeModelOptions(this.getModelOptions());
+  public updateView(modelOptions: Partial<ModelOptions>): void {
+    this.view.changeModelOptions(modelOptions);
     this.view.updateView();
   }
 
