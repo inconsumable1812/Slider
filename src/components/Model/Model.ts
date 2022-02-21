@@ -65,7 +65,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     this.emit(ModelListeners.modelValueChange, this.getOptions());
   }
 
-  calculateValueFromView([valueStartOrEnd, percent]: [string, number]) {
+  calculateValueFromView([valueStartOrEnd, percent]: [string, number]): void {
     const { minValue, maxValue, step, valueStart, valueEnd } =
       this.modelOptions;
     const clickValue = (maxValue - minValue) * percent + minValue;

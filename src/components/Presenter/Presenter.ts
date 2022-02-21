@@ -37,7 +37,7 @@ class Presenter {
     this.view.updateView();
   }
 
-  public unsubscribe() {
+  public unsubscribe(): void {
     this.unsubView();
     this.unsubModel();
   }
