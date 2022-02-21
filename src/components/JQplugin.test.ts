@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 import '../components/JQplugin';
 import '../components/slider';
-import { SliderOptions } from './type';
+import { Slider, SliderOptions } from './type';
 
 function getExampleDOM() {
   const div = document.createElement('div');
@@ -48,5 +48,17 @@ describe('JQuery plugin', () => {
     slider = $(container).JQSlider() as JQuery<HTMLElement>;
     const valueEnd = slider.JQSlider('getSecondValue');
     expect(valueEnd).toBe(50);
+  });
+
+  test('check get slider', () => {
+    slider = $(container).JQSlider() as JQuery<HTMLElement>;
+    const sliderFn = slider.JQSlider('getSlider') as Slider;
+    expect(sliderFn.getFirstValue()).toBe(40);
+  });
+
+  test('check return default null', () => {
+    slider = $(container).JQSlider() as JQuery<HTMLElement>;
+    const sliderFn = slider.JQSlider();
+    expect(sliderFn).toBe(null);
   });
 });
