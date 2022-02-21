@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import $ from 'jquery';
 
-import { SliderOptions } from '../components/type';
+import { Slider, SliderOptions } from '../components/type';
+import Panel from '../components/Panel/Panel';
 import '../components/slider';
 import '../components/JQplugin';
 
-const slider = $('#app').JQSlider() as JQuery;
-slider.JQSlider('addControlPanel');
+const firstSelector = $('#app');
+const slider = firstSelector.JQSlider() as JQuery;
+const firstPanel = new Panel(
+  firstSelector[0],
+  slider.JQSlider('getSlider') as Slider
+);
 
 const sliderSecondConfig: Partial<SliderOptions> = {
   minValue: -0.11,
@@ -30,11 +35,23 @@ const sliderFourthConfig: Partial<SliderOptions> = {
   showProgress: true
 };
 
-const sliderSecond = $('#app_2').JQSlider(sliderSecondConfig) as JQuery;
-const sliderSecondPanel = sliderSecond.JQSlider('addControlPanel');
+const secondSelector = $('#app_2');
+const sliderSecond = secondSelector.JQSlider(sliderSecondConfig) as JQuery;
+const sliderSecondPanel = new Panel(
+  secondSelector[0],
+  sliderSecond.JQSlider('getSlider') as Slider
+);
 
-const sliderThird = $('#app_3').JQSlider(sliderThirdConfig) as JQuery;
-const sliderThirdPanel = sliderThird.JQSlider('addControlPanel');
+const thirdSelector = $('#app_3');
+const sliderThird = thirdSelector.JQSlider(sliderThirdConfig) as JQuery;
+const sliderThirdPanel = new Panel(
+  thirdSelector[0],
+  sliderThird.JQSlider('getSlider') as Slider
+);
 
-const sliderFourth = $('#app_4').JQSlider(sliderFourthConfig) as JQuery;
-const sliderFourthPanel = sliderFourth.JQSlider('addControlPanel');
+const fourthSelector = $('#app_4');
+const sliderFourth = fourthSelector.JQSlider(sliderFourthConfig) as JQuery;
+const sliderFourthPanel = new Panel(
+  fourthSelector[0],
+  sliderFourth.JQSlider('getSlider') as Slider
+);

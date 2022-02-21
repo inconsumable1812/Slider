@@ -1,5 +1,4 @@
 import Model from './Model/Model';
-import Panel from './Panel/Panel';
 import { create } from './slider';
 import { Slider, SliderOptions } from './type';
 import View from './View/View';
@@ -50,16 +49,6 @@ describe('Slider', () => {
 
   test('check correct return container', () => {
     expect(slider.getContainer()).toBe(container);
-  });
-
-  test('check add control panel', () => {
-    expect(slider.addControlPanel()).toBeInstanceOf(Panel);
-  });
-
-  test('check correct change options with control panel', () => {
-    slider.addControlPanel();
-    slider.setOptions({ minValue: 10 });
-    expect(slider.getOptions().minValue).toBe(10);
   });
 
   test('check get Model', () => {

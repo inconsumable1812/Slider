@@ -3,7 +3,6 @@ import $ from 'jquery';
 import '../components/JQplugin';
 import '../components/slider';
 import { SliderOptions } from './type';
-import Panel from './Panel/Panel';
 
 function getExampleDOM() {
   const div = document.createElement('div');
@@ -49,11 +48,5 @@ describe('JQuery plugin', () => {
     slider = $(container).JQSlider() as JQuery<HTMLElement>;
     const valueEnd = slider.JQSlider('getSecondValue');
     expect(valueEnd).toBe(50);
-  });
-
-  test('check addControlPanel', () => {
-    slider = $(container).JQSlider() as JQuery<HTMLElement>;
-    const sliderPanel = slider.JQSlider('addControlPanel');
-    expect(sliderPanel).toBeInstanceOf(Panel);
   });
 });

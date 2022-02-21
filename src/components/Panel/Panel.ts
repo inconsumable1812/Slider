@@ -17,6 +17,8 @@ class Panel {
   constructor(selector: HTMLElement, slider: Slider) {
     this.selector = selector;
     this.slider = slider;
+
+    this.init();
   }
 
   public init(): void {

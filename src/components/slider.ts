@@ -14,12 +14,12 @@ import {
   ListenersFunction,
   ModelListeners,
   ModelOptions,
+  Slider,
   SliderOptions,
   ViewListeners,
   ViewOptions
 } from './type';
 import Model from './Model/Model';
-import Panel from './Panel/Panel';
 import Presenter from './Presenter/Presenter';
 import View from './View/View';
 
@@ -60,8 +60,6 @@ const create = (
   });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const presenter = new Presenter(model, view);
-
-  let panel: Panel;
 
   const slider = {
     getContainer(): Element {
@@ -107,9 +105,6 @@ const create = (
       }
 
       view.setOptions(newViewOptions);
-      if (panel) {
-        panel.setOptionsFromSlider();
-      }
 
       this.setDataAtr();
     },
@@ -119,10 +114,8 @@ const create = (
     getSecondValue(): number {
       return model.getSecondValue();
     },
-    addControlPanel(): Panel {
-      panel = new Panel(selector, slider);
-      panel.init();
-      return panel;
+    getSlider(): Slider {
+      return slider;
     },
     observeDataAtr(): void {
       const oldValues: Record<string, number | boolean> = {};
@@ -225,8 +218,8 @@ const create = (
         case 'getSecondValue':
           return this.getSecondValue();
 
-        case 'addControlPanel':
-          return this.addControlPanel();
+        case 'getSlider':
+          return this.getSlider();
 
         default:
           return null;

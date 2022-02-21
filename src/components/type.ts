@@ -55,9 +55,9 @@ type Slider = {
   setOptions(options: Partial<SliderOptions>): void;
   getFirstValue(): number;
   getSecondValue(): number;
-  addControlPanel(): Panel;
   getModel(): Model;
   getView(): View;
+  getSlider(): Slider;
   setDataAtr(): void;
   observeDataAtr(): void;
   updateModelOptions(
@@ -126,13 +126,6 @@ type ViewProps = {
   options?: Partial<ViewOptions>;
 };
 
-type PanelProps = {
-  selector: HTMLElement;
-  slider: Slider;
-  model: Model;
-  view: View;
-};
-
 enum ModelListeners {
   modelValueChange = 'modelValueChange'
 }
@@ -153,9 +146,9 @@ type JQueryMethod =
   | 'setOptions'
   | 'getFirstValue'
   | 'getSecondValue'
-  | 'addControlPanel';
+  | 'getSlider';
 
-type JQResult = number | void | Element | SliderOptions | Panel | null;
+type JQResult = number | void | Element | SliderOptions | Panel | null | Slider;
 
 export {
   ModelOptions,
@@ -173,7 +166,6 @@ export {
   ScaleProps,
   TrackProps,
   ViewProps,
-  PanelProps,
   ListenersFunctionUnsub,
   JQueryMethod,
   JQResult

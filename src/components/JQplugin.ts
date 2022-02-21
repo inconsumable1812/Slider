@@ -7,7 +7,10 @@ import { JQResult, JQueryMethod, SliderOptions } from './type';
 declare global {
   interface JQuery {
     JQSlider(options?: Partial<SliderOptions>): JQuery;
-    JQSlider(method: JQueryMethod, newOptions?: SliderOptions): JQResult;
+    JQSlider(
+      method: JQueryMethod,
+      newOptions?: Partial<SliderOptions>
+    ): JQResult;
   }
 }
 
