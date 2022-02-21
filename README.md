@@ -129,12 +129,12 @@ $slider.JQSlider('getFirstValue')
 $slider.JQSlider('getSecondValue')
 ```
 
-- addControlPanel(): Panel
+- getSlider(): Slider
 
-Позволяет добавить панель управления
+Позволяет получить объект слайдера
 
 ```
-$slider.JQSlider('addControlPanel')
+$slider.JQSlider('getSlider')
 ```
 
 ## Архитектура приложения
