@@ -35,8 +35,8 @@ describe('Handle', () => {
     handel = new Handle({
       handleNumber: firstHandleNumber,
       value: valueStart,
-      showTooltip: showTooltip,
-      isVertical: isVerticalFalse,
+      showTooltip,
+      isVertical,
       track: firstTrack,
       step
     });
@@ -44,8 +44,8 @@ describe('Handle', () => {
     handelVertical = new Handle({
       handleNumber: secondHandleNumber,
       value: valueStart,
-      showTooltip: showTooltip,
-      isVertical: isVertical,
+      showTooltip,
+      isVertical,
       track: secondTrack,
       step
     });
