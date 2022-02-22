@@ -36,7 +36,7 @@ describe('Handle', () => {
       handleNumber: firstHandleNumber,
       value: valueStart,
       showTooltip,
-      isVertical,
+      isVertical: isVerticalFalse,
       track: firstTrack,
       step
     });
@@ -66,8 +66,7 @@ describe('Handle', () => {
 
   test('check correct set z-index', () => {
     handel.setStyle(98);
-    const element = handel.getElement();
-    expect(element.style.zIndex).toBe('2');
+    expect(handel.getElement().style.zIndex).toBe('2');
   });
 
   describe('is vertical', () => {
