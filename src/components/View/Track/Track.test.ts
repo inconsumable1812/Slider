@@ -34,18 +34,18 @@ describe('Track', () => {
   });
 
   test('element is type of HTMLElement', () => {
-    expect(track.element).toBeInstanceOf(HTMLElement);
+    expect(track.getElement()).toBeInstanceOf(HTMLElement);
   });
 
   test('element is type of HTMLElement, slider is vertical', () => {
-    expect(trackVertical.element).toBeInstanceOf(HTMLElement);
+    expect(trackVertical.getElement()).toBeInstanceOf(HTMLElement);
   });
 
   test('call function when pointerdown on track', () => {
     const fn = jest.fn();
     expect(fn).not.toHaveBeenCalled();
     track.subscribe('clickOnTrack', fn);
-    track.element.dispatchEvent(new Event('pointerdown'));
+    track.getElement().dispatchEvent(new Event('pointerdown'));
     expect(fn).toHaveBeenCalled();
   });
 
@@ -53,7 +53,7 @@ describe('Track', () => {
     const fn = jest.fn();
     expect(fn).not.toHaveBeenCalled();
     trackVertical.subscribe('clickOnTrack', fn);
-    trackVertical.element.dispatchEvent(new Event('pointerdown'));
+    trackVertical.getElement().dispatchEvent(new Event('pointerdown'));
     expect(fn).toHaveBeenCalled();
   });
 

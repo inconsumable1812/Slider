@@ -38,7 +38,7 @@ import {
 } from './Model.function';
 
 class Model extends Observer<{ modelValueChange: ModelOptions }> {
-  modelOptions: ModelOptions = DEFAULT_MODEL_OPTIONS;
+  private modelOptions: ModelOptions = DEFAULT_MODEL_OPTIONS;
   constructor(private selector: HTMLElement, options?: Partial<ModelOptions>) {
     super();
     this.init(options);

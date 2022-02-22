@@ -38,16 +38,16 @@ describe('Scale', () => {
   });
 
   test('element is type of HTMLElement', () => {
-    expect(scale.element).toBeInstanceOf(HTMLElement);
+    expect(scale.getElement()).toBeInstanceOf(HTMLElement);
   });
 
   test('element is type of HTMLElement when slider is vertical', () => {
-    expect(scaleVertical.element).toBeInstanceOf(HTMLElement);
+    expect(scaleVertical.getElement()).toBeInstanceOf(HTMLElement);
   });
 
   test('correct delete scale point', () => {
     scale.deleteScalePoint();
-    expect(scale.element.querySelector('.range-slider__scale_point')).toBe(
+    expect(scale.getElement().querySelector('.range-slider__scale_point')).toBe(
       null
     );
   });
@@ -88,7 +88,7 @@ describe('Scale', () => {
       newOptions.step,
       newOptions.scalePointCount
     );
-    expect(scale.subElement.style.top).toBe('100%');
+    expect(scale.getSubElement().style.top).toBe('100%');
   });
 
   test('check correct change orientation to horizontal', () => {
@@ -105,6 +105,6 @@ describe('Scale', () => {
       newOptions.step,
       newOptions.scalePointCount
     );
-    expect(scaleVertical.subElement.style.left).toBe('100%');
+    expect(scaleVertical.getSubElement().style.left).toBe('100%');
   });
 });

@@ -52,7 +52,7 @@ class View extends Observer<{
   viewChangeModel: [string, number];
 }> {
   private components!: ViewComponents;
-  root!: HTMLElement;
+  private root!: HTMLElement;
   private selector: HTMLElement;
   private modelOptions: ModelOptions;
   private viewOptions: ViewOptions = DEFAULT_VIEW_OPTIONS;
@@ -65,6 +65,10 @@ class View extends Observer<{
     this.options = options;
     this.initViewOptions();
     this.checkScalePointCount();
+  }
+
+  getRoot(): HTMLElement {
+    return this.root;
   }
 
   setOptions(viewOptions: Partial<ViewOptions>): void {
@@ -97,10 +101,10 @@ class View extends Observer<{
     );
 
     if (showProgress) {
-      track.element.append(progress.element);
+      track.getElement().append(progress.getElement());
       progress.setOrientation(isVertical);
     } else {
-      progress.element.remove();
+      progress.getElement().remove();
     }
 
     if (showScale) {
@@ -113,14 +117,14 @@ class View extends Observer<{
     this.mergeTooltip();
 
     if (range) {
-      this.root.append(secondHandle.element);
+      this.root.append(secondHandle.getElement());
 
       secondHandle.setValue(valueEnd);
       secondHandle.setStyle(
         searchStyleValue({ minValue, maxValue, progress: valueEnd })
       );
     } else {
-      secondHandle.element.remove();
+      secondHandle.getElement().remove();
     }
 
     if (isNotRangeAndStayMergeTooltip(range, firstHandle)) {
@@ -260,15 +264,15 @@ class View extends Observer<{
       this.components;
 
     if (showProgress) {
-      track.element.append(progress.element);
+      track.getElement().append(progress.getElement());
     }
-    this.root.append(track.element);
-    this.root.append(firstHandle.element);
+    this.root.append(track.getElement());
+    this.root.append(firstHandle.getElement());
     if (range) {
-      this.root.append(secondHandle.element);
+      this.root.append(secondHandle.getElement());
     }
     if (showScale) {
-      this.root.append(scale.element);
+      this.root.append(scale.getElement());
     }
 
     const firstHandleStyleValue = searchStyleValue({

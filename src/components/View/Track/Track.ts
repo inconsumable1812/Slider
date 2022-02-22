@@ -5,11 +5,11 @@ import { ViewListeners, TrackProps } from '../../type';
 class Track extends Observer<{
   clickOnTrack: { event: MouseEvent; progressPercent: number };
 }> {
-  element!: HTMLElement;
-  minValue: number;
-  maxValue: number;
-  isVertical: boolean;
-  step: number;
+  private element!: HTMLElement;
+  private minValue: number;
+  private maxValue: number;
+  private isVertical: boolean;
+  private step: number;
 
   constructor({ minValue, maxValue, isVertical, step }: TrackProps) {
     super();
@@ -18,6 +18,10 @@ class Track extends Observer<{
     this.isVertical = isVertical;
     this.step = step;
     this.toHtml();
+  }
+
+  getElement(): HTMLElement {
+    return this.element;
   }
 
   getMinValue(): number {

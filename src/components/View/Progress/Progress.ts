@@ -1,7 +1,7 @@
 import { render } from '../../../utils/utils';
 
 class Progress {
-  element!: HTMLElement;
+  private element!: HTMLElement;
 
   constructor(private isVertical: boolean) {
     this.toHtml();
@@ -33,6 +33,10 @@ class Progress {
 
   setOrientation(isVertical: boolean): void {
     this.isVertical = isVertical;
+  }
+
+  getElement(): HTMLElement {
+    return this.element;
   }
 
   private toHtml(): void {

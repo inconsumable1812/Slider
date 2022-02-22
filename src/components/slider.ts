@@ -66,7 +66,7 @@ const create = (
       return selector;
     },
     getViewRoot(): HTMLElement {
-      return view.root;
+      return view.getRoot();
     },
     getOptions(): SliderOptions {
       const modelOptions = model.getOptions();

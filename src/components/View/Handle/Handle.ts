@@ -10,7 +10,7 @@ import Track from '../Track/Track';
 
 class Handle extends Observer<{ clickOnHandle: number }> {
   private elements!: { handle: HTMLElement; tooltip: HTMLElement };
-  element!: HTMLElement;
+  private element!: HTMLElement;
   private handleNumber: number;
   private value: number;
   private showTooltip: boolean;
@@ -175,12 +175,12 @@ class Handle extends Observer<{ clickOnHandle: number }> {
     const { track, isVertical } = this;
 
     const valueInPx: number = isVertical
-      ? event.clientY - track.element.getBoundingClientRect().top
-      : event.clientX - track.element.getBoundingClientRect().left;
+      ? event.clientY - track.getElement().getBoundingClientRect().top
+      : event.clientX - track.getElement().getBoundingClientRect().left;
 
     const widthOrHeight: number = isVertical
-      ? track.element.getBoundingClientRect().height
-      : track.element.getBoundingClientRect().width;
+      ? track.getElement().getBoundingClientRect().height
+      : track.getElement().getBoundingClientRect().width;
 
     const valueInPercent: number = valueInPx / widthOrHeight;
     const valueInPercentRoundTo4: number =

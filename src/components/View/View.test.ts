@@ -85,17 +85,17 @@ describe('View', () => {
 
   test('root is HTMLElement', () => {
     viewDefault.render();
-    expect(viewDefault.root).toBeInstanceOf(HTMLElement);
+    expect(viewDefault.getRoot()).toBeInstanceOf(HTMLElement);
   });
 
   test('root is HTMLElement, 2 option', () => {
     viewAllTrue.render();
-    expect(viewAllTrue.root).toBeInstanceOf(HTMLElement);
+    expect(viewAllTrue.getRoot()).toBeInstanceOf(HTMLElement);
   });
 
   test('root is HTMLElement, 3 option', () => {
     viewAllFalse.render();
-    expect(viewAllFalse.root).toBeInstanceOf(HTMLElement);
+    expect(viewAllFalse.getRoot()).toBeInstanceOf(HTMLElement);
   });
 
   test('correct update viewDefault, 1 option', () => {
@@ -187,7 +187,7 @@ describe('View', () => {
     const fn = jest.fn();
     viewDefault.subscribe(ViewListeners.viewChangeModel, fn);
     const track = viewDefault.getComponents().track;
-    track.element.dispatchEvent(new Event('pointerdown'));
+    track.getElement().dispatchEvent(new Event('pointerdown'));
     expect(fn).toBeCalled();
   });
 
@@ -196,7 +196,7 @@ describe('View', () => {
     const fn = jest.fn();
     viewAllTrue.subscribe(ViewListeners.viewChangeModel, fn);
     const track = viewAllTrue.getComponents().track;
-    track.element.dispatchEvent(new Event('pointerdown'));
+    track.getElement().dispatchEvent(new Event('pointerdown'));
     expect(fn).toBeCalled();
   });
 
@@ -205,7 +205,7 @@ describe('View', () => {
     const fn = jest.fn();
     viewDefault.subscribe(ViewListeners.viewChangeModel, fn);
     const firstHandle = viewDefault.getComponents().firstHandle;
-    firstHandle.element.dispatchEvent(new Event('pointerdown'));
+    firstHandle.getElement().dispatchEvent(new Event('pointerdown'));
     document.dispatchEvent(new Event('pointermove'));
     document.dispatchEvent(new Event('pointerup'));
     expect(fn).toBeCalled();
@@ -216,7 +216,7 @@ describe('View', () => {
     const fn = jest.fn();
     viewAllTrue.subscribe(ViewListeners.viewChangeModel, fn);
     const secondHandle = viewAllTrue.getComponents().secondHandle;
-    secondHandle.element.dispatchEvent(new Event('pointerdown'));
+    secondHandle.getElement().dispatchEvent(new Event('pointerdown'));
     document.dispatchEvent(new Event('pointermove'));
     document.dispatchEvent(new Event('pointerup'));
     expect(fn).toBeCalled();
@@ -227,7 +227,7 @@ describe('View', () => {
     const fn = jest.fn();
     view4.subscribe(ViewListeners.viewChangeModel, fn);
     const firstHandle = view4.getComponents().firstHandle;
-    firstHandle.element.dispatchEvent(new Event('pointerdown'));
+    firstHandle.getElement().dispatchEvent(new Event('pointerdown'));
     document.dispatchEvent(new Event('pointermove'));
     document.dispatchEvent(new Event('pointerup'));
     expect(fn).toBeCalled();
@@ -238,7 +238,7 @@ describe('View', () => {
     const fn = jest.fn();
     viewAllTrue.subscribe(ViewListeners.viewChanged, fn);
     const scale = viewAllTrue.getComponents().scale;
-    scale.element.dispatchEvent(new Event('click'));
+    scale.getElement().dispatchEvent(new Event('click'));
     expect(fn).toBeCalled();
   });
 
@@ -247,7 +247,7 @@ describe('View', () => {
     const fn = jest.fn();
     view4.subscribe(ViewListeners.viewChanged, fn);
     const scale = view4.getComponents().scale;
-    scale.element.dispatchEvent(new Event('click'));
+    scale.getElement().dispatchEvent(new Event('click'));
     expect(fn).toBeCalled();
   });
 

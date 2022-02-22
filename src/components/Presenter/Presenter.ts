@@ -10,9 +10,9 @@ import Model from '../Model/Model';
 import View from '../View/View';
 
 class Presenter {
-  unsubView!: ListenersFunctionUnsub;
-  unsubViewChangeModel!: ListenersFunctionUnsub;
-  unsubModel!: ListenersFunctionUnsub;
+  private unsubView!: ListenersFunctionUnsub;
+  private unsubViewChangeModel!: ListenersFunctionUnsub;
+  private unsubModel!: ListenersFunctionUnsub;
   constructor(private model: Model, private view: View) {
     this.render();
   }
@@ -40,6 +40,7 @@ class Presenter {
   public unsubscribe(): void {
     this.unsubView();
     this.unsubModel();
+    this.unsubViewChangeModel();
   }
 
   private render(): void {

@@ -7,8 +7,8 @@ import Observer from '../../Observer/Observer';
 import { ViewListeners, ScaleProps } from '../../type';
 
 class Scale extends Observer<{ clickOnScale: number }> {
-  element!: HTMLElement;
-  subElement!: HTMLElement;
+  private element!: HTMLElement;
+  private subElement!: HTMLElement;
   private minValue: number;
   private maxValue: number;
   private scalePointCount: number;
@@ -42,6 +42,10 @@ class Scale extends Observer<{ clickOnScale: number }> {
 
   getSubElement(): HTMLElement {
     return this.subElement;
+  }
+
+  getElement(): HTMLElement {
+    return this.element;
   }
 
   setOrientation(isVertical: boolean): void {
