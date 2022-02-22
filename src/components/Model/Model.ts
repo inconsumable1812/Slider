@@ -18,24 +18,7 @@ import {
   VALUE_END,
   VALUE_START
 } from '../constants';
-import {
-  isIncorrectStepInValueEnd,
-  isIncorrectStepInValueStart,
-  isValueStartBiggerMaxValue,
-  isValueStartBiggerValueEnd,
-  isRangeAndValueStartEqualValueEndAndValueEndEqualMaxValue,
-  isRangeAndValueStartEqualValueEndAndValueStartEqualMinValue,
-  isRangeAndValueStartEqualValueEndAndValueStartBiggerPrevValue,
-  isRangeAndValueStartEqualValueEndAndValueEndLessPrevValue,
-  isRangeAndValueStartBiggerValueEndAndValueStartBiggerPrevValue,
-  isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue,
-  isMinValueEqualMaxValueAndMinValueBiggerPrevValue,
-  isMinValueEqualMaxValueAndMaxValueLessPrevValue,
-  isMinValueBiggerMaxValueAndMinValueBiggerPrevValue,
-  isMinValueBiggerMaxValueAndMaxValueLessPrevValue,
-  isNeedRound,
-  calculateValueStartBeforeMax
-} from './Model.function';
+import * as Fn from './Model.function';
 
 class Model extends Observer<{ modelValueChange: ModelOptions }> {
   private modelOptions: ModelOptions = DEFAULT_MODEL_OPTIONS;
@@ -184,7 +167,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
       return this.setOptions({ step: MIN_STEP });
     }
 
-    if (isNeedRound(step)) {
+    if (Fn.isNeedRound(step)) {
       return this.setOptions({
         step: roundToRequiredNumber(step)
       });
@@ -198,7 +181,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     const { minValue, maxValue, step } = this.modelOptions;
 
     if (
-      isMinValueEqualMaxValueAndMinValueBiggerPrevValue({
+      Fn.isMinValueEqualMaxValueAndMinValueBiggerPrevValue({
         minValue,
         maxValue,
         prevMinValue
@@ -211,7 +194,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     }
 
     if (
-      isMinValueEqualMaxValueAndMaxValueLessPrevValue({
+      Fn.isMinValueEqualMaxValueAndMaxValueLessPrevValue({
         minValue,
         maxValue,
         prevMaxValue
@@ -224,7 +207,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     }
 
     if (
-      isMinValueBiggerMaxValueAndMinValueBiggerPrevValue({
+      Fn.isMinValueBiggerMaxValueAndMinValueBiggerPrevValue({
         minValue,
         maxValue,
         prevMinValue
@@ -237,7 +220,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     }
 
     if (
-      isMinValueBiggerMaxValueAndMaxValueLessPrevValue({
+      Fn.isMinValueBiggerMaxValueAndMaxValueLessPrevValue({
         minValue,
         maxValue,
         prevMaxValue
@@ -309,7 +292,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
       this.modelOptions;
 
     if (
-      isRangeAndValueStartEqualValueEndAndValueEndEqualMaxValue({
+      Fn.isRangeAndValueStartEqualValueEndAndValueEndEqualMaxValue({
         range,
         valueStart,
         valueEnd,
@@ -317,7 +300,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
       })
     ) {
       return this.setOptions({
-        valueStart: calculateValueStartBeforeMax({
+        valueStart: Fn.calculateValueStartBeforeMax({
           minValue,
           maxValue,
           step
@@ -326,7 +309,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     }
 
     if (
-      isRangeAndValueStartEqualValueEndAndValueStartEqualMinValue({
+      Fn.isRangeAndValueStartEqualValueEndAndValueStartEqualMinValue({
         range,
         valueStart,
         valueEnd,
@@ -337,7 +320,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     }
 
     if (
-      isRangeAndValueStartEqualValueEndAndValueStartBiggerPrevValue({
+      Fn.isRangeAndValueStartEqualValueEndAndValueStartBiggerPrevValue({
         range,
         valueStart,
         valueEnd,
@@ -351,7 +334,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     }
 
     if (
-      isRangeAndValueStartEqualValueEndAndValueEndLessPrevValue({
+      Fn.isRangeAndValueStartEqualValueEndAndValueEndLessPrevValue({
         range,
         valueStart,
         valueEnd,
@@ -365,7 +348,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     }
 
     if (
-      isRangeAndValueStartBiggerValueEndAndValueStartBiggerPrevValue({
+      Fn.isRangeAndValueStartBiggerValueEndAndValueStartBiggerPrevValue({
         range,
         valueStart,
         valueEnd,
@@ -379,7 +362,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     }
 
     if (
-      isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue({
+      Fn.isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue({
         range,
         valueStart,
         valueEnd,
@@ -393,7 +376,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     }
 
     if (
-      isValueStartBiggerValueEnd({
+      Fn.isValueStartBiggerValueEnd({
         valueStart,
         valueEnd,
         maxValue
@@ -402,7 +385,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
       return this.setOptions({ valueEnd: maxValue });
     }
     if (
-      isValueStartBiggerMaxValue({
+      Fn.isValueStartBiggerMaxValue({
         valueStart,
         valueEnd,
         maxValue
@@ -415,14 +398,14 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
   private checkValueStartCorrectStep(): void | Partial<ModelOptions> {
     const { minValue, step, valueStart, maxValue } = this.modelOptions;
 
-    if (isNeedRound(valueStart)) {
+    if (Fn.isNeedRound(valueStart)) {
       return this.setOptions({
         valueStart: roundToRequiredNumber(valueStart)
       });
     }
 
     if (
-      isIncorrectStepInValueStart({
+      Fn.isIncorrectStepInValueStart({
         minValue,
         step,
         valueStart,
@@ -445,14 +428,14 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
   private checkValueEndCorrectStep(): void | Partial<ModelOptions> {
     const { maxValue, minValue, step, valueEnd } = this.modelOptions;
 
-    if (isNeedRound(valueEnd)) {
+    if (Fn.isNeedRound(valueEnd)) {
       return this.setOptions({
         valueEnd: roundToRequiredNumber(valueEnd)
       });
     }
 
     if (
-      isIncorrectStepInValueEnd({
+      Fn.isIncorrectStepInValueEnd({
         maxValue,
         minValue,
         step,

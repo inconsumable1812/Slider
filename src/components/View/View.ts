@@ -32,20 +32,7 @@ import Handle from './Handle/Handle';
 import Progress from './Progress/Progress';
 import Scale from './Scale/Scale';
 import Track from './Track/Track';
-import {
-  searchStyleValue,
-  findClosestHandle,
-  isClickFromSecondHandlePosition,
-  isRangeAndShowProgress,
-  isNotRangeAndShowProgress,
-  isNotRangeAndStayMergeTooltip,
-  isShowTooltipAndRange,
-  isHideTooltipAndRange,
-  isNewValueStartBiggerValueEnd,
-  isNotRangeAndContainsClassListMerged,
-  isNewValueEndLessValueStart,
-  findClosestHandleFromPercent
-} from './view.function';
+import * as Fn from './view.function';
 
 class View extends Observer<{
   viewChanged: Partial<SliderOptions>;
@@ -97,7 +84,7 @@ class View extends Observer<{
 
     firstHandle.setValue(valueStart);
     firstHandle.setStyle(
-      searchStyleValue({ minValue, maxValue, progress: valueStart })
+      Fn.searchStyleValue({ minValue, maxValue, progress: valueStart })
     );
 
     if (showProgress) {
@@ -121,27 +108,27 @@ class View extends Observer<{
 
       secondHandle.setValue(valueEnd);
       secondHandle.setStyle(
-        searchStyleValue({ minValue, maxValue, progress: valueEnd })
+        Fn.searchStyleValue({ minValue, maxValue, progress: valueEnd })
       );
     } else {
       secondHandle.getElement().remove();
     }
 
-    if (isNotRangeAndStayMergeTooltip(range, firstHandle)) {
+    if (Fn.isNotRangeAndStayMergeTooltip(range, firstHandle)) {
       firstHandle.setTooltipContent();
     }
 
-    if (isRangeAndShowProgress(range, showProgress)) {
+    if (Fn.isRangeAndShowProgress(range, showProgress)) {
       progress.setStyle(
-        searchStyleValue({ minValue, maxValue, progress: valueStart }),
-        searchStyleValue({ minValue, maxValue, progress: valueEnd })
+        Fn.searchStyleValue({ minValue, maxValue, progress: valueStart }),
+        Fn.searchStyleValue({ minValue, maxValue, progress: valueEnd })
       );
     }
 
-    if (isNotRangeAndShowProgress(range, showProgress)) {
+    if (Fn.isNotRangeAndShowProgress(range, showProgress)) {
       progress.setStyle(
         0,
-        searchStyleValue({ minValue, maxValue, progress: valueStart })
+        Fn.searchStyleValue({ minValue, maxValue, progress: valueStart })
       );
     }
 
@@ -151,11 +138,11 @@ class View extends Observer<{
       firstHandle.hideTooltip();
     }
 
-    if (isShowTooltipAndRange(showTooltip, range)) {
+    if (Fn.isShowTooltipAndRange(showTooltip, range)) {
       secondHandle.showTooltipMethod();
     }
 
-    if (isHideTooltipAndRange(showTooltip, range)) {
+    if (Fn.isHideTooltipAndRange(showTooltip, range)) {
       secondHandle.hideTooltip();
     }
 
@@ -163,7 +150,7 @@ class View extends Observer<{
     firstHandle.updateStep(step);
     secondHandle.updateStep(step);
 
-    const styleValueFirst = searchStyleValue({
+    const styleValueFirst = Fn.searchStyleValue({
       minValue: track.getMinValue(),
       maxValue: track.getMaxValue(),
       progress: valueStart
@@ -171,7 +158,7 @@ class View extends Observer<{
 
     // when change orientation
     if (range) {
-      const styleValueSecond = searchStyleValue({
+      const styleValueSecond = Fn.searchStyleValue({
         minValue: track.getMinValue(),
         maxValue: track.getMaxValue(),
         progress: valueEnd
@@ -275,13 +262,13 @@ class View extends Observer<{
       this.root.append(scale.getElement());
     }
 
-    const firstHandleStyleValue = searchStyleValue({
+    const firstHandleStyleValue = Fn.searchStyleValue({
       minValue: track.getMinValue(),
       maxValue: track.getMaxValue(),
       progress: valueStart
     });
 
-    const secondHandleStyleValue = searchStyleValue({
+    const secondHandleStyleValue = Fn.searchStyleValue({
       minValue: track.getMinValue(),
       maxValue: track.getMaxValue(),
       progress: valueEnd
@@ -292,11 +279,11 @@ class View extends Observer<{
       secondHandle.setStyle(secondHandleStyleValue);
     }
 
-    if (isRangeAndShowProgress(range, showProgress)) {
+    if (Fn.isRangeAndShowProgress(range, showProgress)) {
       progress.setStyle(firstHandleStyleValue, secondHandleStyleValue);
     }
 
-    if (isNotRangeAndShowProgress(range, showProgress)) {
+    if (Fn.isNotRangeAndShowProgress(range, showProgress)) {
       progress.setStyle(0, firstHandleStyleValue);
     }
 
@@ -344,7 +331,7 @@ class View extends Observer<{
     const { isVertical } = this.getOptions();
     const { range } = this.getModel();
 
-    if (isNotRangeAndContainsClassListMerged(range, firstHandle)) {
+    if (Fn.isNotRangeAndContainsClassListMerged(range, firstHandle)) {
       firstHandle.getTooltip().classList.remove(MERGED_TOOLTIP_CLASS);
       return;
     }
@@ -429,7 +416,7 @@ class View extends Observer<{
       const { step, range, maxValue, minValue } = this.getModel();
       if (whichHandle === 1) {
         if (
-          isNewValueStartBiggerValueEnd({
+          Fn.isNewValueStartBiggerValueEnd({
             percent,
             secondHandle,
             range,
@@ -448,7 +435,7 @@ class View extends Observer<{
         this.emit(ViewListeners.viewChangeModel, [VALUE_START, percent]);
       } else if (whichHandle === 2) {
         if (
-          isNewValueEndLessValueStart({
+          Fn.isNewValueEndLessValueStart({
             percent,
             firstHandle,
             step,
@@ -470,7 +457,7 @@ class View extends Observer<{
       const { step, maxValue, minValue } = this.getModel();
 
       if (
-        isNewValueEndLessValueStart({
+        Fn.isNewValueEndLessValueStart({
           percent,
           firstHandle,
           step,
@@ -498,7 +485,7 @@ class View extends Observer<{
       let closestHandle: Handle = firstHandle;
       if (range) {
         this.mergeTooltip();
-        closestHandle = findClosestHandle({
+        closestHandle = Fn.findClosestHandle({
           firstHandle,
           secondHandle,
           clickValue: value
@@ -533,7 +520,7 @@ class View extends Observer<{
         let closestHandle = firstHandle;
 
         if (range) {
-          closestHandle = findClosestHandleFromPercent({
+          closestHandle = Fn.findClosestHandleFromPercent({
             firstHandle,
             secondHandle,
             percent: progressPercent
@@ -541,7 +528,7 @@ class View extends Observer<{
           this.mergeTooltip();
 
           if (
-            isClickFromSecondHandlePosition({
+            Fn.isClickFromSecondHandlePosition({
               percent: progressPercent,
               firstHandle,
               secondHandle
