@@ -37,9 +37,10 @@ function isIncorrectStepInValueStart({
   maxValue: number;
 }): boolean {
   return (
-    ((Math.round(Math.abs(valueStart - minValue) * STEP_DECIMAL_PART) %
-      Math.round(step * STEP_DECIMAL_PART)) as unknown as boolean) &&
-    valueStart !== maxValue
+    Boolean(
+      Math.round(Math.abs(valueStart - minValue) * STEP_DECIMAL_PART) %
+        Math.round(step * STEP_DECIMAL_PART)
+    ) && valueStart !== maxValue
   );
 }
 
@@ -55,9 +56,10 @@ function isIncorrectStepInValueEnd({
   valueEnd: number;
 }): boolean {
   return (
-    ((Math.round(Math.abs(valueEnd - minValue) * STEP_DECIMAL_PART) %
-      Math.round(step * STEP_DECIMAL_PART)) as unknown as boolean) &&
-    valueEnd !== maxValue
+    Boolean(
+      Math.round(Math.abs(valueEnd - minValue) * STEP_DECIMAL_PART) %
+        Math.round(step * STEP_DECIMAL_PART)
+    ) && valueEnd !== maxValue
   );
 }
 
@@ -100,7 +102,7 @@ function isRangeAndValueStartEqualValueEndAndValueStartBiggerPrevValue({
   valueEnd: number;
   prevValueStart: number;
 }): boolean {
-  return range && valueStart === valueEnd && valueStart! > prevValueStart;
+  return range && valueStart === valueEnd && valueStart > prevValueStart;
 }
 
 function isRangeAndValueStartEqualValueEndAndValueEndLessPrevValue({
@@ -114,7 +116,7 @@ function isRangeAndValueStartEqualValueEndAndValueEndLessPrevValue({
   valueEnd: number;
   prevValueEnd: number;
 }): boolean {
-  return range && valueStart === valueEnd && valueEnd! < prevValueEnd;
+  return range && valueStart === valueEnd && valueEnd < prevValueEnd;
 }
 
 function isRangeAndValueStartBiggerValueEndAndValueStartBiggerPrevValue({
@@ -128,7 +130,7 @@ function isRangeAndValueStartBiggerValueEndAndValueStartBiggerPrevValue({
   valueEnd: number;
   prevValueStart: number;
 }): boolean {
-  return range && valueStart! > valueEnd! && valueStart! > prevValueStart;
+  return range && valueStart > valueEnd! && valueStart > prevValueStart;
 }
 
 function isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue({
@@ -142,7 +144,7 @@ function isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue({
   valueEnd: number;
   prevValueEnd: number;
 }): boolean {
-  return range && valueStart! > valueEnd! && valueEnd! < prevValueEnd;
+  return range && valueStart > valueEnd! && valueEnd < prevValueEnd;
 }
 
 function isMinValueEqualMaxValueAndMinValueBiggerPrevValue({
@@ -154,7 +156,7 @@ function isMinValueEqualMaxValueAndMinValueBiggerPrevValue({
   maxValue: number;
   prevMinValue: number;
 }): boolean {
-  return minValue === maxValue && minValue! > prevMinValue;
+  return minValue === maxValue && minValue > prevMinValue;
 }
 
 function isMinValueEqualMaxValueAndMaxValueLessPrevValue({
@@ -166,7 +168,7 @@ function isMinValueEqualMaxValueAndMaxValueLessPrevValue({
   maxValue: number;
   prevMaxValue: number;
 }): boolean {
-  return minValue === maxValue && maxValue! < prevMaxValue;
+  return minValue === maxValue && maxValue < prevMaxValue;
 }
 
 function isMinValueBiggerMaxValueAndMinValueBiggerPrevValue({
@@ -178,7 +180,7 @@ function isMinValueBiggerMaxValueAndMinValueBiggerPrevValue({
   maxValue: number;
   prevMinValue: number;
 }): boolean {
-  return minValue! > maxValue! && minValue! > prevMinValue;
+  return minValue > maxValue && minValue > prevMinValue;
 }
 
 function isMinValueBiggerMaxValueAndMaxValueLessPrevValue({
@@ -190,7 +192,7 @@ function isMinValueBiggerMaxValueAndMaxValueLessPrevValue({
   maxValue: number;
   prevMaxValue: number;
 }): boolean {
-  return minValue! > maxValue! && maxValue! < prevMaxValue;
+  return minValue > maxValue && maxValue < prevMaxValue;
 }
 
 function isNeedRound(value: number) {
