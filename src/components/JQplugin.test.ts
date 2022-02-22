@@ -18,19 +18,19 @@ describe('JQuery plugin', () => {
   });
 
   test('check getOptions', () => {
-    slider = $(container).JQSlider() as JQuery<HTMLElement>;
+    slider = $(container).JQSlider();
     const options = slider.JQSlider('getOptions') as SliderOptions;
     expect(options.minValue).toBe(0);
   });
 
   test('check getContainer', () => {
-    slider = $(container).JQSlider() as JQuery<HTMLElement>;
+    slider = $(container).JQSlider();
     const containerFromOptions = slider.JQSlider('getContainer');
     expect(containerFromOptions).toBeInstanceOf(HTMLElement);
   });
 
   test('check setOptions', () => {
-    slider = $(container).JQSlider() as JQuery<HTMLElement>;
+    slider = $(container).JQSlider();
     slider.JQSlider('setOptions', {
       maxValue: 155
     });
@@ -39,25 +39,25 @@ describe('JQuery plugin', () => {
   });
 
   test('check getFirstValue', () => {
-    slider = $(container).JQSlider() as JQuery<HTMLElement>;
+    slider = $(container).JQSlider();
     const valueStart = slider.JQSlider('getFirstValue');
     expect(valueStart).toBe(40);
   });
 
   test('check getSecondValue', () => {
-    slider = $(container).JQSlider() as JQuery<HTMLElement>;
+    slider = $(container).JQSlider();
     const valueEnd = slider.JQSlider('getSecondValue');
     expect(valueEnd).toBe(50);
   });
 
   test('check get slider', () => {
-    slider = $(container).JQSlider() as JQuery<HTMLElement>;
+    slider = $(container).JQSlider();
     const sliderFn = slider.JQSlider('getSlider') as Slider;
     expect(sliderFn.getFirstValue()).toBe(40);
   });
 
   test('check return default null', () => {
-    slider = $(container).JQSlider() as JQuery<HTMLElement>;
+    slider = $(container).JQSlider();
     const sliderFn = slider.JQSlider();
     expect(sliderFn).toBe(null);
   });

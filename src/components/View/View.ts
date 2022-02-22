@@ -189,7 +189,7 @@ class View extends Observer<{
   }
 
   getOptions(): ViewOptions {
-    return { ...this.viewOptions } as ViewOptions;
+    return { ...this.viewOptions };
   }
 
   getComponents(): ViewComponents {

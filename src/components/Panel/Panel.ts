@@ -53,14 +53,14 @@ class Panel {
     this.inputs.minValue.value = minValue.toString();
     this.inputs.valueStart.value = valueStart.toString();
     this.inputs.valueEnd.value = valueEnd.toString();
-    this.inputs.valueEnd.disabled = !range as boolean;
-    this.inputs.showTooltip.checked = showTooltip as boolean;
-    this.inputs.range.checked = range as boolean;
+    this.inputs.valueEnd.disabled = !range;
+    this.inputs.showTooltip.checked = showTooltip;
+    this.inputs.range.checked = range;
     this.inputs.step.value = step.toString();
-    this.inputs.showScale.checked = showScale as boolean;
+    this.inputs.showScale.checked = showScale;
     this.inputs.scalePointCount.value = scalePointCount!.toString();
-    this.inputs.showProgress.checked = showProgress as boolean;
-    this.inputs.isVertical.checked = isVertical as boolean;
+    this.inputs.showProgress.checked = showProgress;
+    this.inputs.isVertical.checked = isVertical;
 
     this.inputs.valueStart.setAttribute('min', `${minValue}`);
     this.inputs.valueEnd.setAttribute('min', `${minValue}`);
