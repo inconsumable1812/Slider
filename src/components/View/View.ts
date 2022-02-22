@@ -113,7 +113,7 @@ class View extends Observer<{
     this.mergeTooltip();
 
     if (range) {
-      this.root.append(secondHandle!.element);
+      this.root.append(secondHandle.element);
 
       secondHandle.setValue(valueEnd);
       secondHandle.setStyle(
@@ -183,7 +183,7 @@ class View extends Observer<{
     firstHandle.clearStyle();
     firstHandle.setStyle(styleValueFirst);
     if (showProgress) {
-      progress!.setOrientation(isVertical);
+      progress.setOrientation(isVertical);
     }
 
     if (isVertical) {
@@ -224,7 +224,7 @@ class View extends Observer<{
     const trackInstance = new Track({
       minValue,
       maxValue,
-      isVertical: isVertical!,
+      isVertical,
       step
     });
 
@@ -246,11 +246,11 @@ class View extends Observer<{
         track: trackInstance,
         step
       }),
-      progress: new Progress(isVertical!),
+      progress: new Progress(isVertical),
       scale: new Scale({
         minValue,
         maxValue,
-        scalePointCount: scalePointCount!,
+        scalePointCount,
         step,
         isVertical
       })
@@ -260,15 +260,15 @@ class View extends Observer<{
       this.components;
 
     if (showProgress) {
-      track.element.append(progress!.element);
+      track.element.append(progress.element);
     }
     this.root.append(track.element);
     this.root.append(firstHandle.element);
     if (range) {
-      this.root.append(secondHandle!.element);
+      this.root.append(secondHandle.element);
     }
     if (showScale) {
-      this.root.append(scale!.element);
+      this.root.append(scale.element);
     }
 
     const firstHandleStyleValue = searchStyleValue({
@@ -285,15 +285,15 @@ class View extends Observer<{
 
     firstHandle.setStyle(firstHandleStyleValue);
     if (range) {
-      secondHandle!.setStyle(secondHandleStyleValue);
+      secondHandle.setStyle(secondHandleStyleValue);
     }
 
     if (isRangeAndShowProgress(range, showProgress)) {
-      progress!.setStyle(firstHandleStyleValue, secondHandleStyleValue);
+      progress.setStyle(firstHandleStyleValue, secondHandleStyleValue);
     }
 
     if (isNotRangeAndShowProgress(range, showProgress)) {
-      progress!.setStyle(0, firstHandleStyleValue);
+      progress.setStyle(0, firstHandleStyleValue);
     }
 
     this.selector.append(this.root);
@@ -320,10 +320,10 @@ class View extends Observer<{
 
   private checkScalePointCount(): void | null {
     const { scalePointCount } = this.viewOptions;
-    if (scalePointCount! < MIN_SCALE_POINT_COUNT) {
+    if (scalePointCount < MIN_SCALE_POINT_COUNT) {
       return this.setOptions({ scalePointCount: MIN_SCALE_POINT_COUNT });
     }
-    if (scalePointCount! > MAX_SCALE_POINT_COUNT) {
+    if (scalePointCount > MAX_SCALE_POINT_COUNT) {
       return this.setOptions({ scalePointCount: MAX_SCALE_POINT_COUNT });
     }
     return null;
@@ -395,8 +395,9 @@ class View extends Observer<{
         return;
       }
       const firstHandleTooltipContent = firstHandle.getTooltipContent();
-      const allLength = firstHandleTooltipContent!.length - 3;
-      const firstValueLength = firstHandleTooltipContent!.indexOf('...');
+      if (firstHandleTooltipContent === null) return;
+      const allLength = firstHandleTooltipContent.length - 3;
+      const firstValueLength = firstHandleTooltipContent.indexOf('...');
       const secondValueLength = allLength - firstValueLength;
 
       const rectangle = firstHandle.getRectangleTooltip();

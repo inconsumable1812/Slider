@@ -252,7 +252,7 @@ class Model extends Observer<{ modelValueChange: ModelOptions }> {
     if (minValue !== prevMinValue) {
       return this.setOptions({ minValue: roundToRequiredNumber(minValue) });
     }
-    if (minValue >= maxValue!) {
+    if (minValue >= maxValue) {
       return this.setOptions({
         maxValue: roundToRequiredNumber(minValue + step),
         minValue: roundToRequiredNumber(minValue)

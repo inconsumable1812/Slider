@@ -49,14 +49,14 @@ class Panel {
       range
     } = this.slider.getOptions();
 
-    this.inputs.maxValue.value = maxValue!.toString();
-    this.inputs.minValue.value = minValue!.toString();
-    this.inputs.valueStart.value = valueStart!.toString();
-    this.inputs.valueEnd.value = valueEnd!.toString();
+    this.inputs.maxValue.value = maxValue.toString();
+    this.inputs.minValue.value = minValue.toString();
+    this.inputs.valueStart.value = valueStart.toString();
+    this.inputs.valueEnd.value = valueEnd.toString();
     this.inputs.valueEnd.disabled = !range as boolean;
     this.inputs.showTooltip.checked = showTooltip as boolean;
     this.inputs.range.checked = range as boolean;
-    this.inputs.step.value = step!.toString();
+    this.inputs.step.value = step.toString();
     this.inputs.showScale.checked = showScale as boolean;
     this.inputs.scalePointCount.value = scalePointCount!.toString();
     this.inputs.showProgress.checked = showProgress as boolean;
@@ -269,7 +269,7 @@ class Panel {
       if (this.inputs.maxValue.value === '') {
         this.inputs.maxValue.value = this.slider
           .getOptions()
-          .maxValue!.toString();
+          .maxValue.toString();
       }
     };
     this.inputs.maxValue.addEventListener(
@@ -299,7 +299,7 @@ class Panel {
       if (this.inputs.minValue.value === '') {
         this.inputs.minValue.value = this.slider
           .getOptions()
-          .minValue!.toString();
+          .minValue.toString();
       }
     };
     this.inputs.minValue.addEventListener(
@@ -330,7 +330,7 @@ class Panel {
       if (this.inputs.valueStart.value === '') {
         this.inputs.valueStart.value = this.slider
           .getOptions()
-          .valueStart!.toString();
+          .valueStart.toString();
       }
     };
     this.inputs.valueStart.addEventListener(
@@ -356,7 +356,7 @@ class Panel {
       if (this.inputs.valueEnd.value === '') {
         this.inputs.valueEnd.value = this.slider
           .getOptions()
-          .valueEnd!.toString();
+          .valueEnd.toString();
       }
     };
     this.inputs.valueEnd.addEventListener(
@@ -386,7 +386,7 @@ class Panel {
 
     const stepCallbackWhenFocusGone = () => {
       if (this.inputs.step.value === '') {
-        this.inputs.step.value = this.slider.getOptions().step!.toString();
+        this.inputs.step.value = this.slider.getOptions().step.toString();
       }
     };
     this.inputs.step.addEventListener('blur', stepCallbackWhenFocusGone);
@@ -409,7 +409,7 @@ class Panel {
       if (this.inputs.scalePointCount.value === '') {
         this.inputs.scalePointCount.value = this.slider
           .getOptions()
-          .scalePointCount!.toString();
+          .scalePointCount.toString();
       }
     };
     this.inputs.scalePointCount.addEventListener(

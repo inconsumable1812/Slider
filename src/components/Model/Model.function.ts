@@ -130,7 +130,7 @@ function isRangeAndValueStartBiggerValueEndAndValueStartBiggerPrevValue({
   valueEnd: number;
   prevValueStart: number;
 }): boolean {
-  return range && valueStart > valueEnd! && valueStart > prevValueStart;
+  return range && valueStart > valueEnd && valueStart > prevValueStart;
 }
 
 function isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue({
@@ -144,7 +144,7 @@ function isRangeAndValueStartBiggerValueEndAndValueEndLessPrevValue({
   valueEnd: number;
   prevValueEnd: number;
 }): boolean {
-  return range && valueStart > valueEnd! && valueEnd < prevValueEnd;
+  return range && valueStart > valueEnd && valueEnd < prevValueEnd;
 }
 
 function isMinValueEqualMaxValueAndMinValueBiggerPrevValue({

@@ -34,20 +34,20 @@ describe('Handle', () => {
   beforeEach(() => {
     handel = new Handle({
       handleNumber: firstHandleNumber,
-      value: valueStart!,
-      showTooltip: showTooltip!,
+      value: valueStart,
+      showTooltip: showTooltip,
       isVertical: isVerticalFalse,
       track: firstTrack,
-      step: step!
+      step
     });
 
     handelVertical = new Handle({
       handleNumber: secondHandleNumber,
-      value: valueStart!,
-      showTooltip: showTooltip!,
-      isVertical: isVertical!,
+      value: valueStart,
+      showTooltip: showTooltip,
+      isVertical: isVertical,
       track: secondTrack,
-      step: step!
+      step
     });
   });
 
@@ -66,7 +66,8 @@ describe('Handle', () => {
 
   test('check correct set z-index', () => {
     handel.setStyle(98);
-    expect(handel.element.style.zIndex).toBe('2');
+    const element = handel.getElement();
+    expect(element.style.zIndex).toBe('2');
   });
 
   describe('is vertical', () => {

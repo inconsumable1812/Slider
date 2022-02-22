@@ -85,7 +85,11 @@ function isNotRangeAndStayMergeTooltip(
   range: boolean,
   firstHandle: Handle
 ): boolean {
-  return !range && firstHandle.getTooltipContent()!.includes('...');
+  const tooltipContent = firstHandle.getTooltipContent();
+  if (tooltipContent === null) {
+    return false;
+  }
+  return !range && tooltipContent.includes('...');
 }
 
 function isShowTooltipAndRange(showTooltip: boolean, range: boolean): boolean {

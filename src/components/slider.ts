@@ -210,7 +210,8 @@ const create = (
           return this.getOptions();
 
         case 'setOptions':
-          return this.setOptions(newOptions!);
+          if (newOptions === undefined) return null;
+          return this.setOptions(newOptions);
 
         case 'getFirstValue':
           return this.getFirstValue();
